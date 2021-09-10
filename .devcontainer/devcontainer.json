@@ -1,28 +1,42 @@
-// For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
-// https://github.com/microsoft/vscode-dev-containers/tree/v0.194.0/containers/docker-existing-docker-compose
-// If you want to run as a non-root user in the container, see .devcontainer/docker-compose.yml.
 {
 	"name": "bifb",
-
-	// Update the 'dockerComposeFile' list if you have more compose files or use different names.
-	// The .devcontainer/docker-compose.yml file contains any overrides you need/want to make.
-	"dockerComposeFile": [
+    "dockerComposeFile": [
 		"../docker-compose.yml"
 	],
-
-	// The 'service' property is the name of the service for the container that VS Code should
-	// use. Update this value and .devcontainer/docker-compose.yml to the real service name.
-	"service": "node",
-
-	// The optional 'workspaceFolder' property is the path VS Code should open by default when
-	// connected. This is typically a file mount in .devcontainer/docker-compose.yml
-	"workspaceFolder": "/usr/src/app",
-
-	// Set *default* container specific settings.json values on container create.
-	"settings": {},
-
-	// Add the IDs of extensions you want installed when the container is created.
-	"extensions": []
+    "service": "node",
+    "workspaceFolder": "/usr/src/app",
+    // 各種設定、保存時の自動フォーマットとスペースサイズを設定
+	"settings": {
+        "[javascript]": {
+            "editor.tabSize": 2,
+            "editor.insertSpaces": true,
+            "editor.defaultFormatter": "esbenp.prettier-vscode" // フォーマッタをprettierに指定
+        },
+        "[typescript]": {
+        
+            "editor.tabSize": 2,
+            "editor.insertSpaces": true,
+            "editor.defaultFormatter": "esbenp.prettier-vscode" // フォーマッタをprettierに指定
+        },
+        "[typescriptreact]": {
+            "editor.tabSize": 2,
+            "editor.insertSpaces": true,
+            "editor.defaultFormatter": "esbenp.prettier-vscode" // フォーマッタをprettierに指定
+        },
+        "editor.formatOnSave": true, // ファイル保存時にPrettierでフォーマット
+        "editor.codeActionsOnSave": {
+            "source.fixAll.eslint": true // ファイル保存時にESLintでフォーマット
+        }
+    },
+	"extensions": [
+        "dbaeumer.vscode-eslint",           // JS用Linter
+        "esbenp.prettier-vscode",           // JS用Prettier
+        "formulahendry.auto-rename-tag",    // HTML開始タグの編集が終了タグにも伝える
+        "donjayamanne.githistory",          // Gitの履歴確認
+        "mosapride.zenkaku",                // 全角スペース
+        "oderwat.indent-rainbow",           // インデントをカラフルにする
+        "xabikos.javascriptsnippets",       // JS用Snippets
+    ]
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
