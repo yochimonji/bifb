@@ -4,7 +4,9 @@ services:
     build:
       context: .
     tty: true
+    restart: always
     volumes:
-      - ./:/usr/src/app
+      - .:/workspace:cached
+      - /workspace/node_modules
     ports:
       - "3000:3000"

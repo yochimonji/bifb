@@ -1,7 +1,6 @@
 FROM node:16-bullseye-slim
-WORKDIR /usr/src/app
-COPY package.json ./
-COPY package-lock.json ./
+WORKDIR /workspace
 RUN apt update && \
-    apt install -y git && \
-    npm install --no-audit
+    apt install -y git
+COPY package*.json ./
+RUN npm install --no-audit

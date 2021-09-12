@@ -4,7 +4,7 @@
 		"../docker-compose.yml"
 	],
     "service": "node",
-    "workspaceFolder": "/usr/src/app",
+    "workspaceFolder": "/workspace",
     // 各種設定、保存時の自動フォーマットとスペースサイズを設定
 	"settings": {
         "[javascript]": {
