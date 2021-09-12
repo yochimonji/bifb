@@ -8,9 +8,9 @@
 - 作品検索
 - フィードバックを受けた際にSlackへ通知
 ## 開発メンバー
-- @yochimonji
-- @shrbt6
-- @ltoppyl
+- [@yochimonji](https://github.com/yochimonji)
+- [@shrbt6](https://github.com/shrbt6)
+- [@ltoppyl](https://github.com/ltoppyl)
 ## 使用技術
 - React
 - TypeScript
