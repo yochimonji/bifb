@@ -1,0 +1,12 @@
+version: "3"
+services:
+  node:
+    build:
+      context: .
+    tty: true
+    restart: always
+    volumes:
+      - .:/workspace:cached
+      - /workspace/node_modules
+    ports:
+      - "3000:3000"
