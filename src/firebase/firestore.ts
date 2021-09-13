@@ -24,12 +24,11 @@ const resProduct = await db.collection("product").doc("test").set(productData);
 // tag collection
 // の追加についても必要
 
-const getApplications = () => {
-  const appId = ""; // アプリIDを呼び出す操作
-  const appIcon = ""; // アプリのアイコンを呼び出す操作
-  // 以下に他にも呼び出すものを記述
+const getProducts = async (tag: string) => {
+  const productList = await db.collection("product").doc(tag).get();
+  return productList;
 };
 
-const fetchApplication = () => {};
+const fetchProduct = () => {};
 
 const fetchUser = () => {};
