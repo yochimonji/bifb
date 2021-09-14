@@ -5,8 +5,7 @@ import {
   doc,
   addDoc,
   updateDoc,
-  getDoc,
-  setDoc,
+  arrayUnion,
 } from "firebase/firestore";
 import firebaseConfig from "./config";
 
@@ -44,15 +43,17 @@ export const postProduct = async (
 };
 
 // // 作品を追加するときのタグが存在していなかったら、tag collectionにタグを追加
-// export const postTags = async (tags: string[]) => {
-//   const postTag = doc(db, "tags", "tags");
-//   const tagsPast = getDoc(postTag);
-//   const tagsPastRe = Arrays.toString(tagsPast)
-//   const tagsNew = tags.concat(tagsPastRe);
-//   await updateDoc(postTag, {
-//     tagsNew,
-//   });
-// };
+export const postTags = async (tags: string[]) => {
+  const postTag = doc(db, "tags", "tags");
+
+  // eslint-disable-next-line no-restricted-syntax
+  for (const value of tags) {
+    // eslint-disable-next-line no-await-in-loop
+    await updateDoc(postTag, {
+      tag: arrayUnion(value),
+    });
+  }
+};
 
 // フィードバックの情報をFirestoreに送るための関数
 export const postFeedbacks = async (
@@ -98,23 +99,15 @@ export const postUserInfo = async (
   return true;
 };
 
-export const postTags = async (tags: string[]) => {
-  await setDoc(doc(db, "tags", "tags"), {
-    tag: tags,
-  });
-};
-
+function async(arg0: void) {
+  throw new Error("Function not implemented.");
+}
 //
 
 // 以下データの取得に関する記述
-// export const fetchProducts = () => {};
-
-// const fetchProduct = () => {};
-
-// export const fetchUser = async (userUid: string): Promise<Object> => {
+// export const fetchUser = async (userUid: string) => {
 //   const userInfo = doc(db, "userInfo", userUid);
 //   const userInfoSnap = await getDoc(userInfo);
 //   console.log(userInfoSnap.data());
-//   const returndata = userInfoSnap.data();
-//   return returndata;
+//   return userInfoSnap.data();
 // };
