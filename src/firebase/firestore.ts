@@ -33,19 +33,28 @@ export const postProduct = async (
   if (!docProduct.id) {
     return false;
   }
-  // eslint-disable-next-line no-console
-  console.log("document written with ID", docProduct.id);
   return true;
 };
 
-// 作品を追加するときのタグが存在していなかったら、tag collectionにタグを追加
-export const postTags = async (tags: string[]): Promise<boolean> => {
-  const docProduct = await addDoc(collection(db, "tags"), {});
-  if (!docProduct.id) {
+// // 作品を追加するときのタグが存在していなかったら、tag collectionにタグを追加
+// export const postTags = async (tags: string[]): Promise<boolean> => {
+//   const docTags = doc(db, "tags", "tags");
+//   await setDoc(docTags, { capital: true }, { merge: true })
+// };
+
+export const postFeedbacks = async (
+  userUid: string,
+  feedbackText: string
+): Promise<boolean> => {
+  const docFeedback = await addDoc(collection(db, "feedback"), {
+    userUid,
+    feedbackText,
+    postData: new Date().toLocaleString(),
+    goodSum: 0,
+  });
+  if (!docFeedback.id) {
     return false;
   }
-  // eslint-disable-next-line no-console
-  console.log("document written with ID", docProduct.id);
   return true;
 };
 
