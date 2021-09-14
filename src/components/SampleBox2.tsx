@@ -9,11 +9,11 @@ import { SampleBox2Props } from "./index";
  * @param num 表示する数値
  * @returns 青背景のBox
  */
-const SampleBox1 = (props: SampleBox2Props): JSX.Element => (
+const SampleBox2 = (props: SampleBox2Props): JSX.Element => (
   <Box bg="blue.200">
     {props.text}
     {props.num}
   </Box>
 );
 
-export default SampleBox1;
+export default SampleBox2;
