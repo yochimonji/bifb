@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
   getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
   onAuthStateChanged,
   User,
   GoogleAuthProvider,
@@ -14,8 +12,16 @@ import * as H from "history";
 // Google Providerの作成
 const provider = new GoogleAuthProvider();
 
+type ContextType = {
+  googleLogin?: (history: H.History) => void;
+  logout?: (history: H.History) => void;
+  currentUser: User | null;
+};
+
 // contextの作成
-export const AuthContext = React.createContext({});
+export const AuthContext = React.createContext<ContextType>({
+  currentUser: null,
+});
 
 type AuthProviderProps = {
   children: JSX.Element;
