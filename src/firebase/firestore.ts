@@ -104,11 +104,19 @@ export const postUserInfo = async (
 
 // ユーザの情報をFirestoreから取得してくる関数
 /**
- * 以下のようにして使うと、dataにObject型としてデータが取得できる
-  const tmp = fetchUserInfo("6syVUuKgFlDQqKAkqg2A").then((data) =>
-  console.log(data)
-); 
- */
+ * 以下のようにして使うと、dataにObject型としてデータが取得でき、
+ * この例ではdataオブジェクト内のnameが出力されている
+const [tmp, setTmp] = React.useState("");
+React.useEffect(() => {
+  const tmpData = fetchUserInfo("6syVUuKgFlDQqKAkqg2A").then((data) => {
+    setTmp(data);
+  });
+});
+
+return(
+  {tmp.name}
+)
+*/
 export const fetchUserInfo = async (userUid: string) => {
   const searchUserUid = doc(db, "userInfo", userUid);
   const LoadUserData = await getDoc(searchUserUid);
