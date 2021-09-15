@@ -8,6 +8,7 @@ import {
   signOut,
 } from "firebase/auth";
 import * as H from "history";
+import app from "../base";
 
 // Google Providerの作成
 const provider = new GoogleAuthProvider();
@@ -34,7 +35,7 @@ type AuthProviderProps = {
  */
 export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
-  const auth = getAuth();
+  const auth = getAuth(app);
 
   /**
    * Googleログイン機能
