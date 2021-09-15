@@ -43,7 +43,7 @@ export const postProduct = async (
   return true;
 };
 
-// // 作品を追加するときのタグが存在していなかったら、tag collectionにタグを追加
+// 作品を追加するときのタグが存在していなかったら、tag collectionにタグを追加
 export const postTags = async (tags: string[]): Promise<boolean> => {
   const postTag = doc(db, "tags", "tags");
 
@@ -102,19 +102,22 @@ export const postUserInfo = async (
   return true;
 };
 
+// ユーザの情報をFirestoreから取得してくる関数
+/**
+ * 以下のようにして使うと、dataにObject型としてデータが取得できる
+  const tmp = fetchUserInfo("6syVUuKgFlDQqKAkqg2A").then((data) =>
+  console.log(data)
+); 
+ */
 export const fetchUserInfo = async (userUid: string) => {
   const searchUserUid = doc(db, "userInfo", userUid);
   const LoadUserData = await getDoc(searchUserUid);
 
-  // オブジェクト型の値の取得を確認
-  console.log(LoadUserData.get("name"));
-
-  // ↑LoadUserData.get("オブジェクトのキー")で取得できる値を外部の関数でも使用きできるようにしたい
   return LoadUserData.data();
 };
 
 // 以下未実装
-// exprot const fetchProducts = () => {};
+// export const fetchProducts = () => {};
 
 // export const fetchProductUser = () => {};
 
