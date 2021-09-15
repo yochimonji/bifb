@@ -5,14 +5,14 @@ import {
   signInWithEmailAndPassword,
   onAuthStateChanged,
   User,
+  GoogleAuthProvider,
+  signInWithPopup,
+  signOut,
 } from "firebase/auth";
 import * as H from "history";
 
-// type contextValue = {
-//   login: () => void;
-//   signup: () => void;
-//   user: string;
-// }
+// Google Providerの作成
+const provider = new GoogleAuthProvider();
 
 // contextの作成
 export const AuthContext = React.createContext({});
@@ -25,24 +25,18 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const auth = getAuth();
 
-  // ユーザーをログインさせる関数
-  const login = async (email: string, password: string, history: H.History) => {
+  const googleLogin = async (history: H.History) => {
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      await signInWithPopup(auth, provider);
       history.push("/");
     } catch (error) {
       alert(error);
     }
   };
 
-  // 新しいユーザーを作成しログインさせる関数
-  const signup = async (
-    email: string,
-    password: string,
-    history: H.History
-  ) => {
+  const logout = async (history: H.History) => {
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      await signOut(auth);
       history.push("/");
     } catch (error) {
       alert(error);
@@ -59,8 +53,8 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
     // Contextを使用して認証に必要な情報をコンポーネントツリーに流し込む。
     <AuthContext.Provider
       value={{
-        login,
-        signup,
+        googleLogin,
+        logout,
         currentUser,
       }}
     >
