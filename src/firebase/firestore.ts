@@ -107,8 +107,9 @@ export const fetchUserInfo = async (userUid: string) => {
   const LoadUserData = await getDoc(searchUserUid);
 
   // オブジェクト型の値の取得を確認
-  // このデータを外の関数でも使いたい
   console.log(LoadUserData.get("name"));
+
+  // ↑LoadUserData.get("オブジェクトのキー")で取得できる値を外部の関数でも使用きできるようにしたい
   return LoadUserData.data();
 };
 
