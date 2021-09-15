@@ -4,6 +4,7 @@ import {
   collection,
   doc,
   addDoc,
+  getDoc,
   updateDoc,
   arrayUnion,
 } from "firebase/firestore";
@@ -43,7 +44,7 @@ export const postProduct = async (
 };
 
 // // 作品を追加するときのタグが存在していなかったら、tag collectionにタグを追加
-export const postTags = async (tags: string[]) => {
+export const postTags = async (tags: string[]): Promise<boolean> => {
   const postTag = doc(db, "tags", "tags");
 
   // eslint-disable-next-line no-restricted-syntax
@@ -53,6 +54,8 @@ export const postTags = async (tags: string[]) => {
       tag: arrayUnion(value),
     });
   }
+
+  return true;
 };
 
 // フィードバックの情報をFirestoreに送るための関数
@@ -99,15 +102,23 @@ export const postUserInfo = async (
   return true;
 };
 
-function async(arg0: void) {
-  throw new Error("Function not implemented.");
-}
-//
+export const fetchUserInfo = async (userUid: string) => {
+  const searchUserUid = doc(db, "userInfo", userUid);
+  const LoadUserData = await getDoc(searchUserUid);
 
-// 以下データの取得に関する記述
-// export const fetchUser = async (userUid: string) => {
-//   const userInfo = doc(db, "userInfo", userUid);
-//   const userInfoSnap = await getDoc(userInfo);
-//   console.log(userInfoSnap.data());
-//   return userInfoSnap.data();
-// };
+  // オブジェクト型の値の取得を確認
+  // このデータを外の関数でも使いたい
+  console.log(LoadUserData.get("name"));
+  return LoadUserData.data();
+};
+
+// 以下未実装
+// exprot const fetchProducts = () => {};
+
+// export const fetchProductUser = () => {};
+
+// export const fetchProduct = () => {};
+
+// export const fetchFeedbask = () => {};
+
+// export const fetchTags = () => {};
