@@ -11,6 +11,7 @@ import {
   query,
   orderBy,
   where,
+  setDoc,
 } from "firebase/firestore";
 import firebaseConfig from "./config";
 
@@ -47,8 +48,9 @@ export const postProduct = async (
     productUrl,
     tags,
     mainText,
-    postData: new Date().toLocaleString(),
-    editData: new Date().toLocaleString(),
+    postDate: new Date().toLocaleString(),
+    editDate: new Date().toLocaleString(),
+    goodSum: 0,
     userUid,
   });
   if (!docProduct.id) {
@@ -92,7 +94,7 @@ export const postFeedbacks = async (
     userUid,
     feedbackText,
     productId,
-    postData: new Date().toLocaleString(),
+    postDate: new Date().toLocaleString(),
     goodSum: 0,
   });
   if (!docFeedback.id) {
@@ -180,21 +182,122 @@ export const fetchProduct = async (productId: string) => {
   return loadProductInfo.data();
 };
 
-// productIdを使ってフィードバック情報をFirestoreから取得してくる関数
-// export const fetchFeedback = async (productId: string) => {
-//   // const searchFeedbask = collection(db, "feedback");
-//   // const q = query(searchFeedbask, where(productId, "==", true));
-//   // const querySnapshot = await getDocs(q);
-//   // console.log(querySnapshot.size);
-//   // console.log(querySnapshot);
-//   // return querySnapshot;
+/**
+ * 作品IDを使って、作品に投稿されたフィードバック情報を返す機能
+ * ただし現状、フィードバック情報の一覧的なものの最後のものの情報しか表示されない
+ * 各情報を保存する方法について要検討
+ *
+ * @param productId 作品ID
+ * @returns
+ */
+export const fetchFeedback = async (productId: string) => {
+  const q = query(
+    collection(db, "feedback"),
+    where("productId", "==", productId)
+  );
+  const querySnapshot = await getDocs(q);
 
-//   // const tmp =
-// };
+  let dataset = {};
+  querySnapshot.forEach((data) => {
+    console.log(data.id, " => ", data.data());
+    dataset = data.data();
+  });
 
-// 以下未実装
-// export const fetchProducts = async () => {};
+  return dataset;
+};
 
-// export const fetchTags = async () => {};
+/**
+ * トレンド・新着・いいね数によって、作品をソートする
+ * ただし現状、リスト的な表示はできず、最後のものしか表示されない 要改善
+ * トレンドをどう表現するかについても要検討
+ *
+ * @param conditions トレンド｜新着｜いいね数大｜いいね数小
+ * @param sortType  昇順｜降順
+ * @returns
+ */
+export const fetchProducts = async (conditions: string, sortType: string) => {
+  let q;
+  if (conditions === "トレンド") {
+    if (sortType === "降順") {
+      q = query(collection(db, "product"), orderBy("goodSum", "desc"));
+    }
+    q = query(collection(db, "product"), orderBy("goodSum"));
+  } else if (conditions === "新着") {
+    if (sortType === "降順") {
+      q = query(collection(db, "product"), orderBy("postDate", "desc"));
+    }
+    q = query(collection(db, "product"), orderBy("postDate"));
+  } else if (conditions === "いいね数大") {
+    if (sortType === "降順") {
+      q = query(collection(db, "product"), orderBy("postDate", "desc"));
+    }
+    q = query(collection(db, "product"), orderBy("goodSum"));
+  } else if (conditions === "いいね数小") {
+    if (sortType === "降順") {
+      q = query(collection(db, "product"), orderBy("postDate"));
+    }
+    q = query(collection(db, "product"), orderBy("goodSum", "desc"));
+  }
 
-// export const fetchProductsUser = async () => {};
+  const querySnapshot = await getDocs(q);
+
+  let dataset = {};
+  querySnapshot.forEach((data) => {
+    console.log(data.id, " => ", data.data());
+    dataset = data.data();
+    console.log(dataset);
+  });
+
+  return dataset;
+};
+
+/**
+ * user画面において、投稿済み｜フィードバック｜いいね｜から選択された作品の表示
+ * 動作未確認
+ * 「いいね」が選択された場合の挙動について要検討
+ *
+ * @param userUid ユーザーID
+ * @param searchType 投稿済み｜フィードバック｜いいね
+ * @returns
+ */
+export const fetchProductsUser = async (
+  userUid: string,
+  searchType: string
+) => {
+  let q;
+  if (searchType === "投稿済み") {
+    q = query(collection(db, "product"), where("userUid", "==", userUid));
+  } else if (searchType === "フィードバック") {
+    q = query(collection(db, "feedback"), where("userUid", "==", userUid));
+  } else if (searchType === "いいね") {
+    // サーチの方法について要検討
+    return 0;
+  }
+
+  const querySnapshot = await getDocs(q);
+
+  let dataset = {};
+  querySnapshot.forEach((data) => {
+    console.log(data.id, " => ", data.data());
+    dataset = data.data();
+    console.log(dataset);
+  });
+
+  return dataset;
+};
+
+/**
+ * 検索画面で文字が入力されるにつれてタグが絞り込まれる機能
+ * @param inputText 画面に入力された文字
+ * @returns 画面に入力された文字を含むタグ
+ */
+export const fetchTags = async (inputText: string) => {
+  const tagsList = doc(db, "tags", "tags");
+  const loadProductInfo = await getDoc(tagsList);
+
+  const obj = loadProductInfo.data();
+
+  // for (const key in obj) {
+  //   console.log(obj(key));
+  // }
+};
