@@ -17,8 +17,18 @@ import firebaseConfig from "./config";
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-// 新しいドキュメントの作成
-// product collectionに作品を登録
+/**
+ * product collectionに作品を登録
+ * @param productTitle 作品タイトル
+ * @param productAbstract 作品概要
+ * @param productIconUrl 作品アイコンのURL
+ * @param githubUrl GithubURL
+ * @param productUrl 作品のURL
+ * @param tags タグ
+ * @param mainText 作品説明、本文
+ * @param userUid ユーザーID
+ * @returns True or False
+ */
 export const postProduct = async (
   productTitle: string,
   productAbstract: string,
@@ -47,7 +57,11 @@ export const postProduct = async (
   return true;
 };
 
-// 作品を追加するときのタグが存在していなかったら、tag collectionにタグを追加
+/**
+ * タグの配列に対して、配列内にあるtag collectionに存在していないタグをtag collectionにタグを追加
+ * @param tags タグの一覧
+ * @returns True or False
+ */
 export const postTags = async (tags: string[]): Promise<boolean> => {
   const postTag = doc(db, "tags", "tags");
 
@@ -62,14 +76,22 @@ export const postTags = async (tags: string[]): Promise<boolean> => {
   return true;
 };
 
-// フィードバックの情報をFirestoreに送るための関数
+/**
+ * フィードバックの情報をFirestoreに登録する
+ * @param userUid ユーザーIDを
+ * @param feedbackText フィードバックの本文
+ * @param productId フィードバックが投稿された作品のID
+ * @returns
+ */
 export const postFeedbacks = async (
   userUid: string,
-  feedbackText: string
+  feedbackText: string,
+  productId: string
 ): Promise<boolean> => {
   const docFeedback = await addDoc(collection(db, "feedback"), {
     userUid,
     feedbackText,
+    productId,
     postData: new Date().toLocaleString(),
     goodSum: 0,
   });
@@ -79,7 +101,18 @@ export const postFeedbacks = async (
   return true;
 };
 
-// User情報をFirestoreに送るための関数
+/**
+ * User情報をFirestoreに登録
+ * @param name ユーザー名
+ * @param userIcon ユーザーのアイコン
+ * @param comment コメント
+ * @param githubUrl GithubURL
+ * @param twitterUrl TwitterURL
+ * @param otherUrl その他のURL
+ * @param giveGood いいねをしている作品IDの一覧
+ * @param giveFeedback フェードバックをしている作品のIDを一覧
+ * @returns
+ */
 export const postUserInfo = async (
   name: string,
   userIcon: string,
@@ -106,55 +139,62 @@ export const postUserInfo = async (
   return true;
 };
 
-// userUidを使ってユーザの情報をFirestoreから取得してくる関数
 /**
+ * userUidを使ってユーザの情報をFirestoreから取得してくる関数
+ *
+ * ----取得したオブジェクトの使用例----
  * 以下のようにして使うと、dataにObject型としてデータが取得でき、
  * この例ではdataオブジェクト内のnameが出力されている
-const [tmp, setTmp] = React.useState("");
-React.useEffect(() => {
-  const tmpData = fetchUserInfo("6syVUuKgFlDQqKAkqg2A").then((data) => {
-    setTmp(data);
-  });
-});
-
-return(
-  {tmp.name}
-)
-*/
+ * const [tmp, setTmp] = React.useState("");
+ * React.useEffect(() => {
+ *    const tmpData = fetchUserInfo("6syVUuKgFlDQqKAkqg2A").then((data) => {
+ *        setTmp(data);
+ *    });
+ * });
+ * return(
+ * {tmp.name}
+ * )
+ *
+ * @param userUid ユーザーID
+ * @returns ユーザーIDと一致するuserInfo collection内、ドキュメントのデータのオブジェクト
+ */
 export const fetchUserInfo = async (userUid: string) => {
   const searchUserUid = doc(db, "userInfo", userUid);
-  const LoadUserData = await getDoc(searchUserUid);
+  const loadUserData = await getDoc(searchUserUid);
 
-  return LoadUserData.data();
+  return loadUserData.data();
 };
 
-// productIdを使って作品情報をFirestoreから取得してくる関数
+/**
+ * productIdを使って作品情報をFirestoreから取得してくる関数
+ *
+ * returnされたオブジェクトの使用例は、fetchUserInfo関数の使用例を参照
+ *
+ * @param productId 作品ID
+ * @returns 作品IDと一致するproduct collection内、ドキュメントのデータのオブジェクト
+ */
 export const fetchProduct = async (productId: string) => {
   const searchProduct = doc(db, "product", productId);
-  const LoadProductInfo = await getDoc(searchProduct);
+  const loadProductInfo = await getDoc(searchProduct);
 
-  return LoadProductInfo.data();
+  return loadProductInfo.data();
 };
 
-export const fetchFeedbask = () => {};
+// productIdを使ってフィードバック情報をFirestoreから取得してくる関数
+// export const fetchFeedback = async (productId: string) => {
+//   // const searchFeedbask = collection(db, "feedback");
+//   // const q = query(searchFeedbask, where(productId, "==", true));
+//   // const querySnapshot = await getDocs(q);
+//   // console.log(querySnapshot.size);
+//   // console.log(querySnapshot);
+//   // return querySnapshot;
+
+//   // const tmp =
+// };
 
 // 以下未実装
-// export const fetchProducts = () => {};
+// export const fetchProducts = async () => {};
 
-// export const fetchTags = () => {};
+// export const fetchTags = async () => {};
 
-// export const fetchProductsUser = async (
-//   userUid: string,
-//   serachType: string
-// ) => {
-//   const productUser = collection(db, "product");
-
-//   if (serachType === "投稿済み") {
-//     const q = query(productUser, where("userUid", "==", userUid));
-//     const querySnapshot = await getDocs(q);
-//     console.log(querySnapshot);
-//     return querySnapshot;
-//   }
-
-//   return 0;
-// };
+// export const fetchProductsUser = async () => {};
