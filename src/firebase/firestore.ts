@@ -5,8 +5,12 @@ import {
   doc,
   addDoc,
   getDoc,
+  getDocs,
   updateDoc,
   arrayUnion,
+  query,
+  orderBy,
+  where,
 } from "firebase/firestore";
 import firebaseConfig from "./config";
 
@@ -102,7 +106,7 @@ export const postUserInfo = async (
   return true;
 };
 
-// ユーザの情報をFirestoreから取得してくる関数
+// userUidを使ってユーザの情報をFirestoreから取得してくる関数
 /**
  * 以下のようにして使うと、dataにObject型としてデータが取得でき、
  * この例ではdataオブジェクト内のnameが出力されている
@@ -124,13 +128,33 @@ export const fetchUserInfo = async (userUid: string) => {
   return LoadUserData.data();
 };
 
+// productIdを使って作品情報をFirestoreから取得してくる関数
+export const fetchProduct = async (productId: string) => {
+  const searchProduct = doc(db, "product", productId);
+  const LoadProductInfo = await getDoc(searchProduct);
+
+  return LoadProductInfo.data();
+};
+
+export const fetchFeedbask = () => {};
+
 // 以下未実装
 // export const fetchProducts = () => {};
 
-// export const fetchProductUser = () => {};
-
-// export const fetchProduct = () => {};
-
-// export const fetchFeedbask = () => {};
-
 // export const fetchTags = () => {};
+
+// export const fetchProductsUser = async (
+//   userUid: string,
+//   serachType: string
+// ) => {
+//   const productUser = collection(db, "product");
+
+//   if (serachType === "投稿済み") {
+//     const q = query(productUser, where("userUid", "==", userUid));
+//     const querySnapshot = await getDocs(q);
+//     console.log(querySnapshot);
+//     return querySnapshot;
+//   }
+
+//   return 0;
+// };
