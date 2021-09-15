@@ -21,10 +21,19 @@ type AuthProviderProps = {
   children: JSX.Element;
 };
 
+/**
+ * 認証プロバイダーを作成。認証に関するロジックを全て管理する。
+ * @param props.children 認証以下の全てのコンポーネント（AuthProviderはroot直下）
+ * @returns 認証プロバイダと全ての子コンポーネント
+ */
 export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const auth = getAuth();
 
+  /**
+   * Googleログイン機能
+   * @param history 閲覧履歴
+   */
   const googleLogin = async (history: H.History) => {
     try {
       await signInWithPopup(auth, provider);
@@ -34,6 +43,10 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
     }
   };
 
+  /**
+   * ログアウト機能
+   * @param history 閲覧履歴
+   */
   const logout = async (history: H.History) => {
     try {
       await signOut(auth);
@@ -43,6 +56,8 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
     }
   };
 
+  // 認証に関する副作用
+  // authはFirebaseAppのAuthインスタンスであり、認証情報が変わるたびに呼び出される
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
