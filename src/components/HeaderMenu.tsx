@@ -18,9 +18,9 @@ const HeaderMenu = (): JSX.Element => {
           <Button colorScheme="none" p="0">
             <Icon as={MdNotifications} w="8" h="8" color="gray.100" />
           </Button>
-          <Button colorScheme="none" p="0">
+          <Link href="/post" p="0">
             <Icon as={MdNoteAdd} w="8" h="8" color="gray.100" />
-          </Button>
+          </Link>
         </>
       )}
       <HeaderMenuUser />

@@ -39,26 +39,23 @@ const HeaderMenuUser = (): JSX.Element => {
             />
           </MenuButton>
           <MenuList>
-            <MenuItem>
-              <Link href="/User">
-                {currentUser?.displayName}
-                <span> さん</span>
-              </Link>
+            <MenuItem as="a" href="User">
+              {currentUser?.displayName}
+              <span> さん</span>
             </MenuItem>
-            <MenuItem>
-              <Link href="/User">フィードバックした投稿</Link>
+            <MenuItem as="a" href="/User">
+              フィードバックした投稿
             </MenuItem>
-            <MenuItem>
-              <Link href="/User">いいねした投稿</Link>
+            <MenuItem as="a" href="/User">
+              いいねした投稿
             </MenuItem>
             <MenuDivider />
-            <MenuItem>
-              <Link href="/User/Edit">設定</Link>
+            <MenuItem as="a" href="/User/Edit">
+              設定
             </MenuItem>
             <MenuItem
               variant="unstyled"
               fontWeight="medium"
-              _hover={{ textDecorationLine: "underline" }}
               onClick={handleLogout}
             >
               ログアウト
