@@ -46,7 +46,7 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
   const googleLogin = async (history: H.History) => {
     try {
       await signInWithPopup(auth, provider);
-      history.push("/");
+      // history.push("/");
     } catch (error) {
       alert(error);
     }
@@ -59,7 +59,7 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
   const logout = async (history: H.History) => {
     try {
       await signOut(auth);
-      history.push("/");
+      // history.push("/");
     } catch (error) {
       alert(error);
     }

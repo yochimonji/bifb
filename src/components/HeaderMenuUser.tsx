@@ -28,42 +28,63 @@ const HeaderMenuUser = (): JSX.Element => {
 
   return (
     <Menu placement="bottom-start">
-      <MenuButton colorScheme="none" p="1">
-        <Avatar
-          w="10"
-          h="10"
-          src={currentUser?.photoURL as string | undefined}
-          name={currentUser?.displayName as string | undefined}
-        />
-      </MenuButton>
-      <MenuList>
-        <MenuItem>
-          <Link href="/User">
-            {currentUser?.displayName}
-            <span> さん</span>
-          </Link>
-        </MenuItem>
-        <MenuItem>
-          <Link href="/User">フィードバックした投稿</Link>
-        </MenuItem>
-        <MenuItem>
-          <Link href="/User">いいねした投稿</Link>
-        </MenuItem>
-        <MenuDivider />
-        <MenuItem>
-          <Link href="/User/Edit">設定</Link>
-        </MenuItem>
-        <MenuItem>
-          <Button
-            variant="unstyled"
-            fontWeight="medium"
-            _hover={{ textDecorationLine: "underline" }}
-            onClick={handleLogout}
-          >
-            ログアウト
-          </Button>
-        </MenuItem>
-      </MenuList>
+      {currentUser ? (
+        <>
+          <MenuButton colorScheme="none" p="1">
+            <Avatar
+              w="10"
+              h="10"
+              src={currentUser?.photoURL as string | undefined}
+              name={currentUser?.displayName as string | undefined}
+            />
+          </MenuButton>
+          <MenuList>
+            <MenuItem>
+              <Link href="/User">
+                {currentUser?.displayName}
+                <span> さん</span>
+              </Link>
+            </MenuItem>
+            <MenuItem>
+              <Link href="/User">フィードバックした投稿</Link>
+            </MenuItem>
+            <MenuItem>
+              <Link href="/User">いいねした投稿</Link>
+            </MenuItem>
+            <MenuDivider />
+            <MenuItem>
+              <Link href="/User/Edit">設定</Link>
+            </MenuItem>
+            <MenuItem>
+              <Button
+                variant="unstyled"
+                fontWeight="medium"
+                _hover={{ textDecorationLine: "underline" }}
+                onClick={handleLogout}
+              >
+                ログアウト
+              </Button>
+            </MenuItem>
+          </MenuList>
+        </>
+      ) : (
+        <>
+          <MenuButton colorScheme="none" p="1">
+            <Avatar w="10" h="10" />
+          </MenuButton>
+          <MenuList>
+            <Button
+              rounded="full"
+              variant="unstyled"
+              bg="teal"
+              _hover={{ textDecorationLine: "underline" }}
+              onClick={() => googleLogin(history)}
+            >
+              ログイン
+            </Button>
+          </MenuList>
+        </>
+      )}
     </Menu>
   );
 };
