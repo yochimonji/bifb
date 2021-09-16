@@ -14,13 +14,15 @@ import app from "../base";
 const provider = new GoogleAuthProvider();
 
 type ContextType = {
-  googleLogin?: (history: H.History) => void;
-  logout?: (history: H.History) => void;
+  googleLogin: (history: H.History) => void;
+  logout: (history: H.History) => void;
   currentUser: User | null;
 };
 
 // contextの作成
 export const AuthContext = React.createContext<ContextType>({
+  googleLogin: () => {},
+  logout: () => {},
   currentUser: null,
 });
 

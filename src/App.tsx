@@ -1,17 +1,25 @@
-import * as React from "react";
+import React from "react";
 import { ChakraProvider, theme } from "@chakra-ui/react";
 import { BrowserRouter, Switch, Route, Link } from "react-router-dom";
 
 import { AuthProvider } from "./auth/AuthProvider";
 import PrivateRoute from "./auth/PrivateRoute";
-
-import { Home, Product, Search, Post, User, UserEdit } from "./components";
+import {
+  Home,
+  Product,
+  Search,
+  Post,
+  User,
+  UserEdit,
+  Header,
+} from "./components";
 
 const App = (): JSX.Element => (
   // 認証プロバイダー
   <AuthProvider>
     {/* Chakra UI プロバイダー */}
     <ChakraProvider theme={theme}>
+      <Header />
       {/* ルータープロバイダー */}
       <BrowserRouter>
         <nav>
