@@ -6,3 +6,4 @@ export { default as User } from "./User";
 export { default as UserEdit } from "./UserEdit";
 export { default as Header } from "./Header";
 export { default as HeaderMenu } from "./HeaderMenu";
+export { default as HeaderMenuUser } from "./HeaderMenuUser";

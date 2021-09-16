@@ -1,18 +1,12 @@
 import React, { useContext } from "react";
-import { Button, Icon, HStack, Avatar } from "@chakra-ui/react";
+import { Button, Icon, HStack } from "@chakra-ui/react";
 import { MdSearch, MdNotifications, MdNoteAdd } from "react-icons/md";
-import { useHistory, Link as ReactLink } from "react-router-dom";
-import { FcGoogle } from "react-icons/fc";
 
 import { AuthContext } from "../auth/AuthProvider";
+import { HeaderMenuUser } from ".";
 
 const HeaderMenu = (): JSX.Element => {
-  const { googleLogin, logout, currentUser } = useContext(AuthContext);
-  const history = useHistory();
-
-  const handleGoogleLogin = () => {
-    googleLogin(history);
-  };
+  const { currentUser } = useContext(AuthContext);
 
   return (
     <HStack>
@@ -29,14 +23,7 @@ const HeaderMenu = (): JSX.Element => {
           </Button>
         </>
       )}
-      <Button colorScheme="none" p="1">
-        <Avatar
-          w="10"
-          h="10"
-          src={currentUser?.photoURL as string | undefined}
-          name={currentUser?.displayName as string | undefined}
-        />
-      </Button>
+      <HeaderMenuUser />
     </HStack>
   );
 };
