@@ -5,9 +5,9 @@ import {
   MenuList,
   MenuItem,
   MenuDivider,
-  Button,
   Avatar,
   Link,
+  Icon,
 } from "@chakra-ui/react";
 import { useHistory } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
@@ -70,12 +70,17 @@ const HeaderMenuUser = (): JSX.Element => {
           <MenuButton color="none" p="1">
             <Avatar w="10" h="10" />
           </MenuButton>
-          <MenuList
-            variant="unstyled"
-            _hover={{ textDecorationLine: "underline" }}
-            onClick={() => googleLogin(history)}
-          >
-            ログイン
+          <MenuList p="4">
+            <MenuItem
+              icon={<Icon as={FcGoogle} w="8" h="8" />}
+              rounded="full"
+              shadow="md"
+              variant="unstyled"
+              fontWeight="bold"
+              onClick={() => googleLogin(history)}
+            >
+              Login with Google
+            </MenuItem>
           </MenuList>
         </>
       )}
