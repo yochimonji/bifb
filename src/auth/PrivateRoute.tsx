@@ -6,8 +6,8 @@ import { Home } from "../components";
 
 /**
  * 認証済みを判断し、認証状態の場合そのまま、非認証状態の場合ホームに移動
- * @param props ルーターで移動するパス
- * @returns 移動するパスを含んだRouteコンポーネント
+ * @param props ルーターで移動するcomponent
+ * @returns componentに移動する
  */
 const PrivateRoute: React.VFC<RouteProps> = (props) => {
   const { currentUser } = useContext(AuthContext);

@@ -6,28 +6,30 @@ import {
   MenuItem,
   MenuDivider,
   Avatar,
-  Link,
   Icon,
 } from "@chakra-ui/react";
-import { useHistory } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 
 import { AuthContext } from "../auth/AuthProvider";
 
+/**
+ * ユーザーアイコンの表示とクリックした際の動作を行う関数
+ * @returns ヘッダーのユーザーアイコンのコンポーネント
+ */
 const HeaderMenuUser = (): JSX.Element => {
   const { googleLogin, logout, currentUser } = useContext(AuthContext);
-  const history = useHistory();
 
   const handleGoogleLogin = () => {
-    googleLogin(history);
+    googleLogin();
   };
 
   const handleLogout = () => {
-    logout(history);
+    logout();
   };
 
   return (
     <Menu placement="bottom-start">
+      {/* ログイン時と非ログイン時で表示するメニューを変更する */}
       {currentUser ? (
         <>
           <MenuButton color="none" p="1">
@@ -74,7 +76,7 @@ const HeaderMenuUser = (): JSX.Element => {
               shadow="md"
               variant="unstyled"
               fontWeight="bold"
-              onClick={() => googleLogin(history)}
+              onClick={handleGoogleLogin}
             >
               Login with Google
             </MenuItem>

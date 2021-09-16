@@ -7,15 +7,15 @@ import {
   signInWithPopup,
   signOut,
 } from "firebase/auth";
-import * as H from "history";
+
 import app from "../base";
 
 // Google Providerの作成
 const provider = new GoogleAuthProvider();
 
 type ContextType = {
-  googleLogin: (history: H.History) => void;
-  logout: (history: H.History) => void;
+  googleLogin: () => void;
+  logout: () => void;
   currentUser: User | null;
 };
 
@@ -40,28 +40,24 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
   const auth = getAuth(app);
 
   /**
-   * Googleログイン機能
-   * @param history 閲覧履歴
+   * Googleで認証する関数
    */
-  const googleLogin = async (history: H.History) => {
+  const googleLogin = async () => {
     try {
       await signInWithPopup(auth, provider);
-      // history.push("/");
     } catch (error) {
-      alert(error);
+      // alert(error);
     }
   };
 
   /**
-   * ログアウト機能
-   * @param history 閲覧履歴
+   * ログアウトする関数
    */
-  const logout = async (history: H.History) => {
+  const logout = async () => {
     try {
       await signOut(auth);
-      // history.push("/");
     } catch (error) {
-      alert(error);
+      // alert(error);
     }
   };
 
@@ -75,6 +71,8 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
 
   return (
     // Contextを使用して認証に必要な情報をコンポーネントツリーに流し込む。
+    // 以下のようにAuthContextの情報を読み込む
+    // const { googleLogin, logout, currentUser } = useContext(AuthContext);
     <AuthContext.Provider
       value={{
         googleLogin,
