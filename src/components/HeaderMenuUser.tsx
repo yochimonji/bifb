@@ -30,7 +30,7 @@ const HeaderMenuUser = (): JSX.Element => {
     <Menu placement="bottom-start">
       {currentUser ? (
         <>
-          <MenuButton colorScheme="none" p="1">
+          <MenuButton color="none" p="1">
             <Avatar
               w="10"
               h="10"
@@ -55,33 +55,27 @@ const HeaderMenuUser = (): JSX.Element => {
             <MenuItem>
               <Link href="/User/Edit">設定</Link>
             </MenuItem>
-            <MenuItem>
-              <Button
-                variant="unstyled"
-                fontWeight="medium"
-                _hover={{ textDecorationLine: "underline" }}
-                onClick={handleLogout}
-              >
-                ログアウト
-              </Button>
+            <MenuItem
+              variant="unstyled"
+              fontWeight="medium"
+              _hover={{ textDecorationLine: "underline" }}
+              onClick={handleLogout}
+            >
+              ログアウト
             </MenuItem>
           </MenuList>
         </>
       ) : (
         <>
-          <MenuButton colorScheme="none" p="1">
+          <MenuButton color="none" p="1">
             <Avatar w="10" h="10" />
           </MenuButton>
-          <MenuList>
-            <Button
-              rounded="full"
-              variant="unstyled"
-              bg="teal"
-              _hover={{ textDecorationLine: "underline" }}
-              onClick={() => googleLogin(history)}
-            >
-              ログイン
-            </Button>
+          <MenuList
+            variant="unstyled"
+            _hover={{ textDecorationLine: "underline" }}
+            onClick={() => googleLogin(history)}
+          >
+            ログイン
           </MenuList>
         </>
       )}

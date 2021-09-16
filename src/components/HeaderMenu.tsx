@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Button, Icon, HStack } from "@chakra-ui/react";
+import { Button, Icon, HStack, Link } from "@chakra-ui/react";
 import { MdSearch, MdNotifications, MdNoteAdd } from "react-icons/md";
 
 import { AuthContext } from "../auth/AuthProvider";
@@ -10,9 +10,9 @@ const HeaderMenu = (): JSX.Element => {
 
   return (
     <HStack>
-      <Button as="a" colorScheme="none" href="/search" p="0">
+      <Link href="/search" p="0">
         <Icon as={MdSearch} w="8" h="8" color="gray.100" />
-      </Button>
+      </Link>
       {currentUser && (
         <>
           <Button colorScheme="none" p="0">
