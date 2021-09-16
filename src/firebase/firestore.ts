@@ -1,6 +1,6 @@
-import firebase from "firebase/compat/app";
-import "firebase/compat/firestore";
+import { initializeApp } from "firebase/app";
 import {
+  getFirestore,
   collection,
   doc,
   addDoc,
@@ -13,10 +13,18 @@ import {
   where,
   setDoc,
 } from "firebase/firestore";
-import firebaseConfig from "./config";
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
+const firebaseApp = initializeApp({
+  apiKey: "AIzaSyAoxu_oyxDi9LNVLfjMpZe71Q6Z5ni63Ms",
+  authDomain: "bifb-ee05f.firebaseapp.com",
+  projectId: "bifb-ee05f",
+  storageBucket: "bifb-ee05f.appspot.com",
+  messagingSenderId: "116632251659",
+  appId: "1:116632251659:web:0605ca2da5d4b3aaf8860e",
+  measurementId: "G-VQ8551C133",
+});
+
+const db = getFirestore();
 
 /**
  * product collectionに作品を登録
