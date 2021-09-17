@@ -192,11 +192,26 @@ export const fetchProduct = async (productId: string) => {
 
 /**
  * 作品IDを使って、作品に投稿されたフィードバック情報を返す機能
- * ただし現状、フィードバック情報の一覧的なものの最後のものの情報しか表示されない
- * 各情報を保存する方法について要検討
- *
- * @param productId 作品ID
- * @returns
+ * 
+ * --取得したオブジェクト配列における各データの取得方法--
+
+ * const [tmp, setTmp] = React.useState("");
+ * const dataset: any[] = [];
+ * React.useEffect(() => {
+ *  const tmpData = fetchFeedback("ay4JTy57wVMdRM2ghaCd").then((data) => {
+ *    data.forEach((eachData) => {
+ *      dataset.push(eachData.data());
+ *        setTmp(dataset[0]);
+ *      });
+ *    });
+ * });
+ * 
+ * return (
+ *  {tmp.feedback}
+ * )
+ * 
+ * @param productId 作品のID
+ * @returns オブジェクトの配列
  */
 export const fetchFeedback = async (productId: string) => {
   const q = query(
@@ -204,14 +219,7 @@ export const fetchFeedback = async (productId: string) => {
     where("productId", "==", productId)
   );
   const querySnapshot = await getDocs(q);
-
-  let dataset = {};
-  querySnapshot.forEach((data) => {
-    console.log(data.id, " => ", data.data());
-    dataset = data.data();
-  });
-
-  return dataset;
+  return querySnapshot;
 };
 
 /**
@@ -288,9 +296,9 @@ export const fetchProductsUser = async (
   querySnapshot.forEach((data) => {
     console.log(data.id, " => ", data.data());
     dataset = data.data();
-    console.log(dataset);
   });
 
+  console.log(dataset);
   return dataset;
 };
 
