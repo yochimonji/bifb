@@ -30,11 +30,22 @@ const Post = (): JSX.Element => {
     setAbstract(event.target.value);
   };
 
+  const handleIcon: React.ChangeEventHandler<HTMLInputElement> = (event) => {
+    if (event.target.files == null || event.target.files[0] == null) {
+      setIconUrl("");
+    } else {
+      const imageFile = event.target.files[0];
+      const imageUrl = URL.createObjectURL(imageFile);
+      setIconUrl(imageUrl);
+    }
+  };
+
   return (
     <Stack>
       <HStack spacing="4" pt="8" align="start">
         <Stack>
-          <Image minW="200px" h="200px" border="gray" />
+          <Image w="200px" h="200px" bg="gray.100" src={iconUrl} />
+          <input type="file" accept="image/*" onChange={handleIcon} />
           <Button leftIcon={<BsImage />} variant="ghost">
             変更する
           </Button>
