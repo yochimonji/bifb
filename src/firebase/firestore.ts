@@ -11,6 +11,7 @@ import {
   setDoc,
   DocumentData,
   deleteDoc,
+  updateDoc,
 } from "firebase/firestore";
 
 const db = getFirestore();
@@ -346,4 +347,22 @@ export const fetchTags = async (inputText: string) => {
  */
 export const deleteProduct = async (productId: string) => {
   await deleteDoc(doc(db, "product", productId));
+};
+
+/**
+ * 作品にいいねが押された時にいいねカウントを1追加する
+ * @param productId 作品ID
+ */
+export const countUpLikeProduct = async (productId: string) => {
+  let newSumLike: unknown;
+
+  await getDoc(doc(db, "product", productId)).then((data) => {
+    console.log(data.get("goodSum"));
+    newSumLike = Number(data.get("goodSum")) + 1;
+  });
+  console.log(newSumLike);
+
+  await updateDoc(doc(db, "product", productId), {
+    goodSum: newSumLike,
+  });
 };
