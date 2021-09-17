@@ -10,6 +10,7 @@ import {
   query,
   orderBy,
   where,
+  setDoc,
 } from "firebase/firestore";
 
 const db = getFirestore();
@@ -19,17 +20,18 @@ const db = getFirestore();
  * @param tags タグの一覧
  * @returns True or False
  */
-export const postTags = async (tags: string[]): Promise<boolean> => {
-  const postTag = doc(db, "tags", "tags");
-
-  // eslint-disable-next-line no-restricted-syntax
-  for (const value of tags) {
-    // eslint-disable-next-line no-await-in-loop
-    await updateDoc(postTag, {
-      tag: arrayUnion(value),
+export const postTags = (tags: string[]) => {
+  async function setData(name: string, sum: number) {
+    await setDoc(doc(db, "tags", name), {
+      sum,
     });
+    return true;
   }
 
+  for (let i = 0; i < tags.length; i += 1) {
+    const tagName = tags[i];
+    const tmp = setData(tagName, 1);
+  }
   return true;
 };
 
@@ -112,6 +114,7 @@ export const postFeedbacks = async (
  * @param otherUrl その他のURL
  * @param giveGood いいねをしている作品IDの一覧
  * @param giveFeedback フェードバックをしている作品のIDを一覧
+ * @param userUid ユーザーID
  * @returns
  */
 export const postUserInfo = async (
@@ -122,9 +125,10 @@ export const postUserInfo = async (
   twitterUrl: string,
   otherUrl: string,
   giveGood: string[],
-  giveFeedback: string[]
+  giveFeedback: string[],
+  userUid: string
 ): Promise<boolean> => {
-  const docUserInfo = await addDoc(collection(db, "userInfo"), {
+  const docUserInfo = await setDoc(doc(db, "userInfo", userUid), {
     name,
     userIcon,
     comment,
@@ -134,9 +138,7 @@ export const postUserInfo = async (
     giveGood,
     giveFeedback,
   });
-  if (!docUserInfo.id) {
-    return false;
-  }
+
   return true;
 };
 
@@ -218,29 +220,29 @@ export const fetchFeedback = async (productId: string) => {
  * ただし現状、リスト的な表示はできず、最後のものしか表示されない 要改善
  * トレンドをどう表現するかについても要検討
  *
- * @param conditions トレンド｜新着｜いいね数大｜いいね数小
- * @param sortType  昇順｜降順
+ * @param conditions Trend｜New｜GoodBig｜GoodSmall
+ * @param sortType  Asce｜Desc
  * @returns
  */
 export const fetchProducts = async (conditions: string, sortType: string) => {
   let q;
-  if (conditions === "トレンド") {
-    if (sortType === "降順") {
+  if (conditions === "Trend") {
+    if (sortType === "Desc") {
       q = query(collection(db, "product"), orderBy("goodSum", "desc"));
     }
     q = query(collection(db, "product"), orderBy("goodSum"));
-  } else if (conditions === "新着") {
-    if (sortType === "降順") {
+  } else if (conditions === "New") {
+    if (sortType === "Desc") {
       q = query(collection(db, "product"), orderBy("postDate", "desc"));
     }
     q = query(collection(db, "product"), orderBy("postDate"));
-  } else if (conditions === "いいね数大") {
-    if (sortType === "降順") {
+  } else if (conditions === "GoodBig") {
+    if (sortType === "Desc") {
       q = query(collection(db, "product"), orderBy("postDate", "desc"));
     }
     q = query(collection(db, "product"), orderBy("goodSum"));
-  } else if (conditions === "いいね数小") {
-    if (sortType === "降順") {
+  } else if (conditions === "GoodSamll") {
+    if (sortType === "Decs") {
       q = query(collection(db, "product"), orderBy("postDate"));
     }
     q = query(collection(db, "product"), orderBy("goodSum", "desc"));
