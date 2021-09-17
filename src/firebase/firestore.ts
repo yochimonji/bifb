@@ -350,7 +350,7 @@ export const deleteProduct = async (productId: string) => {
 };
 
 /**
- * 作品にいいねが押された時にいいねカウントを1追加する
+ * 作品にいいねが押された時にいいねカウントを変化させる
  * @param productId 作品ID
  * @param conditions UP|DOWN
  */
@@ -371,6 +371,32 @@ export const countLikeProduct = async (
   }
 
   await updateDoc(doc(db, "product", productId), {
+    goodSum: newSumLike,
+  });
+};
+
+/**
+ * フィードバックにいいねが押された時にいいねカウントを変化させる
+ * @param productId フィードバックID
+ * @param conditions UP|DOWN
+ */
+export const countLikeFeedback = async (
+  feedbackId: string,
+  conditions: string
+) => {
+  let newSumLike: unknown;
+
+  if (conditions === "UP") {
+    await getDoc(doc(db, "feedback", feedbackId)).then((data) => {
+      newSumLike = Number(data.get("goodSum")) + 1;
+    });
+  } else if (conditions === "DOWN") {
+    await getDoc(doc(db, "feedback", feedbackId)).then((data) => {
+      newSumLike = Number(data.get("goodSum")) - 1;
+    });
+  }
+
+  await updateDoc(doc(db, "feedback", feedbackId), {
     goodSum: newSumLike,
   });
 };
