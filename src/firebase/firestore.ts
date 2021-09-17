@@ -20,7 +20,7 @@ const db = getFirestore();
  * タグの配列に対して、配列内にあるtag collectionに存在していないタグをtag collectionに追加
  * @param tags タグの一覧
  */
-export const postTags = (tags: string[]) => {
+export const postTags = (tags: string[], conditions: string) => {
   async function setData(name: string, sum: number) {
     await setDoc(doc(db, "tags", name), {
       sum,
@@ -32,11 +32,14 @@ export const postTags = (tags: string[]) => {
     if (tagData.exists()) {
       console.log(tagData.id, tagData.get("sum"));
       const tagname = tagData.id;
-      const sum = Number(tagData.get("sum")) + 1;
-      console.log(typeof sum);
+      let sum: number;
+      if (conditions === "EXIST") {
+        sum = Number(tagData.get("sum"));
+      } else if (conditions === "NEW") {
+        sum = Number(tagData.get("sum")) + 1;
+      }
       const tmp = setData(tagname, sum);
     } else {
-      console.log(tagData.id, "Such tagas are not exist");
       const tagname = tagData.id;
       const tmp = setData(tagname, 1);
     }
@@ -70,7 +73,7 @@ export const postProduct = async (
   userUid: string
 ) => {
   // 現時点で存在しないタグをタグコレクションに追加
-  const tmp = postTags(tags);
+  const tmp = postTags(tags, "NEW");
   // 作品情報の取得
   const newProduct = await addDoc(collection(db, "product"), {
     productTitle,
@@ -330,14 +333,6 @@ export const fetchTags = async (inputText: string) => {
 };
 
 /**
- * 作品を削除する
- * @param productId 作品ID
- */
-export const deleteProduct = async (productId: string) => {
-  await deleteDoc(doc(db, "product", productId));
-};
-
-/**
  * 作品にいいねが押された時にいいねカウントを変化させる
  * @param productId 作品ID
  * @param conditions UP|DOWN
@@ -391,4 +386,47 @@ export const countLikeFeedback = async (
     sumLike: newSumLike,
   });
   return newSumLike;
+};
+
+/**
+ * 作品を削除する
+ * @param productId 作品ID
+ */
+export const deleteProduct = async (productId: string) => {
+  await deleteDoc(doc(db, "product", productId));
+};
+
+export const editProduct = async (
+  productId: string,
+  productTitle: string,
+  productAbstract: string,
+  productIconUrl: string,
+  githubUrl: string,
+  productUrl: string,
+  tags: string[],
+  mainText: string,
+  userUid: string
+) => {
+  // 現時点で存在しないタグをタグコレクションに追加
+  const tmp = postTags(tags, "EXIST");
+  // 作品のpostDateの取得
+  let time: unknown;
+  const tmp2 = await getDoc(doc(db, "product", productId)).then((data) => {
+    time = data.get("postDate");
+  });
+  // 作品情報の取得
+  const existProduct = await setDoc(doc(db, "product", productId), {
+    productTitle,
+    productAbstract,
+    productIconUrl,
+    githubUrl,
+    productUrl,
+    tags,
+    mainText,
+    postDate: time,
+    editDate: new Date().toLocaleString(),
+    sumLike: 0,
+    userUid,
+  });
+  return productId;
 };
