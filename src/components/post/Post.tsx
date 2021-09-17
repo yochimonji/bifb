@@ -22,16 +22,28 @@ const Post = (): JSX.Element => {
 
   const iconInputRef = useRef<HTMLInputElement>(null);
 
+  /**
+   * タイトルの変更に合わせてタイトルのstateを変更
+   * @param event 入力が変更されたイベント
+   */
   const handleTitle: React.ChangeEventHandler<HTMLInputElement> = (event) => {
     setTitle(event.target.value);
   };
 
+  /**
+   * 概要の変更に合わせて概要のstateを変更
+   * @param event 入力が変更されたイベント
+   */
   const handleAbstract: React.ChangeEventHandler<HTMLInputElement> = (
     event
   ) => {
     setAbstract(event.target.value);
   };
 
+  /**
+   * アップロードされた画像ファイルのプレビューを表示する関数
+   * @param event fileをアップロードするイベント
+   */
   const handleIcon: React.ChangeEventHandler<HTMLInputElement> = (event) => {
     if (event.target.files == null || event.target.files[0] == null) {
       setIconUrl("");
@@ -42,6 +54,9 @@ const Post = (): JSX.Element => {
     }
   };
 
+  /**
+   * 画像変更ボタンクリックでRefのhidden属性の画像用inputタグをクリックする関数
+   */
   const onClickIconButton: React.MouseEventHandler<HTMLButtonElement> = () => {
     if (iconInputRef.current != null) {
       iconInputRef.current.click();
@@ -52,7 +67,11 @@ const Post = (): JSX.Element => {
     <Stack>
       <HStack spacing="4" pt="8" align="start">
         <Stack>
+          {/* minWにしないと横が潰れる */}
+          {/* 画像はstateの変数から読み込む */}
           <Image minW="200px" h="200px" bg="gray.100" src={iconUrl} />
+          {/* 画像アップロード用のhidden属性を付与したinput */}
+          {/* 下のButtonをクリックするとinputもクリックされる */}
           <input
             hidden
             ref={iconInputRef}
@@ -60,6 +79,7 @@ const Post = (): JSX.Element => {
             accept="image/*"
             onChange={handleIcon}
           />
+          {/* 上のinputの代わりの画像変更用ボタン */}
           <Button
             leftIcon={<BsImage />}
             variant="ghost"
