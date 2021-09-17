@@ -352,15 +352,23 @@ export const deleteProduct = async (productId: string) => {
 /**
  * 作品にいいねが押された時にいいねカウントを1追加する
  * @param productId 作品ID
+ * @param conditions UP|DOWN
  */
-export const countUpLikeProduct = async (productId: string) => {
+export const countLikeProduct = async (
+  productId: string,
+  conditions: string
+) => {
   let newSumLike: unknown;
 
-  await getDoc(doc(db, "product", productId)).then((data) => {
-    console.log(data.get("goodSum"));
-    newSumLike = Number(data.get("goodSum")) + 1;
-  });
-  console.log(newSumLike);
+  if (conditions === "UP") {
+    await getDoc(doc(db, "product", productId)).then((data) => {
+      newSumLike = Number(data.get("goodSum")) + 1;
+    });
+  } else if (conditions === "DOWN") {
+    await getDoc(doc(db, "product", productId)).then((data) => {
+      newSumLike = Number(data.get("goodSum")) - 1;
+    });
+  }
 
   await updateDoc(doc(db, "product", productId), {
     goodSum: newSumLike,
