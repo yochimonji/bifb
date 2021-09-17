@@ -86,7 +86,7 @@ export const postProduct = async (
     mainText,
     postDate: new Date().toLocaleString(),
     editDate: new Date().toLocaleString(),
-    goodSum: 0,
+    sumLike: 0,
     userUid,
   });
   if (!docProduct.id) {
@@ -112,7 +112,7 @@ export const postFeedbacks = async (
     feedbackText,
     productId,
     postDate: new Date().toLocaleString(),
-    goodSum: 0,
+    sumLike: 0,
   });
   if (!docFeedback.id) {
     return false;
@@ -128,7 +128,7 @@ export const postFeedbacks = async (
  * @param githubUrl GithubURL
  * @param twitterUrl TwitterURL
  * @param otherUrl その他のURL
- * @param giveGood いいねをしている作品IDの一覧
+ * @param giveLike いいねをしている作品IDの一覧
  * @param giveFeedback フェードバックをしている作品のIDを一覧
  * @param userUid ユーザーID
  * @returns
@@ -140,7 +140,7 @@ export const postUserInfo = async (
   githubUrl: string,
   twitterUrl: string,
   otherUrl: string,
-  giveGood: string[],
+  giveLike: string[],
   giveFeedback: string[],
   userUid: string
 ): Promise<boolean> => {
@@ -151,7 +151,7 @@ export const postUserInfo = async (
     githubUrl,
     twitterUrl,
     otherUrl,
-    giveGood,
+    giveLike,
     giveFeedback,
   });
 
@@ -244,9 +244,9 @@ export const fetchProducts = async (conditions: string, sortType: string) => {
   let q;
   if (conditions === "Trend") {
     if (sortType === "Desc") {
-      q = query(collection(db, "product"), orderBy("goodSum", "desc"));
+      q = query(collection(db, "product"), orderBy("sumLike", "desc"));
     }
-    q = query(collection(db, "product"), orderBy("goodSum"));
+    q = query(collection(db, "product"), orderBy("sumLike"));
   } else if (conditions === "New") {
     if (sortType === "Desc") {
       q = query(collection(db, "product"), orderBy("postDate", "desc"));
@@ -256,12 +256,12 @@ export const fetchProducts = async (conditions: string, sortType: string) => {
     if (sortType === "Desc") {
       q = query(collection(db, "product"), orderBy("postDate", "desc"));
     }
-    q = query(collection(db, "product"), orderBy("goodSum"));
+    q = query(collection(db, "product"), orderBy("sumLike"));
   } else if (conditions === "LikeSmall") {
     if (sortType === "Decs") {
       q = query(collection(db, "product"), orderBy("postDate"));
     }
-    q = query(collection(db, "product"), orderBy("goodSum", "desc"));
+    q = query(collection(db, "product"), orderBy("sumLike", "desc"));
   }
 
   const querySnapshot = await getDocs(q);
@@ -306,7 +306,7 @@ export const fetchProductsUser = async (
   }
   if (searchType === "LIKE") {
     const giveLikeId = await getDoc(doc(db, "userInfo", userUid));
-    const givedLikeProductId: unknown = giveLikeId.get("giveGood");
+    const givedLikeProductId: unknown = giveLikeId.get("giveLike");
 
     for (let i = 0; i < givedLikeProductId.length; i += 1) {
       const tmp = fetchProduct(givedLikeProductId[i]).then((data) => {
@@ -362,16 +362,16 @@ export const countLikeProduct = async (
 
   if (conditions === "UP") {
     await getDoc(doc(db, "product", productId)).then((data) => {
-      newSumLike = Number(data.get("goodSum")) + 1;
+      newSumLike = Number(data.get("sumLike")) + 1;
     });
   } else if (conditions === "DOWN") {
     await getDoc(doc(db, "product", productId)).then((data) => {
-      newSumLike = Number(data.get("goodSum")) - 1;
+      newSumLike = Number(data.get("sumLike")) - 1;
     });
   }
 
   await updateDoc(doc(db, "product", productId), {
-    goodSum: newSumLike,
+    sumLike: newSumLike,
   });
 };
 
@@ -388,15 +388,15 @@ export const countLikeFeedback = async (
 
   if (conditions === "UP") {
     await getDoc(doc(db, "feedback", feedbackId)).then((data) => {
-      newSumLike = Number(data.get("goodSum")) + 1;
+      newSumLike = Number(data.get("sumLike")) + 1;
     });
   } else if (conditions === "DOWN") {
     await getDoc(doc(db, "feedback", feedbackId)).then((data) => {
-      newSumLike = Number(data.get("goodSum")) - 1;
+      newSumLike = Number(data.get("sumLike")) - 1;
     });
   }
 
   await updateDoc(doc(db, "feedback", feedbackId), {
-    goodSum: newSumLike,
+    sumLike: newSumLike,
   });
 };
