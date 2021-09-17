@@ -15,6 +15,25 @@ import {
 const db = getFirestore();
 
 /**
+ * タグの配列に対して、配列内にあるtag collectionに存在していないタグをtag collectionにタグを追加
+ * @param tags タグの一覧
+ * @returns True or False
+ */
+export const postTags = async (tags: string[]): Promise<boolean> => {
+  const postTag = doc(db, "tags", "tags");
+
+  // eslint-disable-next-line no-restricted-syntax
+  for (const value of tags) {
+    // eslint-disable-next-line no-await-in-loop
+    await updateDoc(postTag, {
+      tag: arrayUnion(value),
+    });
+  }
+
+  return true;
+};
+
+/**
  * product collectionに作品を登録
  * @param productTitle 作品タイトル
  * @param productAbstract 作品概要
@@ -36,6 +55,9 @@ export const postProduct = async (
   mainText: string,
   userUid: string
 ): Promise<boolean> => {
+  // 現時点で存在しないタグをタグコレクションに追加
+  const tmp = postTags(tags);
+  // 作品情報の取得
   const docProduct = await addDoc(collection(db, "product"), {
     productTitle,
     productAbstract,
@@ -52,25 +74,6 @@ export const postProduct = async (
   if (!docProduct.id) {
     return false;
   }
-  return true;
-};
-
-/**
- * タグの配列に対して、配列内にあるtag collectionに存在していないタグをtag collectionにタグを追加
- * @param tags タグの一覧
- * @returns True or False
- */
-export const postTags = async (tags: string[]): Promise<boolean> => {
-  const postTag = doc(db, "tags", "tags");
-
-  // eslint-disable-next-line no-restricted-syntax
-  for (const value of tags) {
-    // eslint-disable-next-line no-await-in-loop
-    await updateDoc(postTag, {
-      tag: arrayUnion(value),
-    });
-  }
-
   return true;
 };
 
