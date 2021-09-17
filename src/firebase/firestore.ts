@@ -396,6 +396,19 @@ export const deleteProduct = async (productId: string) => {
   await deleteDoc(doc(db, "product", productId));
 };
 
+/**
+ * 作品の編集を行った際の作品情報の更新
+ * @param productId 作品ID
+ * @param productTitle 作品のタイトル
+ * @param productAbstract 作品の概要
+ * @param productIconUrl 作品のアイコンのURL
+ * @param githubUrl GithubのURL
+ * @param productUrl 作品のURL
+ * @param tags タグ一覧
+ * @param mainText 本文
+ * @param userUid ユーザーID
+ * @returns 作品ID
+ */
 export const editProduct = async (
   productId: string,
   productTitle: string,
