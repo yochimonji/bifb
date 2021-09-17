@@ -1,4 +1,4 @@
-import React, { ReactEventHandler, useState } from "react";
+import React, { ReactEventHandler, useState, useRef } from "react";
 import {
   Input,
   Textarea,
@@ -20,6 +20,8 @@ const Post = (): JSX.Element => {
   const [tags, setTags] = useState("");
   const [mainText, setMainText] = useState("");
 
+  const iconInputRef = useRef<HTMLInputElement>(null);
+
   const handleTitle: React.ChangeEventHandler<HTMLInputElement> = (event) => {
     setTitle(event.target.value);
   };
@@ -40,13 +42,29 @@ const Post = (): JSX.Element => {
     }
   };
 
+  const onClickIconButton: React.MouseEventHandler<HTMLButtonElement> = () => {
+    if (iconInputRef.current != null) {
+      iconInputRef.current.click();
+    }
+  };
+
   return (
     <Stack>
       <HStack spacing="4" pt="8" align="start">
         <Stack>
-          <Image w="200px" h="200px" bg="gray.100" src={iconUrl} />
-          <input type="file" accept="image/*" onChange={handleIcon} />
-          <Button leftIcon={<BsImage />} variant="ghost">
+          <Image minW="200px" h="200px" bg="gray.100" src={iconUrl} />
+          <input
+            hidden
+            ref={iconInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleIcon}
+          />
+          <Button
+            leftIcon={<BsImage />}
+            variant="ghost"
+            onClick={onClickIconButton}
+          >
             変更する
           </Button>
         </Stack>
