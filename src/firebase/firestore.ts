@@ -5,8 +5,6 @@ import {
   addDoc,
   getDoc,
   getDocs,
-  updateDoc,
-  arrayUnion,
   query,
   orderBy,
   where,
@@ -320,8 +318,23 @@ export const fetchProductsUser = async (
 };
 
 /**
- * 検索画面で文字が入力されるにつれてタグが絞り込まれる機能
- * @param inputText 画面に入力された文字
- * @returns 画面に入力された文字を含むタグ
+ * 入力された文字を含むタグ名の一覧を取得する
+ * @param inputText 入力された文字列
+ * @returns 入力された文字列を含むタグ名の配列
  */
-export const fetchTags = async (inputText: string) => {};
+export const fetchTags = async (inputText: string) => {
+  const returnTagList: unknown[] = [];
+  const q = query(collection(db, "tags"));
+  const tmp = await getDocs(q).then((tagList) => {
+    tagList.forEach((tag) => {
+      const tagId = tag.id;
+      const searchText = new RegExp(inputText, "i");
+      const test = tagId.search(searchText);
+      if (test !== -1) {
+        returnTagList.push(tag.id);
+      }
+    });
+  });
+
+  return returnTagList;
+};
