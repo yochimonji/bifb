@@ -256,15 +256,7 @@ export const fetchProducts = async (conditions: string, sortType: string) => {
   }
 
   const querySnapshot = await getDocs(q);
-
-  let dataset = {};
-  querySnapshot.forEach((data) => {
-    console.log(data.id, " => ", data.data());
-    dataset = data.data();
-    console.log(dataset);
-  });
-
-  return dataset;
+  return querySnapshot;
 };
 
 /**
@@ -291,15 +283,7 @@ export const fetchProductsUser = async (
   }
 
   const querySnapshot = await getDocs(q);
-
-  let dataset = {};
-  querySnapshot.forEach((data) => {
-    console.log(data.id, " => ", data.data());
-    dataset = data.data();
-  });
-
-  console.log(dataset);
-  return dataset;
+  return querySnapshot;
 };
 
 /**
