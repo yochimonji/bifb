@@ -270,12 +270,12 @@ export const fetchProducts = async (conditions: string, sortType: string) => {
 
 /**
  * user画面において、投稿済み｜フィードバック｜いいね｜から選択された作品の表示
- * 動作未確認
- * 「いいね」が選択された場合の挙動について要検討
  *
  * @param userUid ユーザーID
- * @param searchType 投稿済み｜フィードバック｜いいね
- * @returns
+ * @param searchType POST|FEEDBACK|LIKE
+ * @returns POSTの場合   ：作品一覧のquerySnapShot データの取得方法はfetcuFeedbackを参照
+ * @returns FEEDBAKの場合：作品一覧の配列
+ * @returns LIKEの場合   ：作品一覧の配列
  */
 export const fetchProductsUser = async (
   userUid: string,
@@ -324,13 +324,4 @@ export const fetchProductsUser = async (
  * @param inputText 画面に入力された文字
  * @returns 画面に入力された文字を含むタグ
  */
-export const fetchTags = async (inputText: string) => {
-  const tagsList = doc(db, "tags", "tags");
-  const loadProductInfo = await getDoc(tagsList);
-
-  const obj = loadProductInfo.data();
-
-  // for (const key in obj) {
-  //   console.log(obj(key));
-  // }
-};
+export const fetchTags = async (inputText: string) => {};
