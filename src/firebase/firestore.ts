@@ -57,6 +57,7 @@ export const postTags = (tags: string[]) => {
  * @param tags タグ
  * @param mainText 作品説明、本文
  * @param userUid ユーザーID
+ * @returns 新規に作成した作品ID
  */
 export const postProduct = async (
   productTitle: string,
@@ -71,7 +72,7 @@ export const postProduct = async (
   // 現時点で存在しないタグをタグコレクションに追加
   const tmp = postTags(tags);
   // 作品情報の取得
-  const docProduct = await addDoc(collection(db, "product"), {
+  const newProduct = await addDoc(collection(db, "product"), {
     productTitle,
     productAbstract,
     productIconUrl,
@@ -84,6 +85,7 @@ export const postProduct = async (
     sumLike: 0,
     userUid,
   });
+  return newProduct.id;
 };
 
 /**
