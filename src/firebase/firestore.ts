@@ -291,26 +291,29 @@ export const fetchProductsUser = async (
     return querySnapshot;
   }
   if (searchType === "FEEDBACK") {
-    console.log("log1");
     q = query(collection(db, "feedback"), where("userUid", "==", userUid));
     const querySnapshotTmp = await getDocs(q).then((feedbackDoc) => {
       feedbackDoc.forEach((feedbackEachData) => {
-        console.log(feedbackEachData.get("productId"));
         eachProductIdFeedback.push(feedbackEachData.get("productId"));
       });
     });
-    console.log("log2");
     for (let i = 0; i < eachProductIdFeedback.length; i += 1) {
-      console.log(eachProductIdFeedback[i]);
       const tmp = fetchProduct(eachProductIdFeedback[i]).then((data) => {
         returnProductInfo.push(data);
       });
     }
-    console.log(returnProductInfo);
     return returnProductInfo;
   }
   if (searchType === "LIKE") {
-    // サーチの方法について要検討
+    const giveLikeId = await getDoc(doc(db, "userInfo", userUid));
+    const givedLikeProductId: unknown = giveLikeId.get("giveGood");
+
+    for (let i = 0; i < givedLikeProductId.length; i += 1) {
+      const tmp = fetchProduct(givedLikeProductId[i]).then((data) => {
+        returnProductInfo.push(data);
+      });
+      return returnProductInfo;
+    }
   }
 
   return true;
