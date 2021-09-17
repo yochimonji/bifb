@@ -10,6 +10,7 @@ import {
   where,
   setDoc,
   DocumentData,
+  deleteDoc,
 } from "firebase/firestore";
 
 const db = getFirestore();
@@ -337,4 +338,12 @@ export const fetchTags = async (inputText: string) => {
   });
 
   return returnTagList;
+};
+
+/**
+ * 作品を削除する
+ * @param productId 作品ID
+ */
+export const deleteProduct = async (productId: string) => {
+  await deleteDoc(doc(db, "product", productId));
 };
