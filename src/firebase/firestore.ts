@@ -11,6 +11,7 @@ import {
   orderBy,
   where,
   setDoc,
+  DocumentData,
 } from "firebase/firestore";
 
 const db = getFirestore();
@@ -235,7 +236,7 @@ export const fetchFeedback = async (productId: string) => {
  * ただし現状、リスト的な表示はできず、最後のものしか表示されない 要改善
  * トレンドをどう表現するかについても要検討
  *
- * @param conditions Trend｜New｜GoodBig｜GoodSmall
+ * @param conditions Trend｜New｜LikeLarge｜LikeSmall
  * @param sortType  Asce｜Desc
  * @returns
  */
@@ -251,12 +252,12 @@ export const fetchProducts = async (conditions: string, sortType: string) => {
       q = query(collection(db, "product"), orderBy("postDate", "desc"));
     }
     q = query(collection(db, "product"), orderBy("postDate"));
-  } else if (conditions === "GoodBig") {
+  } else if (conditions === "LikeLarge") {
     if (sortType === "Desc") {
       q = query(collection(db, "product"), orderBy("postDate", "desc"));
     }
     q = query(collection(db, "product"), orderBy("goodSum"));
-  } else if (conditions === "GoodSamll") {
+  } else if (conditions === "LikeSmall") {
     if (sortType === "Decs") {
       q = query(collection(db, "product"), orderBy("postDate"));
     }
@@ -281,17 +282,38 @@ export const fetchProductsUser = async (
   searchType: string
 ) => {
   let q;
-  if (searchType === "投稿済み") {
+  let querySnapshot;
+  const eachProductIdFeedback: any[] = [];
+  const returnProductInfo: (DocumentData | undefined)[] = [];
+  if (searchType === "POSTED") {
     q = query(collection(db, "product"), where("userUid", "==", userUid));
-  } else if (searchType === "フィードバック") {
+    querySnapshot = await getDocs(q);
+    return querySnapshot;
+  }
+  if (searchType === "FEEDBACK") {
+    console.log("log1");
     q = query(collection(db, "feedback"), where("userUid", "==", userUid));
-  } else if (searchType === "いいね") {
+    const querySnapshotTmp = await getDocs(q).then((feedbackDoc) => {
+      feedbackDoc.forEach((feedbackEachData) => {
+        console.log(feedbackEachData.get("productId"));
+        eachProductIdFeedback.push(feedbackEachData.get("productId"));
+      });
+    });
+    console.log("log2");
+    for (let i = 0; i < eachProductIdFeedback.length; i += 1) {
+      console.log(eachProductIdFeedback[i]);
+      const tmp = fetchProduct(eachProductIdFeedback[i]).then((data) => {
+        returnProductInfo.push(data);
+      });
+    }
+    console.log(returnProductInfo);
+    return returnProductInfo;
+  }
+  if (searchType === "LIKE") {
     // サーチの方法について要検討
-    return 0;
   }
 
-  const querySnapshot = await getDocs(q);
-  return querySnapshot;
+  return true;
 };
 
 /**
