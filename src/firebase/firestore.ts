@@ -16,7 +16,7 @@ import {
 const db = getFirestore();
 
 /**
- * タグの配列に対して、配列内にあるtag collectionに存在していないタグをtag collectionにタグを追加
+ * タグの配列に対して、配列内にあるtag collectionに存在していないタグをtag collectionに追加
  * @param tags タグの一覧
  * @returns True or False
  */
@@ -28,9 +28,24 @@ export const postTags = (tags: string[]) => {
     return true;
   }
 
+  async function getData(name: string) {
+    const tagData = await getDoc(doc(db, "tags", name));
+    if (tagData.exists()) {
+      console.log(tagData.id, tagData.get("sum"));
+      const tagname = tagData.id;
+      const sum = Number(tagData.get("sum")) + 1;
+      console.log(typeof sum);
+      const tmp = setData(tagname, sum);
+    } else {
+      console.log(tagData.id, "Such tagas are not exist");
+      const tagname = tagData.id;
+      const tmp = setData(tagname, 1);
+    }
+    return true;
+  }
+
   for (let i = 0; i < tags.length; i += 1) {
-    const tagName = tags[i];
-    const tmp = setData(tagName, 1);
+    const tmp = getData(tags[i]);
   }
   return true;
 };
