@@ -19,14 +19,12 @@ const db = getFirestore();
 /**
  * タグの配列に対して、配列内にあるtag collectionに存在していないタグをtag collectionに追加
  * @param tags タグの一覧
- * @returns True or False
  */
 export const postTags = (tags: string[]) => {
   async function setData(name: string, sum: number) {
     await setDoc(doc(db, "tags", name), {
       sum,
     });
-    return true;
   }
 
   async function getData(name: string) {
@@ -42,13 +40,11 @@ export const postTags = (tags: string[]) => {
       const tagname = tagData.id;
       const tmp = setData(tagname, 1);
     }
-    return true;
   }
 
   for (let i = 0; i < tags.length; i += 1) {
     const tmp = getData(tags[i]);
   }
-  return true;
 };
 
 /**
@@ -61,7 +57,6 @@ export const postTags = (tags: string[]) => {
  * @param tags タグ
  * @param mainText 作品説明、本文
  * @param userUid ユーザーID
- * @returns True or False
  */
 export const postProduct = async (
   productTitle: string,
@@ -72,7 +67,7 @@ export const postProduct = async (
   tags: string[],
   mainText: string,
   userUid: string
-): Promise<boolean> => {
+) => {
   // 現時点で存在しないタグをタグコレクションに追加
   const tmp = postTags(tags);
   // 作品情報の取得
@@ -89,10 +84,6 @@ export const postProduct = async (
     sumLike: 0,
     userUid,
   });
-  if (!docProduct.id) {
-    return false;
-  }
-  return true;
 };
 
 /**
@@ -100,13 +91,12 @@ export const postProduct = async (
  * @param userUid ユーザーIDを
  * @param feedbackText フィードバックの本文
  * @param productId フィードバックが投稿された作品のID
- * @returns
  */
 export const postFeedbacks = async (
   userUid: string,
   feedbackText: string,
   productId: string
-): Promise<boolean> => {
+) => {
   const docFeedback = await addDoc(collection(db, "feedback"), {
     userUid,
     feedbackText,
@@ -114,10 +104,6 @@ export const postFeedbacks = async (
     postDate: new Date().toLocaleString(),
     sumLike: 0,
   });
-  if (!docFeedback.id) {
-    return false;
-  }
-  return true;
 };
 
 /**
@@ -143,7 +129,7 @@ export const postUserInfo = async (
   giveLike: string[],
   giveFeedback: string[],
   userUid: string
-): Promise<boolean> => {
+) => {
   const docUserInfo = await setDoc(doc(db, "userInfo", userUid), {
     name,
     userIcon,
@@ -154,8 +140,6 @@ export const postUserInfo = async (
     giveLike,
     giveFeedback,
   });
-
-  return true;
 };
 
 /**
