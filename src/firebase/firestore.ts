@@ -93,19 +93,21 @@ export const postProduct = async (
  * @param userUid ユーザーIDを
  * @param feedbackText フィードバックの本文
  * @param productId フィードバックが投稿された作品のID
+ * @returns 新規に作成したフィードバックのID
  */
 export const postFeedbacks = async (
   userUid: string,
   feedbackText: string,
   productId: string
 ) => {
-  const docFeedback = await addDoc(collection(db, "feedback"), {
+  const newFeedback = await addDoc(collection(db, "feedback"), {
     userUid,
     feedbackText,
     productId,
     postDate: new Date().toLocaleString(),
     sumLike: 0,
   });
+  return newFeedback.id;
 };
 
 /**
@@ -339,6 +341,7 @@ export const deleteProduct = async (productId: string) => {
  * 作品にいいねが押された時にいいねカウントを変化させる
  * @param productId 作品ID
  * @param conditions UP|DOWN
+ * @returns 最新のいいね数
  */
 export const countLikeProduct = async (
   productId: string,
@@ -359,12 +362,14 @@ export const countLikeProduct = async (
   await updateDoc(doc(db, "product", productId), {
     sumLike: newSumLike,
   });
+  return newSumLike;
 };
 
 /**
  * フィードバックにいいねが押された時にいいねカウントを変化させる
  * @param productId フィードバックID
  * @param conditions UP|DOWN
+ * @returns 最新のいいね数
  */
 export const countLikeFeedback = async (
   feedbackId: string,
@@ -385,4 +390,5 @@ export const countLikeFeedback = async (
   await updateDoc(doc(db, "feedback", feedbackId), {
     sumLike: newSumLike,
   });
+  return newSumLike;
 };
