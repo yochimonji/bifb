@@ -1,12 +1,9 @@
-import React, { ReactEventHandler, useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 import {
   Input,
-  Textarea,
   HStack,
   Stack,
   Image,
-  Box,
-  Icon,
   Button,
   FormControl,
   FormLabel,
@@ -99,22 +96,10 @@ const Post = (): JSX.Element => {
    * マークダウンの入力の変更に合わせてmainTextを変更
    * @param event マークダウンの入力イベント
    */
-  const handleMainText = () => {
-    setMainText("");
-  };
-
-  const handleDropMarkdown = (
-    instance: CodeMirror.Editor,
-    event: DragEvent
+  const handleMainText: React.ChangeEventHandler<HTMLTextAreaElement> = (
+    event
   ) => {
-    if (event.dataTransfer != null) {
-      const images = event.dataTransfer.files;
-      if (images.length > 0) {
-        const image = images[0];
-        const imageUrl = URL.createObjectURL(image);
-        alert(imageUrl);
-      }
-    }
+    setMainText(event.target.value);
   };
 
   return (
@@ -200,11 +185,7 @@ const Post = (): JSX.Element => {
           />
         </FormControl>
       </HStack>
-      <MarkdownForm
-      // mainText={mainText}
-      // handleMainText={handleMainText}
-      // handleDropMarkdown={handleDropMarkdown}
-      />
+      <MarkdownForm mainText={mainText} handleMainText={handleMainText} />
     </Stack>
   );
 };
