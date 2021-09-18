@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { BsImage } from "react-icons/bs";
 
-import { GithubIcon, ProductIcon } from "..";
+import { GithubIcon, ProductIcon, TagIcon } from "..";
 
 const Post = (): JSX.Element => {
   const [title, setTitle] = useState("");
@@ -87,6 +87,14 @@ const Post = (): JSX.Element => {
     setProductUrl(event.target.value);
   };
 
+  /**
+   * タグ入力欄の変更に合わせてtagsを変更
+   * @param event tagsの入力イベント
+   */
+  const handleTags: React.ChangeEventHandler<HTMLInputElement> = (event) => {
+    setTags(event.target.value);
+  };
+
   return (
     <Stack>
       <HStack spacing="4" pt="8" align="start">
@@ -155,6 +163,18 @@ const Post = (): JSX.Element => {
             placeholder="https://example.com"
             value={productUrl}
             onChange={handleProductUrl}
+          />
+        </FormControl>
+      </HStack>
+      {/* 作品リンク入力欄 */}
+      <HStack spacing="4">
+        <TagIcon minW="200px" />
+        <FormControl id="tags" w="100%">
+          <Input
+            variant="flushed"
+            placeholder="タグをスペースで区切って5つまで入力（例：Webアプリ JavaScript）"
+            value={tags}
+            onChange={handleTags}
           />
         </FormControl>
       </HStack>
