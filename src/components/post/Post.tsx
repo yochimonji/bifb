@@ -12,7 +12,6 @@ import {
   FormLabel,
 } from "@chakra-ui/react";
 import { BsImage } from "react-icons/bs";
-import { SimpleMDEReactProps } from "react-simplemde-editor";
 
 import { GithubIcon, ProductIcon, TagIcon, MarkdownForm } from "..";
 
@@ -100,8 +99,8 @@ const Post = (): JSX.Element => {
    * マークダウンの入力の変更に合わせてmainTextを変更
    * @param event マークダウンの入力イベント
    */
-  const handleMainText: SimpleMDEReactProps["onChange"] = (value) => {
-    setMainText(value);
+  const handleMainText = () => {
+    setMainText("");
   };
 
   const handleDropMarkdown = (
@@ -202,9 +201,9 @@ const Post = (): JSX.Element => {
         </FormControl>
       </HStack>
       <MarkdownForm
-        mainText={mainText}
-        handleMainText={handleMainText}
-        handleDropMarkdown={handleDropMarkdown}
+      // mainText={mainText}
+      // handleMainText={handleMainText}
+      // handleDropMarkdown={handleDropMarkdown}
       />
     </Stack>
   );
