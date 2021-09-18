@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { BsImage } from "react-icons/bs";
 
-import { Github } from "..";
+import { GithubIcon } from "..";
 
 const Post = (): JSX.Element => {
   const [title, setTitle] = useState("");
@@ -120,7 +120,7 @@ const Post = (): JSX.Element => {
       </HStack>
       {/* GitHubリンク入力欄 */}
       <HStack spacing="4">
-        <Github minW="200px" />
+        <GithubIcon minW="200px" />
         <FormControl id="githubUrl" w="100%">
           <Input
             variant="flushed"

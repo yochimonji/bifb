@@ -7,4 +7,4 @@ export { default as UserEdit } from "./UserEdit";
 export { default as Header } from "./Header";
 export { default as HeaderMenu } from "./HeaderMenu";
 export { default as HeaderMenuUser } from "./HeaderMenuUser";
-export { default as Github } from "./common_part/Github";
+export { default as GithubIcon } from "./common_part/GithubIcon";
