@@ -8,6 +8,8 @@ import {
   Box,
   Icon,
   Button,
+  FormControl,
+  FormLabel,
 } from "@chakra-ui/react";
 import { BsImage } from "react-icons/bs";
 
@@ -96,24 +98,26 @@ const Post = (): JSX.Element => {
             変更する
           </Button>
         </Stack>
-        <Stack w="100%" h="200px">
-          <Input
-            w="100%"
-            h="40%"
-            placeholder="作品タイトル"
-            fontSize="xl"
-            variant="flushed"
-            value={title}
-            onChange={handleTitle}
-          />
-          <Input
-            w="100%"
-            h="60%"
-            placeholder="この作品を一言で表すと？"
-            variant="flushed"
-            value={abstract}
-            onChange={handleAbstract}
-          />
+        <Stack w="100%" h="200px" pt="4">
+          <FormControl id="title" isRequired w="100%" h="60%">
+            <FormLabel>作品タイトル</FormLabel>
+            <Input
+              w="100%"
+              fontSize="xl"
+              variant="flushed"
+              value={title}
+              onChange={handleTitle}
+            />
+          </FormControl>
+          <FormControl id="abstract" isRequired w="100%" h="40%">
+            <FormLabel>この作品を一言で表すと？</FormLabel>
+            <Input
+              w="100%"
+              variant="flushed"
+              value={abstract}
+              onChange={handleAbstract}
+            />
+          </FormControl>
         </Stack>
       </HStack>
       {/* GitHubリンク入力欄 */}
@@ -122,6 +126,7 @@ const Post = (): JSX.Element => {
         <Input
           w="100%"
           variant="flushed"
+          type="url"
           value={githubUrl}
           onChange={handleGithubUrl}
         />
