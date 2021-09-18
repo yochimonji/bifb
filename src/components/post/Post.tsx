@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { BsImage } from "react-icons/bs";
 
-import { GithubIcon } from "..";
+import { GithubIcon, ProductIcon } from "..";
 
 const Post = (): JSX.Element => {
   const [title, setTitle] = useState("");
@@ -67,10 +67,24 @@ const Post = (): JSX.Element => {
     }
   };
 
+  /**
+   * GitHub URL の変更に合わせてgithubUrlを変更
+   * @param event GitHubリンクの入力イベント
+   */
   const handleGithubUrl: React.ChangeEventHandler<HTMLInputElement> = (
     event
   ) => {
     setGithubUrl(event.target.value);
+  };
+
+  /**
+   * GitHub URL の変更に合わせてgithubUrlを変更
+   * @param event GitHubリンクの入力イベント
+   */
+  const handleProductUrl: React.ChangeEventHandler<HTMLInputElement> = (
+    event
+  ) => {
+    setProductUrl(event.target.value);
   };
 
   return (
@@ -125,8 +139,22 @@ const Post = (): JSX.Element => {
           <Input
             variant="flushed"
             type="url"
+            placeholder="https://example.com"
             value={githubUrl}
             onChange={handleGithubUrl}
+          />
+        </FormControl>
+      </HStack>
+      {/* 作品リンク入力欄 */}
+      <HStack spacing="4">
+        <ProductIcon minW="200px" />
+        <FormControl id="productUrl" w="100%">
+          <Input
+            variant="flushed"
+            type="url"
+            placeholder="https://example.com"
+            value={productUrl}
+            onChange={handleProductUrl}
           />
         </FormControl>
       </HStack>
