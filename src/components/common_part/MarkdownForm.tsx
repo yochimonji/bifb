@@ -17,10 +17,11 @@ import remarkGfm from "remark-gfm";
 import ChackUIRenderer from "chakra-ui-markdown-renderer";
 import { BsImage } from "react-icons/bs";
 import { AiFillGithub } from "react-icons/ai";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { dark } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 type MarkdownFormProps = {
-  needImportGithub: boolean;
-  postText: string;
+  pageType: "post" | "product";
   mainText: string;
   handleMainText: React.ChangeEventHandler<HTMLTextAreaElement>;
 };
@@ -43,7 +44,7 @@ const MarkdownForm = (props: MarkdownFormProps): JSX.Element => (
             プレビュー
           </Tab>
         </TabList>
-        {props.needImportGithub && (
+        {props.pageType === "post" && (
           <Button variant="outline">
             <Icon as={AiFillGithub} h="10" w="10" pr="2" />
             GitHubから読み込む
@@ -96,7 +97,10 @@ const MarkdownForm = (props: MarkdownFormProps): JSX.Element => (
       >
         追加する
       </Button>
-      <Button variant="outline">{props.postText}</Button>
+      <Button variant="outline">
+        {props.pageType === "post" && "作品を投稿する"}
+        {props.pageType === "product" && "フィードバックを投稿する"}
+      </Button>
     </HStack>
   </Stack>
 );

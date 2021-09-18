@@ -186,8 +186,7 @@ const Post = (): JSX.Element => {
         </FormControl>
       </HStack>
       <MarkdownForm
-        needImportGithub
-        postText="作品を投稿する"
+        pageType="post"
         mainText={mainText}
         handleMainText={handleMainText}
       />
