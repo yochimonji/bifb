@@ -11,6 +11,8 @@ import {
 } from "@chakra-ui/react";
 import { BsImage } from "react-icons/bs";
 
+import { Github } from "..";
+
 const Post = (): JSX.Element => {
   const [title, setTitle] = useState("");
   const [abstract, setAbstract] = useState("");
@@ -63,6 +65,12 @@ const Post = (): JSX.Element => {
     }
   };
 
+  const handleGithubUrl: React.ChangeEventHandler<HTMLInputElement> = (
+    event
+  ) => {
+    setGithubUrl(event.target.value);
+  };
+
   return (
     <Stack>
       <HStack spacing="4" pt="8" align="start">
@@ -107,6 +115,16 @@ const Post = (): JSX.Element => {
             onChange={handleAbstract}
           />
         </Stack>
+      </HStack>
+      {/* GitHubリンク入力欄 */}
+      <HStack>
+        <Github minW="200px" />
+        <Input
+          w="100%"
+          variant="flushed"
+          value={githubUrl}
+          onChange={handleGithubUrl}
+        />
       </HStack>
     </Stack>
   );
