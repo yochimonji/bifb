@@ -1,22 +1,54 @@
-import firebase from "firebase/compat/app";
-import "firebase/compat/firestore";
 import {
+  getFirestore,
   collection,
   doc,
   addDoc,
   getDoc,
   getDocs,
-  updateDoc,
-  arrayUnion,
   query,
   orderBy,
   where,
   setDoc,
+  DocumentData,
+  deleteDoc,
+  updateDoc,
 } from "firebase/firestore";
-import firebaseConfig from "./config";
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
+const db = getFirestore();
+
+/**
+ * タグの配列に対して、配列内にあるtag collectionに存在していないタグをtag collectionに追加
+ * @param tags タグの一覧
+ */
+export const postTags = (tags: string[], conditions: string) => {
+  async function setData(name: string, sum: number) {
+    await setDoc(doc(db, "tags", name), {
+      sum,
+    });
+  }
+
+  async function getData(name: string) {
+    const tagData = await getDoc(doc(db, "tags", name));
+    if (tagData.exists()) {
+      console.log(tagData.id, tagData.get("sum"));
+      const tagname = tagData.id;
+      let sum: number;
+      if (conditions === "EXIST") {
+        sum = Number(tagData.get("sum"));
+      } else if (conditions === "NEW") {
+        sum = Number(tagData.get("sum")) + 1;
+      }
+      const tmp = setData(tagname, sum);
+    } else {
+      const tagname = tagData.id;
+      const tmp = setData(tagname, 1);
+    }
+  }
+
+  for (let i = 0; i < tags.length; i += 1) {
+    const tmp = getData(tags[i]);
+  }
+};
 
 /**
  * product collectionに作品を登録
@@ -28,7 +60,7 @@ const db = firebase.firestore();
  * @param tags タグ
  * @param mainText 作品説明、本文
  * @param userUid ユーザーID
- * @returns True or False
+ * @returns 新規に作成した作品ID
  */
 export const postProduct = async (
   productTitle: string,
@@ -39,8 +71,11 @@ export const postProduct = async (
   tags: string[],
   mainText: string,
   userUid: string
-): Promise<boolean> => {
-  const docProduct = await addDoc(collection(db, "product"), {
+) => {
+  // 現時点で存在しないタグをタグコレクションに追加
+  const tmp = postTags(tags, "NEW");
+  // 作品情報の取得
+  const newProduct = await addDoc(collection(db, "product"), {
     productTitle,
     productAbstract,
     productIconUrl,
@@ -50,32 +85,10 @@ export const postProduct = async (
     mainText,
     postDate: new Date().toLocaleString(),
     editDate: new Date().toLocaleString(),
-    goodSum: 0,
+    sumLike: 0,
     userUid,
   });
-  if (!docProduct.id) {
-    return false;
-  }
-  return true;
-};
-
-/**
- * タグの配列に対して、配列内にあるtag collectionに存在していないタグをtag collectionにタグを追加
- * @param tags タグの一覧
- * @returns True or False
- */
-export const postTags = async (tags: string[]): Promise<boolean> => {
-  const postTag = doc(db, "tags", "tags");
-
-  // eslint-disable-next-line no-restricted-syntax
-  for (const value of tags) {
-    // eslint-disable-next-line no-await-in-loop
-    await updateDoc(postTag, {
-      tag: arrayUnion(value),
-    });
-  }
-
-  return true;
+  return newProduct.id;
 };
 
 /**
@@ -83,24 +96,21 @@ export const postTags = async (tags: string[]): Promise<boolean> => {
  * @param userUid ユーザーIDを
  * @param feedbackText フィードバックの本文
  * @param productId フィードバックが投稿された作品のID
- * @returns
+ * @returns 新規に作成したフィードバックのID
  */
 export const postFeedbacks = async (
   userUid: string,
   feedbackText: string,
   productId: string
-): Promise<boolean> => {
-  const docFeedback = await addDoc(collection(db, "feedback"), {
+) => {
+  const newFeedback = await addDoc(collection(db, "feedback"), {
     userUid,
     feedbackText,
     productId,
     postDate: new Date().toLocaleString(),
-    goodSum: 0,
+    sumLike: 0,
   });
-  if (!docFeedback.id) {
-    return false;
-  }
-  return true;
+  return newFeedback.id;
 };
 
 /**
@@ -111,8 +121,9 @@ export const postFeedbacks = async (
  * @param githubUrl GithubURL
  * @param twitterUrl TwitterURL
  * @param otherUrl その他のURL
- * @param giveGood いいねをしている作品IDの一覧
+ * @param giveLike いいねをしている作品IDの一覧
  * @param giveFeedback フェードバックをしている作品のIDを一覧
+ * @param userUid ユーザーID
  * @returns
  */
 export const postUserInfo = async (
@@ -122,23 +133,20 @@ export const postUserInfo = async (
   githubUrl: string,
   twitterUrl: string,
   otherUrl: string,
-  giveGood: string[],
-  giveFeedback: string[]
-): Promise<boolean> => {
-  const docUserInfo = await addDoc(collection(db, "userInfo"), {
+  giveLike: string[],
+  giveFeedback: string[],
+  userUid: string
+) => {
+  const docUserInfo = await setDoc(doc(db, "userInfo", userUid), {
     name,
     userIcon,
     comment,
     githubUrl,
     twitterUrl,
     otherUrl,
-    giveGood,
+    giveLike,
     giveFeedback,
   });
-  if (!docUserInfo.id) {
-    return false;
-  }
-  return true;
 };
 
 /**
@@ -184,11 +192,26 @@ export const fetchProduct = async (productId: string) => {
 
 /**
  * 作品IDを使って、作品に投稿されたフィードバック情報を返す機能
- * ただし現状、フィードバック情報の一覧的なものの最後のものの情報しか表示されない
- * 各情報を保存する方法について要検討
- *
- * @param productId 作品ID
- * @returns
+ * 
+ * --取得したオブジェクト配列における各データの取得方法--
+
+ * const [tmp, setTmp] = React.useState("");
+ * const dataset: any[] = [];
+ * React.useEffect(() => {
+ *  const tmpData = fetchFeedback("ay4JTy57wVMdRM2ghaCd").then((data) => {
+ *    data.forEach((eachData) => {
+ *      dataset.push(eachData.data());
+ *        setTmp(dataset[0]);
+ *      });
+ *    });
+ * });
+ * 
+ * return (
+ *  {tmp.feedback}
+ * )
+ * 
+ * @param productId 作品のID
+ * @returns オブジェクトの配列
  */
 export const fetchFeedback = async (productId: string) => {
   const q = query(
@@ -196,14 +219,7 @@ export const fetchFeedback = async (productId: string) => {
     where("productId", "==", productId)
   );
   const querySnapshot = await getDocs(q);
-
-  let dataset = {};
-  querySnapshot.forEach((data) => {
-    console.log(data.id, " => ", data.data());
-    dataset = data.data();
-  });
-
-  return dataset;
+  return querySnapshot;
 };
 
 /**
@@ -211,93 +227,219 @@ export const fetchFeedback = async (productId: string) => {
  * ただし現状、リスト的な表示はできず、最後のものしか表示されない 要改善
  * トレンドをどう表現するかについても要検討
  *
- * @param conditions トレンド｜新着｜いいね数大｜いいね数小
- * @param sortType  昇順｜降順
+ * @param conditions Trend｜New｜LikeLarge｜LikeSmall
+ * @param sortType  Asce｜Desc
  * @returns
  */
 export const fetchProducts = async (conditions: string, sortType: string) => {
   let q;
-  if (conditions === "トレンド") {
-    if (sortType === "降順") {
-      q = query(collection(db, "product"), orderBy("goodSum", "desc"));
+  if (conditions === "Trend") {
+    if (sortType === "Desc") {
+      q = query(collection(db, "product"), orderBy("sumLike", "desc"));
     }
-    q = query(collection(db, "product"), orderBy("goodSum"));
-  } else if (conditions === "新着") {
-    if (sortType === "降順") {
+    q = query(collection(db, "product"), orderBy("sumLike"));
+  } else if (conditions === "New") {
+    if (sortType === "Desc") {
       q = query(collection(db, "product"), orderBy("postDate", "desc"));
     }
     q = query(collection(db, "product"), orderBy("postDate"));
-  } else if (conditions === "いいね数大") {
-    if (sortType === "降順") {
+  } else if (conditions === "LikeLarge") {
+    if (sortType === "Desc") {
       q = query(collection(db, "product"), orderBy("postDate", "desc"));
     }
-    q = query(collection(db, "product"), orderBy("goodSum"));
-  } else if (conditions === "いいね数小") {
-    if (sortType === "降順") {
+    q = query(collection(db, "product"), orderBy("sumLike"));
+  } else if (conditions === "LikeSmall") {
+    if (sortType === "Decs") {
       q = query(collection(db, "product"), orderBy("postDate"));
     }
-    q = query(collection(db, "product"), orderBy("goodSum", "desc"));
+    q = query(collection(db, "product"), orderBy("sumLike", "desc"));
   }
 
   const querySnapshot = await getDocs(q);
-
-  let dataset = {};
-  querySnapshot.forEach((data) => {
-    console.log(data.id, " => ", data.data());
-    dataset = data.data();
-    console.log(dataset);
-  });
-
-  return dataset;
+  return querySnapshot;
 };
 
 /**
  * user画面において、投稿済み｜フィードバック｜いいね｜から選択された作品の表示
- * 動作未確認
- * 「いいね」が選択された場合の挙動について要検討
  *
  * @param userUid ユーザーID
- * @param searchType 投稿済み｜フィードバック｜いいね
- * @returns
+ * @param searchType POST|FEEDBACK|LIKE
+ * @returns POSTの場合   ：作品一覧のquerySnapShot データの取得方法はfetcuFeedbackを参照
+ * @returns FEEDBAKの場合：作品一覧の配列
+ * @returns LIKEの場合   ：作品一覧の配列
  */
 export const fetchProductsUser = async (
   userUid: string,
   searchType: string
 ) => {
   let q;
-  if (searchType === "投稿済み") {
+  let querySnapshot;
+  const eachProductIdFeedback: any[] = [];
+  const returnProductInfo: (DocumentData | undefined)[] = [];
+  if (searchType === "POSTED") {
     q = query(collection(db, "product"), where("userUid", "==", userUid));
-  } else if (searchType === "フィードバック") {
+    querySnapshot = await getDocs(q);
+    return querySnapshot;
+  }
+  if (searchType === "FEEDBACK") {
     q = query(collection(db, "feedback"), where("userUid", "==", userUid));
-  } else if (searchType === "いいね") {
-    // サーチの方法について要検討
-    return 0;
+    const querySnapshotTmp = await getDocs(q).then((feedbackDoc) => {
+      feedbackDoc.forEach((feedbackEachData) => {
+        eachProductIdFeedback.push(feedbackEachData.get("productId"));
+      });
+    });
+    for (let i = 0; i < eachProductIdFeedback.length; i += 1) {
+      const tmp = fetchProduct(eachProductIdFeedback[i]).then((data) => {
+        returnProductInfo.push(data);
+      });
+    }
+    return returnProductInfo;
+  }
+  if (searchType === "LIKE") {
+    const giveLikeId = await getDoc(doc(db, "userInfo", userUid));
+    const givedLikeProductId: unknown = giveLikeId.get("giveLike");
+
+    for (let i = 0; i < givedLikeProductId.length; i += 1) {
+      const tmp = fetchProduct(givedLikeProductId[i]).then((data) => {
+        returnProductInfo.push(data);
+      });
+      return returnProductInfo;
+    }
   }
 
-  const querySnapshot = await getDocs(q);
-
-  let dataset = {};
-  querySnapshot.forEach((data) => {
-    console.log(data.id, " => ", data.data());
-    dataset = data.data();
-    console.log(dataset);
-  });
-
-  return dataset;
+  return true;
 };
 
 /**
- * 検索画面で文字が入力されるにつれてタグが絞り込まれる機能
- * @param inputText 画面に入力された文字
- * @returns 画面に入力された文字を含むタグ
+ * 入力された文字を含むタグ名の一覧を取得する
+ * @param inputText 入力された文字列
+ * @returns 入力された文字列を含むタグ名の配列
  */
 export const fetchTags = async (inputText: string) => {
-  const tagsList = doc(db, "tags", "tags");
-  const loadProductInfo = await getDoc(tagsList);
+  const returnTagList: unknown[] = [];
+  const q = query(collection(db, "tags"));
+  const tmp = await getDocs(q).then((tagList) => {
+    tagList.forEach((tag) => {
+      const tagId = tag.id;
+      const searchText = new RegExp(inputText, "i");
+      const test = tagId.search(searchText);
+      if (test !== -1) {
+        returnTagList.push(tag.id);
+      }
+    });
+  });
 
-  const obj = loadProductInfo.data();
+  return returnTagList;
+};
 
-  // for (const key in obj) {
-  //   console.log(obj(key));
-  // }
+/**
+ * 作品にいいねが押された時にいいねカウントを変化させる
+ * @param productId 作品ID
+ * @param conditions UP|DOWN
+ * @returns 最新のいいね数
+ */
+export const countLikeProduct = async (
+  productId: string,
+  conditions: string
+) => {
+  let newSumLike: unknown;
+
+  if (conditions === "UP") {
+    await getDoc(doc(db, "product", productId)).then((data) => {
+      newSumLike = Number(data.get("sumLike")) + 1;
+    });
+  } else if (conditions === "DOWN") {
+    await getDoc(doc(db, "product", productId)).then((data) => {
+      newSumLike = Number(data.get("sumLike")) - 1;
+    });
+  }
+
+  await updateDoc(doc(db, "product", productId), {
+    sumLike: newSumLike,
+  });
+  return newSumLike;
+};
+
+/**
+ * フィードバックにいいねが押された時にいいねカウントを変化させる
+ * @param productId フィードバックID
+ * @param conditions UP|DOWN
+ * @returns 最新のいいね数
+ */
+export const countLikeFeedback = async (
+  feedbackId: string,
+  conditions: string
+) => {
+  let newSumLike: unknown;
+
+  if (conditions === "UP") {
+    await getDoc(doc(db, "feedback", feedbackId)).then((data) => {
+      newSumLike = Number(data.get("sumLike")) + 1;
+    });
+  } else if (conditions === "DOWN") {
+    await getDoc(doc(db, "feedback", feedbackId)).then((data) => {
+      newSumLike = Number(data.get("sumLike")) - 1;
+    });
+  }
+
+  await updateDoc(doc(db, "feedback", feedbackId), {
+    sumLike: newSumLike,
+  });
+  return newSumLike;
+};
+
+/**
+ * 作品を削除する
+ * @param productId 作品ID
+ */
+export const deleteProduct = async (productId: string) => {
+  await deleteDoc(doc(db, "product", productId));
+};
+
+/**
+ * 作品の編集を行った際の作品情報の更新
+ * @param productId 作品ID
+ * @param productTitle 作品のタイトル
+ * @param productAbstract 作品の概要
+ * @param productIconUrl 作品のアイコンのURL
+ * @param githubUrl GithubのURL
+ * @param productUrl 作品のURL
+ * @param tags タグ一覧
+ * @param mainText 本文
+ * @param userUid ユーザーID
+ * @returns 作品ID
+ */
+export const editProduct = async (
+  productId: string,
+  productTitle: string,
+  productAbstract: string,
+  productIconUrl: string,
+  githubUrl: string,
+  productUrl: string,
+  tags: string[],
+  mainText: string,
+  userUid: string
+) => {
+  // 現時点で存在しないタグをタグコレクションに追加
+  const tmp = postTags(tags, "EXIST");
+  // 作品のpostDateの取得
+  let time: unknown;
+  const tmp2 = await getDoc(doc(db, "product", productId)).then((data) => {
+    time = data.get("postDate");
+  });
+  // 作品情報の取得
+  const existProduct = await setDoc(doc(db, "product", productId), {
+    productTitle,
+    productAbstract,
+    productIconUrl,
+    githubUrl,
+    productUrl,
+    tags,
+    mainText,
+    postDate: time,
+    editDate: new Date().toLocaleString(),
+    sumLike: 0,
+    userUid,
+  });
+  return productId;
 };
