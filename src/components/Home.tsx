@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  Text,
   HStack,
   VStack,
   Box,
@@ -8,16 +7,17 @@ import {
   TagLabel,
   TagCloseButton,
   Select,
+  SimpleGrid,
 } from "@chakra-ui/react";
 
 const Home = (): JSX.Element => (
-  <VStack spacing={4} align="stretch">
-    <Box h="55px" bg="yellow.100">
+  <VStack spacing={7} align="stretch">
+    <Box h="100px">
       <HStack spacing="10px">
-        <Box w="10%" h="55px" padding="10px" textAlign="center" bg="red.100">
-          検索条件
+        <Box w="10%" h="100px" padding="15px" textAlign="center">
+          検索条件:
         </Box>
-        <Box w="70%" h="55px" padding="10px" textAlign="center" bg="red.100">
+        <Box w="70%" h="100px" padding="10px" textAlign="center">
           <HStack spacing={4}>
             {["React", "Typescript"].map((size) => (
               <Tag
@@ -25,7 +25,8 @@ const Home = (): JSX.Element => (
                 key="lg"
                 borderRadius="full"
                 variant="solid"
-                colorScheme="green"
+                bg="#DEEFF1"
+                textColor="black"
               >
                 <TagLabel>{size}</TagLabel>
                 <TagCloseButton />
@@ -33,7 +34,7 @@ const Home = (): JSX.Element => (
             ))}
           </HStack>
         </Box>
-        <Box w="20%" h="55px" padding="10px" textAlign="center" s bg="red.100">
+        <Box w="20%" h="100px" padding="10px" textAlign="center">
           <Select placeholder="トレンド">
             <option value="NEW">新着</option>
             <option value="LikeLarge">いいね数大</option>
@@ -42,8 +43,13 @@ const Home = (): JSX.Element => (
         </Box>
       </HStack>
     </Box>
-    <Box h="5000px" bg="tomato">
-      test2
+    <Box h="600px">
+      <SimpleGrid columns={2} spacing={10}>
+        <Box bg="#90CE9C" height="300px" />
+        <Box bg="#90CE9C" height="300px" />
+        <Box bg="#90CE9C" height="300px" />
+        <Box bg="#90CE9C" height="300px" />
+      </SimpleGrid>
     </Box>
   </VStack>
 );
