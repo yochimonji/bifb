@@ -102,7 +102,6 @@ const Post = (): JSX.Element => {
           <FormControl id="title" isRequired w="100%" h="60%">
             <FormLabel>作品タイトル</FormLabel>
             <Input
-              w="100%"
               fontSize="xl"
               variant="flushed"
               value={title}
@@ -112,7 +111,6 @@ const Post = (): JSX.Element => {
           <FormControl id="abstract" isRequired w="100%" h="40%">
             <FormLabel>この作品を一言で表すと？</FormLabel>
             <Input
-              w="100%"
               variant="flushed"
               value={abstract}
               onChange={handleAbstract}
@@ -121,15 +119,16 @@ const Post = (): JSX.Element => {
         </Stack>
       </HStack>
       {/* GitHubリンク入力欄 */}
-      <HStack>
+      <HStack spacing="4">
         <Github minW="200px" />
-        <Input
-          w="100%"
-          variant="flushed"
-          type="url"
-          value={githubUrl}
-          onChange={handleGithubUrl}
-        />
+        <FormControl id="githubUrl" w="100%">
+          <Input
+            variant="flushed"
+            type="url"
+            value={githubUrl}
+            onChange={handleGithubUrl}
+          />
+        </FormControl>
       </HStack>
     </Stack>
   );
