@@ -67,9 +67,9 @@ const Home = (): JSX.Element => (
       <SimpleGrid columns={2} spacing={10}>
         <Box bg="#90CE9C" height="210px">
           <HStack spacing={0}>
-            <Box w="30%" h="210" bg="tomato">
+            <Box w="30%" h="210">
               <VStack spacing={0}>
-                <Box w="100%" h="150px" bg="gray">
+                <Box w="100%" h="150px">
                   <Image
                     src="https://bit.ly/sage-adebayo"
                     boxsize="100px"
@@ -77,21 +77,14 @@ const Home = (): JSX.Element => (
                     alignItems="center"
                   />
                 </Box>
-                <Box w="100%" h="60px" bg="blue.50">
+                <Box w="100%" h="60px">
                   <HStack spacing={0}>
-                    <Box
-                      w="30%"
-                      h="60px"
-                      bg="tomato"
-                      padding="10px"
-                      margin="auto"
-                    >
+                    <Box w="30%" h="60px" padding="10px" margin="auto">
                       <Avatar src="https://bit.ly/broken-link" size="sm" />
                     </Box>
                     <Box
                       w="70%"
                       h="60px"
-                      bg="blue.200"
                       fontSize="xs"
                       textAlign="center"
                       padding="12.5px"
@@ -102,7 +95,7 @@ const Home = (): JSX.Element => (
                 </Box>
               </VStack>
             </Box>
-            <Box w="70%" h="210px" bg="blue.100" />
+            <Box w="70%" h="210px" bg="blue.100">
           </HStack>
         </Box>
         <Box bg="#90CE9C" height="210px" />
