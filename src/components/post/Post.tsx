@@ -102,7 +102,20 @@ const Post = (): JSX.Element => {
    */
   const handleMainText: SimpleMDEReactProps["onChange"] = (value) => {
     setMainText(value);
-    console.log(mainText);
+  };
+
+  const handleDropMarkdown = (
+    instance: CodeMirror.Editor,
+    event: DragEvent
+  ) => {
+    if (event.dataTransfer != null) {
+      const images = event.dataTransfer.files;
+      if (images.length > 0) {
+        const image = images[0];
+        const imageUrl = URL.createObjectURL(image);
+        alert(imageUrl);
+      }
+    }
   };
 
   return (
@@ -188,7 +201,11 @@ const Post = (): JSX.Element => {
           />
         </FormControl>
       </HStack>
-      <MarkdownForm mainText={mainText} handleMainText={handleMainText} />
+      <MarkdownForm
+        mainText={mainText}
+        handleMainText={handleMainText}
+        handleDropMarkdown={handleDropMarkdown}
+      />
     </Stack>
   );
 };
