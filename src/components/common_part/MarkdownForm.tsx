@@ -8,10 +8,12 @@ import {
   Textarea,
   Box,
 } from "@chakra-ui/react";
+import SimpleMDE, { SimpleMDEReactProps } from "react-simplemde-editor";
+import "easymde/dist/easymde.min.css";
 
 type MarkdownFormProps = {
   mainText: string;
-  handleMainText: React.ChangeEventHandler<HTMLTextAreaElement>;
+  handleMainText: SimpleMDEReactProps["onChange"];
 };
 
 const MarkdownForm = (props: MarkdownFormProps): JSX.Element => (
@@ -26,13 +28,7 @@ const MarkdownForm = (props: MarkdownFormProps): JSX.Element => (
     </TabList>
     <TabPanels>
       <TabPanel p="0" pt="4">
-        <Textarea
-          value={props.mainText}
-          onChange={props.handleMainText}
-          bg="#FCFCFC"
-          shadow="inner"
-          h="80"
-        />
+        <SimpleMDE value={props.mainText} onChange={props.handleMainText} />
       </TabPanel>
       <TabPanel p="0" pt="4">
         <Box p="2" pl="4" pr="4" rounded="md" shadow="inner" bg="#FCFCFC">
