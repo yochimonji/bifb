@@ -118,7 +118,7 @@ const Post = (): JSX.Element => {
             accept="image/*"
             onChange={handleIcon}
           />
-          {/* 上のinputの代わりの画像変更用ボタン */}
+          {/* 上のinputの代わりのアイコン変更用ボタン */}
           <Button
             leftIcon={<BsImage />}
             variant="ghost"
@@ -174,7 +174,7 @@ const Post = (): JSX.Element => {
         </FormControl>
       </HStack>
       {/* 作品リンク入力欄 */}
-      <HStack spacing="4">
+      <HStack spacing="4" pb="4">
         <TagIcon minW="200px" />
         <FormControl id="tags" w="100%">
           <Input
@@ -185,7 +185,12 @@ const Post = (): JSX.Element => {
           />
         </FormControl>
       </HStack>
-      <MarkdownForm mainText={mainText} handleMainText={handleMainText} />
+      <MarkdownForm
+        needImportGithub
+        postText="作品を投稿する"
+        mainText={mainText}
+        handleMainText={handleMainText}
+      />
     </Stack>
   );
 };
