@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { BsImage } from "react-icons/bs";
 
-import { GithubIcon, ProductIcon, TagIcon } from "..";
+import { GithubIcon, ProductIcon, TagIcon, MarkdownForm } from "..";
 
 const Post = (): JSX.Element => {
   const [title, setTitle] = useState("");
@@ -93,6 +93,17 @@ const Post = (): JSX.Element => {
    */
   const handleTags: React.ChangeEventHandler<HTMLInputElement> = (event) => {
     setTags(event.target.value);
+  };
+
+  /**
+   * マークダウンの入力の変更に合わせてmainTextを変更
+   * @param event マークダウンの入力イベント
+   */
+  const handleMainText: React.ChangeEventHandler<HTMLTextAreaElement> = (
+    event
+  ) => {
+    setMainText(event.target.value);
+    console.log(mainText);
   };
 
   return (
@@ -178,6 +189,7 @@ const Post = (): JSX.Element => {
           />
         </FormControl>
       </HStack>
+      <MarkdownForm mainText={mainText} handleMainText={handleMainText} />
     </Stack>
   );
 };
