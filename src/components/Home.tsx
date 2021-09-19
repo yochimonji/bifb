@@ -15,6 +15,8 @@ import {
 } from "@chakra-ui/react";
 import { PlusSquareIcon } from "@chakra-ui/icons";
 
+// 作品情報の表示
+// 実際には、作品情報を変数として、テンプレート枠にその情報を埋め込んでいく
 function Product() {
   return (
     <Box
