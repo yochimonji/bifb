@@ -39,7 +39,7 @@ const Home = (): JSX.Element => (
           )
         )}
       </HStack>
-      <Box w="20%" padding="30px 0px 35px 30px">
+      <Box w="20%" padding="30px 0px">
         <Select>
           <option value="TREND">トレンド</option>
           <option value="NEW">新着</option>
