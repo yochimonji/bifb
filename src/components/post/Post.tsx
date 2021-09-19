@@ -12,6 +12,7 @@ import {
 import { BsImage } from "react-icons/bs";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
+import loadImage from "blueimp-load-image";
 
 import app from "../../base";
 import { GithubIcon, ProductIcon, TagIcon, MarkdownForm } from "..";
@@ -151,7 +152,14 @@ const Post = (): JSX.Element => {
         <Stack>
           {/* minWにしないと横が潰れる */}
           {/* 画像はstateの変数から読み込む */}
-          <Image minW="200px" h="200px" bg="gray.100" src={iconUrl} />
+          <Image
+            minW="200px"
+            h="200px"
+            bg="gray.100"
+            fit="cover"
+            src={iconUrl}
+            alt="icon"
+          />
           {/* 画像アップロード用のhidden属性を付与したinput */}
           {/* 下のButtonをクリックするとinputもクリックされる */}
           <input
