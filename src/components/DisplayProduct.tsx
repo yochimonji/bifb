@@ -42,7 +42,7 @@ const DisplayProduct = (): JSX.Element => (
         </Text>
 
         <HStack w="100%" spacing={0}>
-          <VStack w="80%" spacing={0} bg="blue.50">
+          <VStack w="80%" spacing={0}>
             <Box w="100%" />
             <Text
               w="100%"

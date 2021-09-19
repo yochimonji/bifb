@@ -18,10 +18,10 @@ const Home = (): JSX.Element => (
   <VStack spacing={10} align="stretch">
     {/* 上段(検索条件・トレンド等の選択) */}
     <HStack w="100%" spacing="0px" alignItems="center" flexWrap="wrap">
-      <Box w="10%" padding="37px 20px 35px 0px" bg="blue.50" minW="90px">
+      <Box w="10%" padding="37px 20px 35px 0px" minW="90px">
         検索条件:
       </Box>
-      <HStack w="70%" textAlign="center" spacing={4} bg="blue.100" minW="550px">
+      <HStack w="70%" textAlign="center" spacing={4} minW="550px">
         {["React", "Typescript", "JavaScript", "C++", "Webアプリ"].map(
           (tag) => (
             <Tag
@@ -39,7 +39,7 @@ const Home = (): JSX.Element => (
           )
         )}
       </HStack>
-      <Box w="20%" padding="30px 0px 35px 30px" bg="blue.200">
+      <Box w="20%" padding="30px 0px 35px 30px">
         <Select>
           <option value="TREND">トレンド</option>
           <option value="NEW">新着</option>

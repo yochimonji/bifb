@@ -3,7 +3,7 @@ import { HStack, IconButton, Text } from "@chakra-ui/react";
 import { TiHeart } from "react-icons/ti";
 
 const Like = (): JSX.Element => (
-  <HStack w="100%" spacing={0} bg="blue.100">
+  <HStack w="100%" spacing={0}>
     <IconButton
       w="50%"
       alignItems="center"
