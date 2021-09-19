@@ -19,28 +19,20 @@ import { TiHeart } from "react-icons/ti";
 // 実際には、作品情報を変数として、テンプレート枠にその情報を埋め込んでいく
 function Product() {
   return (
-    <Box
-      height="210px"
-      shadow="md"
-      boederWidth="1px"
-      flex="1"
-      borderRadius="md"
-    >
+    <Box shadow="md" boederWidth="1px" flex="1" borderRadius="md">
       <HStack spacing={0}>
-        <VStack w="30%" h="210" spacing={0}>
+        <VStack w="30%" spacing={0}>
           <Image
             w="100%"
-            h="150px"
             src="https://bit.ly/sage-adebayo"
             boxsize="100px"
             padding="10px"
             alignItems="center"
           />
-          <HStack w="100%" h="60px" spacing={0}>
-            <Avatar w="30%" h="40px" src="https://bit.ly/broken-link" />
+          <HStack w="100%" spacing={0}>
+            <Avatar w="30%" src="https://bit.ly/broken-link" />
             <Text
               w="70%"
-              h="60px"
               fontSize="md"
               textAlign="center"
               padding="15px 0px 15px"
@@ -49,39 +41,50 @@ function Product() {
             </Text>
           </HStack>
         </VStack>
-        <Box w="70%" h="210px">
-          <Text
-            w="100%"
-            h="70px"
-            textAlign="left"
-            padding="12.5px"
-            fontSize="2xl"
-          >
+        <Box w="70%">
+          <Text w="100%" textAlign="left" padding="12.5px" fontSize="2xl">
             ラクスケ
           </Text>
 
-          <Text w="100%" h="70px" textAlign="left" fontSize="lg">
-            予定に合わせて自動でタスクを登録するアプリ
+          <Text
+            w="100%"
+            textAlign="left"
+            fontSize="3vmin"
+            justfy="left"
+            minWidth="50%"
+          >
+            予定に合わせて自動でタスクを登録するアプリ予定に合わせて自動でタスクを登録するアプリ
           </Text>
 
-          <HStack w="100%" h="70px" spacing={0}>
-            <VStack w="80%" h="70px" spacing={0}>
-              <Box w="100%" h="20px" />
-              <Text w="100%" h="25px" textAlign="center" fontSize="sm">
+          <HStack w="100%" spacing={0}>
+            <VStack w="80%" spacing={0}>
+              <Box w="100%" />
+              <Text
+                w="100%"
+                textAlign="center"
+                fontSize="sm"
+                padding="1px"
+                justfy="center"
+              >
                 2021年08月28日公開
               </Text>
-              <Text w="100%" h="25px" textAlign="center" fontSize="sm">
+              <Text
+                w="100%"
+                textAlign="center"
+                fontSize="sm"
+                padding="1px"
+                justfy="center"
+              >
                 2021年09月10日更新
               </Text>
             </VStack>
 
-            <VStack w="20%" h="70px" spacing={0}>
-              <Box w="100%" h="35px" />
+            <VStack w="20%" spacing={0}>
+              <Box w="100%" />
 
-              <HStack w="100%" h="35px" spacing={0}>
+              <HStack w="100%" spacing={0}>
                 <IconButton
                   w="50%"
-                  h="35px"
                   alignItems="center"
                   aria-label="center"
                   size="xs"
@@ -91,10 +94,11 @@ function Product() {
 
                 <Text
                   w="50%"
-                  h="35px"
                   textAlign="left"
-                  padding={2}
+                  padding="10px 0px 10px 15px"
                   fontSize="5px"
+                  justfy="center"
+                  minWidth="50%"
                 >
                   10
                 </Text>
@@ -110,8 +114,8 @@ function Product() {
 const Home = (): JSX.Element => (
   <VStack spacing={10} align="stretch">
     {/* 上段(検索条件・トレンド等の選択) */}
-    <HStack w="100%" h="100px" spacing="10px">
-      <Box w="10%" h="100px" padding="37px 30px 35px 0px">
+    <HStack w="100%" spacing="10px">
+      <Box w="10%" padding="37px 30px 35px 0px" fontSize="2svmin">
         検索条件:
       </Box>
       <HStack w="70%" textAlign="center" spacing={4}>
@@ -132,7 +136,7 @@ const Home = (): JSX.Element => (
           )
         )}
       </HStack>
-      <Box w="20%" h="100px" padding="30px 0px 35px 30px">
+      <Box w="20%" padding="30px 0px 35px 30px">
         <Select>
           <option value="TREND">トレンド</option>
           <option value="NEW">新着</option>
@@ -143,7 +147,7 @@ const Home = (): JSX.Element => (
     </HStack>
 
     {/* 作品一覧の表示 */}
-    <SimpleGrid w="100%" h="600px" columns={2} spacing={10}>
+    <SimpleGrid w="100%" columns={2} spacing={10}>
       {Product()}
       {Product()}
       {Product()}
