@@ -8,12 +8,7 @@ import {
   TagCloseButton,
   Select,
   SimpleGrid,
-  Image,
-  Avatar,
-  Text,
-  IconButton,
 } from "@chakra-ui/react";
-import { TiHeart } from "react-icons/ti";
 import { DisplayProduct } from "./index";
 
 // 作品情報の表示
