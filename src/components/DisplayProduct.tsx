@@ -1,14 +1,7 @@
 import React from "react";
-import {
-  HStack,
-  VStack,
-  Box,
-  Image,
-  Avatar,
-  Text,
-  IconButton,
-} from "@chakra-ui/react";
+import { HStack, VStack, Box, Image, Avatar, Text } from "@chakra-ui/react";
 import { TiHeart } from "react-icons/ti";
+import { Like } from "./index";
 
 const DisplayProduct = (): JSX.Element => (
   <Box shadow="md" boederWidth="1px" flex="1" borderRadius="md">
@@ -49,7 +42,7 @@ const DisplayProduct = (): JSX.Element => (
         </Text>
 
         <HStack w="100%" spacing={0}>
-          <VStack w="80%" spacing={0}>
+          <VStack w="80%" spacing={0} bg="blue.50">
             <Box w="100%" />
             <Text
               w="100%"
@@ -72,29 +65,7 @@ const DisplayProduct = (): JSX.Element => (
           </VStack>
 
           <VStack w="20%" spacing={0}>
-            <Box w="100%" />
-
-            <HStack w="100%" spacing={0}>
-              <IconButton
-                w="50%"
-                alignItems="center"
-                aria-label="center"
-                size="xs"
-                backgroundColor="white"
-                icon={<TiHeart />}
-              />
-
-              <Text
-                w="50%"
-                textAlign="left"
-                padding="10px 0px 10px 15px"
-                fontSize="5px"
-                justfy="center"
-                minWidth="50%"
-              >
-                10
-              </Text>
-            </HStack>
+            <Like />
           </VStack>
         </HStack>
       </Box>
