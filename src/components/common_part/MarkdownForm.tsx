@@ -11,6 +11,8 @@ import {
   HStack,
   Button,
   Icon,
+  FormControl,
+  FormHelperText,
 } from "@chakra-ui/react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -21,6 +23,7 @@ import { AiFillGithub } from "react-icons/ai";
 type MarkdownFormProps = {
   pageType: "post" | "product";
   mainText: string;
+  validMainText: boolean;
   handleMainText: React.ChangeEventHandler<HTMLTextAreaElement>;
   handlePost: React.MouseEventHandler<HTMLButtonElement>;
 };
@@ -54,14 +57,21 @@ const MarkdownForm = (props: MarkdownFormProps): JSX.Element => (
       </HStack>
       <TabPanels>
         <TabPanel p="0" pt="4">
-          <Textarea
-            value={props.mainText}
-            onChange={props.handleMainText}
-            bg="#FCFCFC"
-            shadow="inner"
-            minH="60"
-            p="4"
-          />
+          <FormControl id="mainText">
+            <Textarea
+              value={props.mainText}
+              onChange={props.handleMainText}
+              bg="#FCFCFC"
+              shadow="inner"
+              minH="60"
+              p="4"
+            />
+            {props.validMainText && (
+              <FormHelperText color="red">
+                説明を入力してください。
+              </FormHelperText>
+            )}
+          </FormControl>
         </TabPanel>
         <TabPanel p="0" pt="4">
           <Text

@@ -7,6 +7,7 @@ import {
   Button,
   FormControl,
   FormLabel,
+  FormHelperText,
   Text,
 } from "@chakra-ui/react";
 import { BsImage } from "react-icons/bs";
@@ -37,6 +38,11 @@ const Post = (): JSX.Element => {
   const [tags, setTags] = useState("");
   const [mainText, setMainText] = useState("");
   const [error, setError] = useState("");
+  const [validTitle, setValidTitle] = useState(false);
+  const [validAbstract, setValidAbstract] = useState(false);
+  const [validIconUrl, setValidIconUrl] = useState(false);
+  const [validTags, setValidTags] = useState(false);
+  const [validMainText, setValidMainText] = useState(false);
 
   const iconInputRef = useRef<HTMLInputElement>(null);
   const { currentUser } = useContext(AuthContext);
@@ -81,7 +87,7 @@ const Post = (): JSX.Element => {
       // ファイルを選択し直した時に既存のファイルをStorageから削除
       if (iconName !== "") {
         const oldIconRef = ref(storage, iconName);
-        await deleteObject(oldIconRef).catch((e) => console.log(e));
+        await deleteObject(oldIconRef);
       }
       setIconName(newIconName);
 
@@ -166,9 +172,52 @@ const Post = (): JSX.Element => {
     setMainText(event.target.value);
   };
 
+  const validate = () => {
+    let canPost = true;
+    if (title === "") {
+      canPost = false;
+      setValidTitle(true);
+    } else {
+      setValidTitle(false);
+    }
+    if (abstract === "") {
+      canPost = false;
+      setValidAbstract(true);
+    } else {
+      setValidAbstract(false);
+    }
+    if (iconUrl === "") {
+      canPost = false;
+      setValidIconUrl(true);
+    } else {
+      setValidIconUrl(false);
+    }
+    if (mainText === "") {
+      canPost = false;
+      setValidMainText(true);
+    } else {
+      setValidMainText(false);
+    }
+    const newTags = tags
+      .normalize("NFKC")
+      .replace(/(^\s+)|(\s+$)/g, "")
+      .replace(/(\s{2,})/g, " ");
+    setTags(newTags);
+    const tagList = newTags.split(" ");
+    if (tagList.length > 5) {
+      canPost = false;
+      setValidTags(true);
+    } else {
+      setValidTags(false);
+    }
+    return canPost;
+  };
+
+  // 投稿ボタンを押したら作品情報をFirestoreに保存する関数
   const handlePost: React.MouseEventHandler<HTMLButtonElement> = async () => {
+    const canPost = validate();
     const tagList = tags.split(" ");
-    if (currentUser != null) {
+    if (currentUser != null && canPost) {
       const productId = await postProduct(
         title,
         abstract,
@@ -210,16 +259,21 @@ const Post = (): JSX.Element => {
             variant="ghost"
             onClick={onClickIconButton}
           >
-            変更する
+            アイコンを選択
           </Button>
           {error && (
             <Text fontSize="sm" color="red" m="0">
               {error}
             </Text>
           )}
+          {validIconUrl && (
+            <Text fontSize="xs" color="red" m="0" align="center">
+              作品のアイコンを選択してください
+            </Text>
+          )}
         </Stack>
         <Stack w="100%" h="200px" pt="4">
-          <FormControl id="title" isRequired w="100%" h="60%">
+          <FormControl id="title" w="100%" h="60%">
             <FormLabel>作品タイトル</FormLabel>
             <Input
               fontSize="xl"
@@ -227,14 +281,24 @@ const Post = (): JSX.Element => {
               value={title}
               onChange={handleTitle}
             />
+            {validTitle && (
+              <FormHelperText color="red">
+                作品タイトルを入力してください。
+              </FormHelperText>
+            )}
           </FormControl>
-          <FormControl id="abstract" isRequired w="100%" h="40%">
+          <FormControl id="abstract" w="100%" h="40%">
             <FormLabel>この作品を一言で表すと？</FormLabel>
             <Input
               variant="flushed"
               value={abstract}
               onChange={handleAbstract}
             />
+            {validAbstract && (
+              <FormHelperText color="red">
+                作品概要を入力してください。
+              </FormHelperText>
+            )}
           </FormControl>
         </Stack>
       </HStack>
@@ -274,10 +338,17 @@ const Post = (): JSX.Element => {
             value={tags}
             onChange={handleTags}
           />
+          {validTags && (
+            <FormHelperText color="red">
+              タグはスペースで区切って5つまで入力してください（例：Webアプリ
+              JavaScript）
+            </FormHelperText>
+          )}
         </FormControl>
       </HStack>
       <MarkdownForm
         pageType="post"
+        validMainText={validMainText}
         mainText={mainText}
         handleMainText={handleMainText}
         handlePost={handlePost}
