@@ -29,14 +29,14 @@ function Product() {
       <HStack spacing={0}>
         <Box w="30%" h="210">
           <VStack spacing={0}>
-            <Box w="100%" h="150px">
-              <Image
-                src="https://bit.ly/sage-adebayo"
-                boxsize="100px"
-                padding="10px"
-                alignItems="center"
-              />
-            </Box>
+            <Image
+              w="100%"
+              h="150px"
+              src="https://bit.ly/sage-adebayo"
+              boxsize="100px"
+              padding="10px"
+              alignItems="center"
+            />
             <Box w="100%" h="60px">
               <HStack spacing={0}>
                 <Box w="30%" h="60px" padding="10px" margin="auto">
