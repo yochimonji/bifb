@@ -37,7 +37,7 @@ type MarkdownFormProps = {
  * @returns Markdownのコンポーネント
  */
 const MarkdownForm = (props: MarkdownFormProps): JSX.Element => (
-  <Stack>
+  <Stack pb="8">
     <Tabs variant="unstyled">
       <HStack justify="space-between">
         <TabList>
@@ -63,7 +63,7 @@ const MarkdownForm = (props: MarkdownFormProps): JSX.Element => (
               onChange={props.handleMainText}
               bg="#FCFCFC"
               shadow="inner"
-              minH="60"
+              minH="80"
               p="4"
             />
             {props.validMainText && (
@@ -106,7 +106,7 @@ const MarkdownForm = (props: MarkdownFormProps): JSX.Element => (
         variant="ghost"
         // onClick={}
       >
-        追加する
+        画像を追加
       </Button>
       <Button variant="outline" onClick={props.handlePost}>
         {props.pageType === "post" && "作品を投稿する"}

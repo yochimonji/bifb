@@ -20,6 +20,7 @@ import {
 } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
 import loadImage from "blueimp-load-image";
+import { useHistory } from "react-router-dom";
 
 import app from "../../base";
 import { GithubIcon, ProductIcon, TagIcon, MarkdownForm } from "..";
@@ -46,6 +47,7 @@ const Post = (): JSX.Element => {
 
   const iconInputRef = useRef<HTMLInputElement>(null);
   const { currentUser } = useContext(AuthContext);
+  const history = useHistory();
 
   /**
    * タイトルの変更に合わせてタイトルのstateを変更
@@ -172,8 +174,13 @@ const Post = (): JSX.Element => {
     setMainText(event.target.value);
   };
 
+  /**
+   * 入力値のバリデーションを行う関数
+   * @returns 投稿可能かのBoolean
+   */
   const validate = () => {
     let canPost = true;
+    // タイトル、概要、アイコンURL、説明文は同じ処理
     if (title === "") {
       canPost = false;
       setValidTitle(true);
@@ -198,10 +205,15 @@ const Post = (): JSX.Element => {
     } else {
       setValidMainText(false);
     }
+    // タグは空白で区切って5つまでとしている
+    // normalizeで全角を半角に統一
+    // 1つ目のreplaceで前後の空白を削除
+    // 2つ目のreplaceで空白が2回以上続いたら1つの空白に置換
     const newTags = tags
       .normalize("NFKC")
       .replace(/(^\s+)|(\s+$)/g, "")
       .replace(/(\s{2,})/g, " ");
+    // 処理を行なったタグで更新しておく
     setTags(newTags);
     const tagList = newTags.split(" ");
     if (tagList.length > 5) {
@@ -216,7 +228,14 @@ const Post = (): JSX.Element => {
   // 投稿ボタンを押したら作品情報をFirestoreに保存する関数
   const handlePost: React.MouseEventHandler<HTMLButtonElement> = async () => {
     const canPost = validate();
-    const tagList = tags.split(" ");
+    // タグはvalidateと同様の処理を行う
+    // stateはすぐに更新されないことがあるため
+    const tagList = tags
+      .normalize("NFKC")
+      .replace(/(^\s+)|(\s+$)/g, "")
+      .replace(/(\s{2,})/g, " ")
+      .split(" ");
+    // ログイン済みでバリデーションOKの場合Firestoreに保存
     if (currentUser != null && canPost) {
       const productId = await postProduct(
         title,
@@ -228,6 +247,11 @@ const Post = (): JSX.Element => {
         mainText,
         currentUser.uid
       );
+      if (productId) {
+        history.push("/");
+      } else {
+        alert("投稿処理に失敗しました");
+      }
     }
   };
 
@@ -261,17 +285,20 @@ const Post = (): JSX.Element => {
           >
             アイコンを選択
           </Button>
+          {/* アイコン選択時のエラー */}
           {error && (
             <Text fontSize="sm" color="red" m="0">
               {error}
             </Text>
           )}
+          {/* 投稿ボタンをクリックした際のバリデーション情報 */}
           {validIconUrl && (
             <Text fontSize="xs" color="red" m="0" align="center">
               作品のアイコンを選択してください
             </Text>
           )}
         </Stack>
+        {/* 作品タイトルと概要 */}
         <Stack w="100%" h="200px" pt="4">
           <FormControl id="title" w="100%" h="60%">
             <FormLabel>作品タイトル</FormLabel>
@@ -328,7 +355,7 @@ const Post = (): JSX.Element => {
           />
         </FormControl>
       </HStack>
-      {/* 作品リンク入力欄 */}
+      {/* タグ入力欄 */}
       <HStack spacing="4" pb="4">
         <TagIcon minW="200px" />
         <FormControl id="tags" w="100%">
