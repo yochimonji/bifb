@@ -108,7 +108,7 @@ const Home = (): JSX.Element => (
   <VStack spacing={10} align="stretch">
     {/* 上段(検索条件・トレンド等の選択) */}
     <HStack w="100%" h="100px" spacing="10px">
-      <Box w="10%" h="100px" padding="35px 30px 35px 0px" bg="tomato">
+      <Box w="10%" h="100px" padding="37px 30px 35px 0px">
         検索条件:
       </Box>
 
@@ -131,10 +131,12 @@ const Home = (): JSX.Element => (
         )}
       </HStack>
 
-      <Box w="20%" h="100px" padding="30px 0px 35px 30px" bg="tomato">
-        <Select placeholder="トレンド">
+      <Box w="20%" h="100px" padding="30px 0px 35px 30px">
+        <Select>
+          <option value="TREND">トレンド</option>
           <option value="NEW">新着</option>
-          <option value="LikeLarge">いいね数</option>
+          <option value="LikeLarge">いいね数(多い順)</option>
+          <option value="LikeLarge">いいね数(少ない順)</option>
         </Select>
       </Box>
     </HStack>
