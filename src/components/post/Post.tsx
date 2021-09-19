@@ -259,7 +259,7 @@ const Post = (): JSX.Element => {
 
   return (
     <Stack spacing={{ base: "4", md: "2" }} pt="8">
-      <HStack align="start">
+      <HStack align="center">
         <Stack w={{ base: "40%", sm: "30%", md: "20%" }}>
           {/* 画像はstateの変数から読み込む */}
           {iconUrl ? (

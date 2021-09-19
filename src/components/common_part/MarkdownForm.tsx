@@ -39,22 +39,39 @@ type MarkdownFormProps = {
 const MarkdownForm = (props: MarkdownFormProps): JSX.Element => (
   <Stack pb="8">
     <Tabs variant="unstyled">
-      <HStack justify="space-between">
-        <TabList>
-          <Tab rounded="full" _selected={{ color: "#FCFCFC", bg: "#99CED4" }}>
+      <Stack
+        flexDir={{ base: "column-reverse", sm: "row" }}
+        justify="space-between"
+      >
+        <TabList pt="2">
+          <Tab
+            rounded="full"
+            fontSize={{ base: "sm", md: "md" }}
+            _selected={{ color: "#FCFCFC", bg: "#99CED4" }}
+          >
             マークダウン
           </Tab>
-          <Tab rounded="full" _selected={{ color: "#FCFCFC", bg: "#99CED4" }}>
+          <Tab
+            rounded="full"
+            fontSize={{ base: "sm", md: "md" }}
+            _selected={{ color: "#FCFCFC", bg: "#99CED4" }}
+          >
             プレビュー
           </Tab>
         </TabList>
         {props.pageType === "post" && (
-          <Button variant="outline">
-            <Icon as={AiFillGithub} h="10" w="10" pr="2" />
+          <Button variant="outline" w="max-content">
+            <Icon
+              as={AiFillGithub}
+              h="10"
+              w="10"
+              pr="2"
+              fontSize={{ base: "sm", md: "md" }}
+            />
             GitHubから読み込む
           </Button>
         )}
-      </HStack>
+      </Stack>
       <TabPanels>
         <TabPanel p="0" pt="4">
           <FormControl id="mainText">
@@ -93,20 +110,20 @@ const MarkdownForm = (props: MarkdownFormProps): JSX.Element => (
       </TabPanels>
     </Tabs>
     <HStack justify="space-between">
-      {/* 下のButtonをクリックするとinputもクリックされる */}
-      <input
-        hidden
-        // ref={}
-        type="file"
-        accept="image/*"
-        // onChange={}
-      />
-      {/* 上のinputの代わりの画像変更用ボタン */}
+      {/* 下のinputの代わりの画像変更用ボタン */}
       <Button
         leftIcon={<BsImage />}
         variant="ghost"
         // onClick={}
       >
+        {/* 上のButtonをクリックするとinputもクリックされる */}
+        <input
+          hidden
+          // ref={}
+          type="file"
+          accept="image/*"
+          // onChange={}
+        />
         画像を追加
       </Button>
       <Button variant="outline" onClick={props.handlePost}>
