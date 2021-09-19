@@ -70,16 +70,36 @@ const Post = (): JSX.Element => {
       )}`;
       const iconRef = ref(storage, newIconName);
 
-      await uploadBytes(iconRef, icon)
-        .then(() => {
-          setError("");
-        })
-        .catch((err) => {
-          setError(`ファイルのアップに失敗しました。${err as string}`);
-        });
+      const loadIcon = await loadImage(icon, {
+        maxHeight: 512,
+        maxWidth: 512,
+        crop: true,
+        canvas: true,
+      });
+      const canvasIcon = loadIcon.image as HTMLCanvasElement;
 
-      const downloadUrl = await getDownloadURL(iconRef);
-      setIconUrl(downloadUrl);
+      canvasIcon.toBlob(
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
+        async (blobIcon) => {
+          if (blobIcon == null) {
+            setError("アイコンの変換に失敗しました");
+          } else {
+            await uploadBytes(iconRef, blobIcon)
+              .then(() => {
+                setError("");
+              })
+              .catch((err) => {
+                setError(
+                  `アイコンのアップロードに失敗しました。${err as string}`
+                );
+              });
+            const downloadUrl = await getDownloadURL(iconRef);
+            setIconUrl(downloadUrl);
+          }
+        },
+        "image/jpeg",
+        0.95
+      );
     }
   };
 
