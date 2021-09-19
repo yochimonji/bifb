@@ -106,56 +106,41 @@ function Product() {
 
 const Home = (): JSX.Element => (
   <VStack spacing={10} align="stretch">
-    <Box h="100px">
-      <HStack spacing="10px">
-        <Box
-          w="15%"
-          h="100px"
-          padding="35px"
-          textAlign="left"
-          alignItems="center"
-        >
-          検索条件:
-        </Box>
-        <Box
-          w="65%"
-          h="100px"
-          padding="30px"
-          textAlign="center"
-          alignItems="center"
-        >
-          <HStack spacing={4}>
-            {["React", "Typescript"].map((size) => (
-              <Tag
-                size="lg"
-                key="lg"
-                borderRadius="full"
-                variant="solid"
-                bg="#DEEFF1"
-                textColor="black"
-              >
-                <TagLabel>{size}</TagLabel>
-                <TagCloseButton />
-              </Tag>
-            ))}
-          </HStack>
-        </Box>
-        <Box
-          w="20%"
-          h="100px"
-          padding="30px"
-          textAlign="center"
-          alignItems="center"
-        >
-          <Select placeholder="トレンド">
-            <option value="NEW">新着</option>
-            <option value="LikeLarge">いいね数</option>
-          </Select>
-        </Box>
-      </HStack>
-    </Box>
+    {/* 上段(検索条件・トレンド等の選択) */}
+    <HStack w="100%" h="100px" spacing="10px">
+      <Box w="10%" h="100px" padding="35px 30px 35px 0px" bg="tomato">
+        検索条件:
+      </Box>
 
-    <Box h="600px">
+      <HStack w="70%" textAlign="center" spacing={4}>
+        {["React", "Typescript", "JavaScript", "C++", "Webアプリ"].map(
+          (tag) => (
+            <Tag
+              size="lg"
+              key="lg"
+              borderRadius="full"
+              variant="solid"
+              bg="#DEEFF1"
+              textColor="black"
+              justfy="left"
+            >
+              <TagLabel>{tag}</TagLabel>
+              <TagCloseButton />
+            </Tag>
+          )
+        )}
+      </HStack>
+
+      <Box w="20%" h="100px" padding="30px 0px 35px 30px" bg="tomato">
+        <Select placeholder="トレンド">
+          <option value="NEW">新着</option>
+          <option value="LikeLarge">いいね数</option>
+        </Select>
+      </Box>
+    </HStack>
+
+    {/* 作品一覧の表示 */}
+    <Box w="100%" h="600px">
       <SimpleGrid columns={2} spacing={10}>
         {Product()}
         {Product()}
