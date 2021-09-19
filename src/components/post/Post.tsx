@@ -236,6 +236,9 @@ const Post = (): JSX.Element => {
       .replace(/(^\s+)|(\s+$)/g, "")
       .replace(/(\s{2,})/g, " ")
       .split(" ");
+    // 重複要素を削除
+    const nonDuplicatedTagList = [...new Set(tagList)];
+    console.log(nonDuplicatedTagList);
     // ログイン済みでバリデーションOKの場合Firestoreに保存
     if (currentUser != null && canPost) {
       const productId = await postProduct(
@@ -244,7 +247,7 @@ const Post = (): JSX.Element => {
         iconUrl,
         githubUrl,
         productUrl,
-        tagList,
+        nonDuplicatedTagList,
         mainText,
         currentUser.uid
       );
