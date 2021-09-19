@@ -22,12 +22,15 @@ type MarkdownFormProps = {
   pageType: "post" | "product";
   mainText: string;
   handleMainText: React.ChangeEventHandler<HTMLTextAreaElement>;
+  handlePost: React.MouseEventHandler<HTMLButtonElement>;
 };
 
 /**
  * マークダウンの入力フォームのコンポーネントの関数
+ * @param props.pygeType post：作品投稿ページ、product：作品詳細ページのレビュー投稿用
  * @param props.mainText 作品の説明の本文
  * @param props.handleMainText 説明の変更に合わせて実行する関数
+ * @param props.handlePost 投稿ボタンを押した際の処理をする関数
  * @returns Markdownのコンポーネント
  */
 const MarkdownForm = (props: MarkdownFormProps): JSX.Element => (
@@ -95,7 +98,7 @@ const MarkdownForm = (props: MarkdownFormProps): JSX.Element => (
       >
         追加する
       </Button>
-      <Button variant="outline">
+      <Button variant="outline" onClick={props.handlePost}>
         {props.pageType === "post" && "作品を投稿する"}
         {props.pageType === "product" && "フィードバックを投稿する"}
       </Button>

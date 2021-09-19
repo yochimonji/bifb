@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useContext } from "react";
 import {
   Input,
   HStack,
@@ -15,6 +15,8 @@ import { v4 as uuidv4 } from "uuid";
 
 import app from "../../base";
 import { GithubIcon, ProductIcon, TagIcon, MarkdownForm } from "..";
+import { postProduct } from "../../firebase/firestore";
+import { AuthContext } from "../../auth/AuthProvider";
 
 const storage = getStorage(app);
 
@@ -29,6 +31,7 @@ const Post = (): JSX.Element => {
   const [error, setError] = useState("");
 
   const iconInputRef = useRef<HTMLInputElement>(null);
+  const { currentUser } = useContext(AuthContext);
 
   /**
    * タイトルの変更に合わせてタイトルのstateを変更
@@ -55,7 +58,6 @@ const Post = (): JSX.Element => {
   const handleIcon: React.ChangeEventHandler<HTMLInputElement> = async (
     event
   ) => {
-    console.log(event.target.files);
     if (event.target.files == null || event.target.files[0] == null) {
       setError("ファイルが選択されていません");
       setIconUrl("");
@@ -125,6 +127,22 @@ const Post = (): JSX.Element => {
     event
   ) => {
     setMainText(event.target.value);
+  };
+
+  const handlePost: React.MouseEventHandler<HTMLButtonElement> = async () => {
+    const tagList = tags.split(" ");
+    if (currentUser != null) {
+      const productId = await postProduct(
+        title,
+        abstract,
+        iconUrl,
+        githubUrl,
+        productUrl,
+        tagList,
+        mainText,
+        currentUser.uid
+      );
+    }
   };
 
   return (
@@ -219,6 +237,7 @@ const Post = (): JSX.Element => {
         pageType="post"
         mainText={mainText}
         handleMainText={handleMainText}
+        handlePost={handlePost}
       />
     </Stack>
   );
