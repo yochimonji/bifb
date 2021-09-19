@@ -27,77 +27,85 @@ function Product() {
       borderRadius="md"
     >
       <HStack spacing={0}>
-        <Box w="30%" h="210">
-          <VStack spacing={0}>
-            <Image
-              w="100%"
-              h="150px"
-              src="https://bit.ly/sage-adebayo"
-              boxsize="100px"
-              padding="10px"
-              alignItems="center"
+        <VStack w="30%" h="210" spacing={0}>
+          <Image
+            w="100%"
+            h="150px"
+            src="https://bit.ly/sage-adebayo"
+            boxsize="100px"
+            padding="10px"
+            alignItems="center"
+          />
+          <HStack w="100%" h="60px" spacing={0}>
+            <Avatar
+              w="30%"
+              src="https://bit.ly/broken-link"
+              size="xs"
+              backgroundColor="blue.100"
             />
-            <Box w="100%" h="60px">
-              <HStack spacing={0}>
-                <Box w="30%" h="60px" padding="10px" margin="auto">
-                  <Avatar src="https://bit.ly/broken-link" size="sm" />
-                </Box>
-                <Box
-                  w="70%"
-                  h="60px"
-                  fontSize="xs"
-                  textAlign="center"
-                  padding="12.5px"
-                >
-                  <Text fontSize="15px">yochimonji</Text>
-                </Box>
-              </HStack>
-            </Box>
-          </VStack>
-        </Box>
-        <Box w="70%" h="210px">
-          <Box w="100%" h="70px" textAlign="left" padding="12.5px">
-            <Text fontSize="2xl">ラクスケ</Text>
-          </Box>
-          <Box w="100%" h="70px" textAlign="left">
-            <Text fontSize="lg">
-              予定に合わせて自動でタスクを登録するアプリ
+            <Text
+              w="70%"
+              h="60px"
+              fontSize="xs"
+              textAlign="center"
+              padding="12.5px"
+              size="xl"
+            >
+              yochimonji
             </Text>
-          </Box>
-          <Box w="100%" h="70px">
-            <HStack spacing={0}>
-              <Box w="80%" h="70px">
-                <VStack spacing={0}>
-                  <Box w="100%" h="20px" />
-                  <Box w="100%" h="25px" textAlign="center">
-                    <Text fontSize="sm">2021年08月28日公開</Text>
-                  </Box>
-                  <Box w="100%" h="25px" textAlign="center">
-                    <Text fontSize="sm">2021年09月10日更新</Text>
-                  </Box>
-                </VStack>
+          </HStack>
+        </VStack>
+        <Box w="70%" h="210px">
+          <Text
+            w="100%"
+            h="70px"
+            textAlign="left"
+            padding="12.5px"
+            fontSize="2xl"
+          >
+            ラクスケ
+          </Text>
+
+          <Text w="100%" h="70px" textAlign="left" fontSize="lg">
+            予定に合わせて自動でタスクを登録するアプリ
+          </Text>
+
+          <HStack w="100%" h="70px" spacing={0}>
+            <VStack w="80%" h="70px" spacing={0}>
+              <Box w="100%" h="20px" />
+              <Box w="100%" h="25px" textAlign="center">
+                <Text fontSize="sm">2021年08月28日公開</Text>
               </Box>
-              <Box w="20%" h="70px">
-                <VStack spacing={0}>
-                  <Box w="100%" h="35px" />
-                  <Box w="100%" h="35px">
-                    <HStack spacing={0}>
-                      <Box w="50%" h="35px" alignItems="center">
-                        <IconButton
-                          aria-label="Search database"
-                          size="xs"
-                          icon={<PlusSquareIcon />}
-                        />
-                      </Box>
-                      <Box w="50%" h="35px" textAlign="left" padding={2}>
-                        <Text fontSize="5px">10</Text>
-                      </Box>
-                    </HStack>
-                  </Box>
-                </VStack>
+              <Box w="100%" h="25px" textAlign="center">
+                <Text fontSize="sm">2021年09月10日更新</Text>
               </Box>
-            </HStack>
-          </Box>
+            </VStack>
+
+            <VStack w="20%" h="70px" spacing={0}>
+              <Box w="100%" h="35px" />
+
+              <HStack w="100%" h="35px" spacing={0}>
+                <IconButton
+                  w="50%"
+                  h="35px"
+                  alignItems="center"
+                  aria-label="Search database"
+                  size="xs"
+                  icon={<PlusSquareIcon />}
+                />
+
+                <Text
+                  w="50%"
+                  h="35px"
+                  textAlign="left"
+                  padding={2}
+                  fontSize="5px"
+                >
+                  10
+                </Text>
+              </HStack>
+            </VStack>
+          </HStack>
         </Box>
       </HStack>
     </Box>
@@ -111,7 +119,6 @@ const Home = (): JSX.Element => (
       <Box w="10%" h="100px" padding="37px 30px 35px 0px">
         検索条件:
       </Box>
-
       <HStack w="70%" textAlign="center" spacing={4}>
         {["React", "Typescript", "JavaScript", "C++", "Webアプリ"].map(
           (tag) => (
@@ -130,7 +137,6 @@ const Home = (): JSX.Element => (
           )
         )}
       </HStack>
-
       <Box w="20%" h="100px" padding="30px 0px 35px 30px">
         <Select>
           <option value="TREND">トレンド</option>
