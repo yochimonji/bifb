@@ -13,7 +13,7 @@ import {
   Text,
   IconButton,
 } from "@chakra-ui/react";
-import { PlusSquareIcon } from "@chakra-ui/icons";
+import { TiHeart } from "react-icons/ti";
 
 // 作品情報の表示
 // 実際には、作品情報を変数として、テンプレート枠にその情報を埋め込んでいく
@@ -37,19 +37,13 @@ function Product() {
             alignItems="center"
           />
           <HStack w="100%" h="60px" spacing={0}>
-            <Avatar
-              w="30%"
-              src="https://bit.ly/broken-link"
-              size="xs"
-              backgroundColor="blue.100"
-            />
+            <Avatar w="30%" h="40px" src="https://bit.ly/broken-link" />
             <Text
               w="70%"
               h="60px"
-              fontSize="xs"
+              fontSize="md"
               textAlign="center"
-              padding="12.5px"
-              size="xl"
+              padding="15px 0px 15px"
             >
               yochimonji
             </Text>
@@ -73,12 +67,12 @@ function Product() {
           <HStack w="100%" h="70px" spacing={0}>
             <VStack w="80%" h="70px" spacing={0}>
               <Box w="100%" h="20px" />
-              <Box w="100%" h="25px" textAlign="center">
-                <Text fontSize="sm">2021年08月28日公開</Text>
-              </Box>
-              <Box w="100%" h="25px" textAlign="center">
-                <Text fontSize="sm">2021年09月10日更新</Text>
-              </Box>
+              <Text w="100%" h="25px" textAlign="center" fontSize="sm">
+                2021年08月28日公開
+              </Text>
+              <Text w="100%" h="25px" textAlign="center" fontSize="sm">
+                2021年09月10日更新
+              </Text>
             </VStack>
 
             <VStack w="20%" h="70px" spacing={0}>
@@ -89,9 +83,10 @@ function Product() {
                   w="50%"
                   h="35px"
                   alignItems="center"
-                  aria-label="Search database"
+                  aria-label="center"
                   size="xs"
-                  icon={<PlusSquareIcon />}
+                  backgroundColor="white"
+                  icon={<TiHeart />}
                 />
 
                 <Text
