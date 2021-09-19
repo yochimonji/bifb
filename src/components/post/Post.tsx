@@ -7,6 +7,7 @@ import {
   Button,
   FormControl,
   FormLabel,
+  Text,
 } from "@chakra-ui/react";
 import { BsImage } from "react-icons/bs";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -25,6 +26,7 @@ const Post = (): JSX.Element => {
   const [productUrl, setProductUrl] = useState("");
   const [tags, setTags] = useState("");
   const [mainText, setMainText] = useState("");
+  const [error, setError] = useState("");
 
   const iconInputRef = useRef<HTMLInputElement>(null);
 
@@ -53,11 +55,12 @@ const Post = (): JSX.Element => {
   const handleIcon: React.ChangeEventHandler<HTMLInputElement> = async (
     event
   ) => {
+    console.log(event.target.files);
     if (event.target.files == null || event.target.files[0] == null) {
-      console.log("ファイルが選択されていません");
+      setError("ファイルが選択されていません");
       setIconUrl("");
     } else {
-      console.log("アップロード処理");
+      setError("");
       const icon = event.target.files[0];
       const newIconName = `icon/${uuidv4()}${icon.name.slice(
         icon.name.lastIndexOf(".")
@@ -65,12 +68,11 @@ const Post = (): JSX.Element => {
       const iconRef = ref(storage, newIconName);
 
       await uploadBytes(iconRef, icon)
-        .then((snapshot) => {
-          console.log("アップロード完了");
-          console.log(snapshot);
+        .then(() => {
+          setError("");
         })
-        .catch((error) => {
-          console.log(error);
+        .catch((err) => {
+          setError(`ファイルのアップに失敗しました。${err as string}`);
         });
 
       const downloadUrl = await getDownloadURL(iconRef);
@@ -149,6 +151,11 @@ const Post = (): JSX.Element => {
           >
             変更する
           </Button>
+          {error && (
+            <Text fontSize="sm" color="red" m="0">
+              {error}
+            </Text>
+          )}
         </Stack>
         <Stack w="100%" h="200px" pt="4">
           <FormControl id="title" isRequired w="100%" h="60%">
