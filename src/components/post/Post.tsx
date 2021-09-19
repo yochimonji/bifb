@@ -9,8 +9,13 @@ import {
   FormLabel,
 } from "@chakra-ui/react";
 import { BsImage } from "react-icons/bs";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { v4 as uuidv4 } from "uuid";
 
+import app from "../../base";
 import { GithubIcon, ProductIcon, TagIcon, MarkdownForm } from "..";
+
+const storage = getStorage(app);
 
 const Post = (): JSX.Element => {
   const [title, setTitle] = useState("");
@@ -45,13 +50,31 @@ const Post = (): JSX.Element => {
    * アップロードされた画像ファイルのプレビューを表示する関数
    * @param event fileをアップロードするイベント
    */
-  const handleIcon: React.ChangeEventHandler<HTMLInputElement> = (event) => {
+  const handleIcon: React.ChangeEventHandler<HTMLInputElement> = async (
+    event
+  ) => {
     if (event.target.files == null || event.target.files[0] == null) {
+      console.log("ファイルが選択されていません");
       setIconUrl("");
     } else {
-      const imageFile = event.target.files[0];
-      const imageUrl = URL.createObjectURL(imageFile);
-      setIconUrl(imageUrl);
+      console.log("アップロード処理");
+      const icon = event.target.files[0];
+      const newIconName = `icon/${uuidv4()}${icon.name.slice(
+        icon.name.lastIndexOf(".")
+      )}`;
+      const iconRef = ref(storage, newIconName);
+
+      await uploadBytes(iconRef, icon)
+        .then((snapshot) => {
+          console.log("アップロード完了");
+          console.log(snapshot);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
+      const downloadUrl = await getDownloadURL(iconRef);
+      setIconUrl(downloadUrl);
     }
   };
 

@@ -17,8 +17,6 @@ import remarkGfm from "remark-gfm";
 import ChackUIRenderer from "chakra-ui-markdown-renderer";
 import { BsImage } from "react-icons/bs";
 import { AiFillGithub } from "react-icons/ai";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { dark } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 type MarkdownFormProps = {
   pageType: "post" | "product";
