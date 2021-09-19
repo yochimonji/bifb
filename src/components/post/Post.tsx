@@ -9,6 +9,7 @@ import {
   FormLabel,
   FormHelperText,
   Text,
+  Icon,
 } from "@chakra-ui/react";
 import { BsImage } from "react-icons/bs";
 import {
@@ -257,18 +258,17 @@ const Post = (): JSX.Element => {
   };
 
   return (
-    <Stack spacing={{ base: "4", md: "2" }}>
-      <HStack spacing="4" pt="8" align="start">
-        <Stack>
-          {/* minWにしないと横が潰れる */}
+    <Stack spacing={{ base: "4", md: "2" }} pt="8">
+      <HStack align="start">
+        <Stack w={{ base: "40%", sm: "30%", md: "20%" }}>
           {/* 画像はstateの変数から読み込む */}
-          <Image
-            minW="200px"
-            h="200px"
-            bg="gray.100"
-            fit="cover"
-            src={iconUrl}
-          />
+          {iconUrl ? (
+            <Image w="100%" fit="cover" src={iconUrl} />
+          ) : (
+            <Button w="100%" variant="ghost" onClick={onClickIconButton}>
+              <Icon as={BsImage} boxSize="8" />
+            </Button>
+          )}
           {/* 画像アップロード用のhidden属性を付与したinput */}
           {/* 下のButtonをクリックするとinputもクリックされる */}
           <input
@@ -280,11 +280,13 @@ const Post = (): JSX.Element => {
           />
           {/* 上のinputの代わりのアイコン変更用ボタン */}
           <Button
-            leftIcon={<BsImage />}
             variant="ghost"
+            fontSize="sm"
+            w="100%"
+            h="100%"
             onClick={onClickIconButton}
           >
-            アイコンを選択
+            アイコン選択
           </Button>
           {/* アイコン選択時のエラー */}
           {error && (
@@ -300,7 +302,7 @@ const Post = (): JSX.Element => {
           )}
         </Stack>
         {/* 作品タイトルと概要 */}
-        <Stack w="100%" h="200px" pt="4">
+        <Stack w={{ base: "60%", sm: "70%", md: "80%" }} h="auto" pt="4">
           <FormControl id="title" w="100%" h="60%">
             <FormLabel>作品タイトル</FormLabel>
             <Input
@@ -316,7 +318,9 @@ const Post = (): JSX.Element => {
             )}
           </FormControl>
           <FormControl id="abstract" w="100%" h="40%">
-            <FormLabel>この作品を一言で表すと？</FormLabel>
+            <FormLabel fontSize={{ base: "sm", sm: "md" }}>
+              この作品を一言で表すと？
+            </FormLabel>
             <Input
               variant="flushed"
               value={abstract}
@@ -331,10 +335,7 @@ const Post = (): JSX.Element => {
         </Stack>
       </HStack>
       {/* GitHubリンク入力欄 */}
-      <Stack
-        spacing={{ base: "0", md: "4" }}
-        flexDir={{ base: "column", md: "row" }}
-      >
+      <Stack flexDir={{ base: "column", md: "row" }} pl="2">
         <GithubIcon
           w={{ base: "100%", md: "20%" }}
           justify={{ base: "flex-start", md: "center" }}
@@ -350,10 +351,7 @@ const Post = (): JSX.Element => {
         </FormControl>
       </Stack>
       {/* 作品リンク入力欄 */}
-      <Stack
-        spacing={{ base: "0", md: "4" }}
-        flexDir={{ base: "column", md: "row" }}
-      >
+      <Stack flexDir={{ base: "column", md: "row" }} pl="2">
         <ProductIcon
           w={{ base: "100%", md: "20%" }}
           justify={{ base: "flex-start", md: "center" }}
@@ -369,10 +367,7 @@ const Post = (): JSX.Element => {
         </FormControl>
       </Stack>
       {/* タグ入力欄 */}
-      <Stack
-        spacing={{ base: "0", md: "4" }}
-        flexDir={{ base: "column", md: "row" }}
-      >
+      <Stack flexDir={{ base: "column", md: "row" }} pl="2">
         <TagIcon
           w={{ base: "100%", md: "20%" }}
           justify={{ base: "flex-start", md: "center" }}
