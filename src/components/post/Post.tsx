@@ -10,7 +10,13 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { BsImage } from "react-icons/bs";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import {
+  getStorage,
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  deleteObject,
+} from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
 import loadImage from "blueimp-load-image";
 
@@ -25,6 +31,7 @@ const Post = (): JSX.Element => {
   const [title, setTitle] = useState("");
   const [abstract, setAbstract] = useState("");
   const [iconUrl, setIconUrl] = useState("");
+  const [iconName, setIconName] = useState("");
   const [githubUrl, setGithubUrl] = useState("");
   const [productUrl, setProductUrl] = useState("");
   const [tags, setTags] = useState("");
@@ -59,17 +66,26 @@ const Post = (): JSX.Element => {
   const handleIcon: React.ChangeEventHandler<HTMLInputElement> = async (
     event
   ) => {
+    // ファイルが選択されているかチェック
     if (event.target.files == null || event.target.files[0] == null) {
       setError("ファイルが選択されていません");
       setIconUrl("");
     } else {
+      // ファイルが選択されている場合、新しいファイル名を生成
       setError("");
       const icon = event.target.files[0];
       const newIconName = `icon/${uuidv4()}${icon.name.slice(
         icon.name.lastIndexOf(".")
       )}`;
-      const iconRef = ref(storage, newIconName);
 
+      // ファイルを選択し直した時に既存のファイルをStorageから削除
+      if (iconName !== "") {
+        const oldIconRef = ref(storage, iconName);
+        await deleteObject(oldIconRef).catch((e) => console.log(e));
+      }
+      setIconName(newIconName);
+
+      // アイコンの圧縮・クロップ処理してcanvas形式に変換
       const loadIcon = await loadImage(icon, {
         maxHeight: 512,
         maxWidth: 512,
@@ -78,22 +94,22 @@ const Post = (): JSX.Element => {
       });
       const canvasIcon = loadIcon.image as HTMLCanvasElement;
 
+      // canvasをBlobに変換してStorageに保存
+      const newIconRef = ref(storage, newIconName);
       canvasIcon.toBlob(
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         async (blobIcon) => {
           if (blobIcon == null) {
             setError("アイコンの変換に失敗しました");
           } else {
-            await uploadBytes(iconRef, blobIcon)
+            await uploadBytes(newIconRef, blobIcon)
               .then(() => {
                 setError("");
               })
-              .catch((err) => {
-                setError(
-                  `アイコンのアップロードに失敗しました。${err as string}`
-                );
+              .catch(() => {
+                setError(`アイコンのアップロードに失敗しました。`);
               });
-            const downloadUrl = await getDownloadURL(iconRef);
+            const downloadUrl = await getDownloadURL(newIconRef);
             setIconUrl(downloadUrl);
           }
         },
@@ -178,7 +194,6 @@ const Post = (): JSX.Element => {
             bg="gray.100"
             fit="cover"
             src={iconUrl}
-            alt="icon"
           />
           {/* 画像アップロード用のhidden属性を付与したinput */}
           {/* 下のButtonをクリックするとinputもクリックされる */}
