@@ -142,14 +142,12 @@ const Home = (): JSX.Element => (
     </HStack>
 
     {/* 作品一覧の表示 */}
-    <Box w="100%" h="600px">
-      <SimpleGrid columns={2} spacing={10}>
-        {Product()}
-        {Product()}
-        {Product()}
-        {Product()}
-      </SimpleGrid>
-    </Box>
+    <SimpleGrid w="100%" h="600px" columns={2} spacing={10}>
+      {Product()}
+      {Product()}
+      {Product()}
+      {Product()}
+    </SimpleGrid>
   </VStack>
 );
 export default Home;
