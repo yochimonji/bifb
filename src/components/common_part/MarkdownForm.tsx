@@ -61,9 +61,10 @@ const MarkdownForm = (props: MarkdownFormProps): JSX.Element => (
             <Textarea
               value={props.mainText}
               onChange={props.handleMainText}
+              placeholder="マークダウン形式で入力"
               bg="#FCFCFC"
               shadow="inner"
-              minH="80"
+              minH="72"
               p="4"
             />
             {props.validMainText && (
@@ -83,7 +84,7 @@ const MarkdownForm = (props: MarkdownFormProps): JSX.Element => (
             border="1px"
             borderColor="gray.200"
             rounded="md"
-            minH="60"
+            minH="72"
             p="4"
           >
             {props.mainText}

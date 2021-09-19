@@ -1,12 +1,16 @@
 import React from "react";
-import { HStack, Text, Icon } from "@chakra-ui/react";
+import { HStack, Text, Icon, StackProps } from "@chakra-ui/react";
 import { AiFillGithub } from "react-icons/ai";
 
-const Github = ({ minW = "200px" } = {}): JSX.Element => (
-  <HStack minW={minW} justify="center">
+const GithubIcon = (props: StackProps): JSX.Element => (
+  <HStack {...props}>
     <Icon as={AiFillGithub} h="8" w="8" />
-    <Text fontWeight="bold">GitHubリンク</Text>
+    <Text fontWeight="bold">GitHub</Text>
   </HStack>
 );
 
-export default Github;
+GithubIcon.defaultProps = {
+  minW: "130px",
+};
+
+export default GithubIcon;

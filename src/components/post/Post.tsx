@@ -250,13 +250,14 @@ const Post = (): JSX.Element => {
       if (productId) {
         history.push("/");
       } else {
+        // eslint-disable-next-line no-alert
         alert("投稿処理に失敗しました");
       }
     }
   };
 
   return (
-    <Stack>
+    <Stack spacing={{ base: "4", md: "2" }}>
       <HStack spacing="4" pt="8" align="start">
         <Stack>
           {/* minWにしないと横が潰れる */}
@@ -330,9 +331,15 @@ const Post = (): JSX.Element => {
         </Stack>
       </HStack>
       {/* GitHubリンク入力欄 */}
-      <HStack spacing="4">
-        <GithubIcon minW="200px" />
-        <FormControl id="githubUrl" w="100%">
+      <Stack
+        spacing={{ base: "0", md: "4" }}
+        flexDir={{ base: "column", md: "row" }}
+      >
+        <GithubIcon
+          w={{ base: "100%", md: "20%" }}
+          justify={{ base: "flex-start", md: "center" }}
+        />
+        <FormControl id="githubUrl" w={{ base: "100%", md: "80%" }}>
           <Input
             variant="flushed"
             type="url"
@@ -341,11 +348,17 @@ const Post = (): JSX.Element => {
             onChange={handleGithubUrl}
           />
         </FormControl>
-      </HStack>
+      </Stack>
       {/* 作品リンク入力欄 */}
-      <HStack spacing="4">
-        <ProductIcon minW="200px" />
-        <FormControl id="productUrl" w="100%">
+      <Stack
+        spacing={{ base: "0", md: "4" }}
+        flexDir={{ base: "column", md: "row" }}
+      >
+        <ProductIcon
+          w={{ base: "100%", md: "20%" }}
+          justify={{ base: "flex-start", md: "center" }}
+        />
+        <FormControl id="productUrl" w={{ base: "100%", md: "80%" }}>
           <Input
             variant="flushed"
             type="url"
@@ -354,25 +367,32 @@ const Post = (): JSX.Element => {
             onChange={handleProductUrl}
           />
         </FormControl>
-      </HStack>
+      </Stack>
       {/* タグ入力欄 */}
-      <HStack spacing="4" pb="4">
-        <TagIcon minW="200px" />
-        <FormControl id="tags" w="100%">
-          <Input
-            variant="flushed"
-            placeholder="タグをスペースで区切って5つまで入力（例：Webアプリ JavaScript）"
-            value={tags}
-            onChange={handleTags}
-          />
-          {validTags && (
+      <Stack
+        spacing={{ base: "0", md: "4" }}
+        flexDir={{ base: "column", md: "row" }}
+      >
+        <TagIcon
+          w={{ base: "100%", md: "20%" }}
+          justify={{ base: "flex-start", md: "center" }}
+          pb={{ base: "0", md: "2" }}
+        />
+        <FormControl id="tags" w={{ base: "100%", md: "80%" }}>
+          <Input variant="flushed" value={tags} onChange={handleTags} />
+          {validTags ? (
             <FormHelperText color="red">
+              タグはスペースで区切って5つまで入力してください（例：Webアプリ
+              JavaScript）
+            </FormHelperText>
+          ) : (
+            <FormHelperText>
               タグはスペースで区切って5つまで入力してください（例：Webアプリ
               JavaScript）
             </FormHelperText>
           )}
         </FormControl>
-      </HStack>
+      </Stack>
       <MarkdownForm
         pageType="post"
         validMainText={validMainText}

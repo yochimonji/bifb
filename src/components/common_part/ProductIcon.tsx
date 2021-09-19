@@ -1,12 +1,16 @@
 import React from "react";
-import { HStack, Text } from "@chakra-ui/react";
+import { HStack, Text, StackProps } from "@chakra-ui/react";
 import { LinkIcon } from "@chakra-ui/icons";
 
-const ProductIcon = ({ minW = "200px" } = {}): JSX.Element => (
-  <HStack minW={minW} justify="center">
+const ProductIcon = (props: StackProps): JSX.Element => (
+  <HStack {...props}>
     <LinkIcon h="6" w="6" />
     <Text fontWeight="bold">作品リンク</Text>
   </HStack>
 );
+
+ProductIcon.defaultProps = {
+  minW: "130px",
+};
 
 export default ProductIcon;
