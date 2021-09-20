@@ -50,7 +50,13 @@ const Home = (): JSX.Element => (
     </HStack>
 
     {/* 作品一覧の表示 */}
-    <SimpleGrid w="100%" columns={[1, null, 2]} spacing={10}>
+    <SimpleGrid
+      bg="blue.50"
+      w="100%"
+      columns={[1, null, 2]}
+      spacingX="0px"
+      spacingY="30px"
+    >
       <DisplayProduct />
       <DisplayProduct />
       <DisplayProduct />

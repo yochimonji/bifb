@@ -17,7 +17,7 @@ const Like = (): JSX.Element => (
       textAlign="left"
       padding="10px 0px 10px 15px"
       fontSize="5px"
-      justfy="center"
+      justify="center"
       minWidth="50%"
     >
       10
