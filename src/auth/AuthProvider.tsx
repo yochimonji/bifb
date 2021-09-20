@@ -38,7 +38,6 @@ type AuthProviderProps = {
  */
 export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
-  const [register, setRegister] = useState(true);
   const auth = getAuth(app);
 
   /**
