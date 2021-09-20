@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Stack, HStack, Image, Text } from "@chakra-ui/react";
+import { Stack, HStack, Image, Text, Heading } from "@chakra-ui/react";
 
 import { TagIcon, GithubIcon, ProductIcon } from "../index";
 import { fetchProduct } from "../../firebase/firestore";
@@ -18,8 +18,8 @@ const Product = (): JSX.Element => {
   const [userUid, setUserUid] = useState("");
 
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const temp = fetchProduct("4L1WDWkKNTeqfyup4qUW").then((productData) => {
-      console.log(productData);
       if (productData) {
         setTitle(productData.productTitle);
         setAbstract(productData.productAbstract);
@@ -34,14 +34,18 @@ const Product = (): JSX.Element => {
 
   return (
     <Stack spacing={{ base: "4", md: "2" }} pt="8">
-      <HStack align="center">
-        <Stack w={{ base: "40%", sm: "35%", md: "30%" }}>
+      <HStack spacing={{ base: "2", sm: "4", md: "6" }} align="flex-start">
+        <Stack w={{ base: "40%", sm: "30%", md: "20%" }}>
           <Image w="100%" fit="cover" src={iconUrl} />
         </Stack>
         {/* 作品タイトルと概要 */}
-        <Stack w={{ base: "60%", sm: "65%", md: "70%" }} h="auto" pt="4">
-          <Text fontSize="xl">{title}</Text>
-          <Text>{abstract}</Text>
+        <Stack
+          pt={{ base: "2", sm: "4", md: "6" }}
+          w={{ base: "60%", sm: "70%", md: "80%" }}
+          spacing={{ base: "4", sm: "8", md: "12" }}
+        >
+          <Heading size="lg">{title}</Heading>
+          <Text fontSize={{ base: "sm", md: "md" }}>{abstract}</Text>
         </Stack>
       </HStack>
       {/* GitHubリンク入力欄 */}
