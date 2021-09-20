@@ -42,7 +42,7 @@ const HeaderMenuUser = (): JSX.Element => {
         }
       });
     }
-  });
+  }, [currentUser]);
 
   return (
     <Menu placement="bottom-start">

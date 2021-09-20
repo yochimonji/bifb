@@ -62,9 +62,9 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
     }
   };
 
-  //
+  // ユーザー登録を行う関数
   const register = async () => {
-    if (currentUser != null && currentUser)
+    if (currentUser != null && currentUser) {
       await postUserInfo(
         currentUser?.displayName as string,
         currentUser?.photoURL as string,
@@ -76,6 +76,7 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
         [""],
         currentUser?.uid
       );
+    }
   };
 
   /**
