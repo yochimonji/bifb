@@ -38,7 +38,7 @@ type AuthProviderProps = {
  */
 export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
-  const [register, setRegister] = useState(false);
+  const [register, setRegister] = useState(true);
   const auth = getAuth(app);
 
   /**
@@ -64,17 +64,25 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
   };
 
   /**
-   * 登録してあるかをチェックする関数
+   * Firestoreにユーザーが登録してあるかをチェックして登録してない場合に登録する関数
    * @param user Firestoreから取得したユーザー情報
    */
   const isRegistered = (user: User | null) => {
     if (user) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const tmpUserInfo = fetchUserInfo(user.uid).then((userInfo) => {
-        if (userInfo) {
-          setRegister(true);
-        } else {
-          setRegister(false);
+        if (!userInfo) {
+          postUserInfo(
+            currentUser?.displayName as string,
+            currentUser?.photoURL as string,
+            "よろしくお願いします。",
+            "",
+            "",
+            "",
+            [""],
+            [""],
+            currentUser?.uid as string
+          ).catch(() => {});
         }
       });
     }
@@ -87,6 +95,7 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
       setCurrentUser(user);
       isRegistered(user);
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth]);
 
   return (
