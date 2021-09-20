@@ -19,7 +19,7 @@ const User = (): JSX.Element => (
   <VStack spacing={10}>
     {/* ユーザー情報の部分 */}
     <HStack w="100%" spacing="0">
-      <VStack w="15%" minW="100px">
+      <VStack w="15%" minW="120px" pt="5">
         <Avatar src="https://bit.ly/broken-link" size="xl" padding="2px" />
         <Button colorScheme="black" variant="outline">
           編集
@@ -37,16 +37,19 @@ const User = (): JSX.Element => (
             aria-label="Github Icon"
             icon={<AiFillGithub />}
             size="lg"
+            variant="ghost"
           />
           <IconButton
             aria-label="Twitter Icon"
             icon={<AiOutlineTwitter />}
             size="lg"
+            variant="ghost"
           />
           <IconButton
             aria-label="Other Icon"
             icon={<AiOutlinePlusCircle />}
             size="lg"
+            variant="ghost"
           />
         </Wrap>
       </VStack>
