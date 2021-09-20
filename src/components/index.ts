@@ -9,3 +9,7 @@ export { default as HeaderMenu } from "./HeaderMenu";
 export { default as HeaderMenuUser } from "./HeaderMenuUser";
 export { default as DisplayProduct } from "./DisplayProduct";
 export { default as Like } from "./Like";
+export { default as GithubIcon } from "./common_part/GithubIcon";
+export { default as ProductIcon } from "./common_part/ProductIcon";
+export { default as TagIcon } from "./common_part/TagIcon";
+export { default as MarkdownForm } from "./common_part/MarkdownForm";
