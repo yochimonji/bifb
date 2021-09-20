@@ -22,7 +22,7 @@ const App = (): JSX.Element => (
       {/* ルータープロバイダー */}
       <BrowserRouter>
         <Header />
-        <Box bg="#F8F8FA">
+        <Box>
           <Container maxW="container.lg">
             <Switch>
               <Route path="/" component={Home} exact />
