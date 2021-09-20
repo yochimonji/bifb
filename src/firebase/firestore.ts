@@ -30,7 +30,6 @@ export const postTags = (tags: string[], conditions: string) => {
   async function getData(name: string) {
     const tagData = await getDoc(doc(db, "tags", name));
     if (tagData.exists()) {
-      console.log(tagData.id, tagData.get("sum"));
       const tagname = tagData.id;
       let sum: number;
       if (conditions === "EXIST") {
@@ -45,9 +44,17 @@ export const postTags = (tags: string[], conditions: string) => {
     }
   }
 
-  for (let i = 0; i < tags.length; i += 1) {
-    const tmp = getData(tags[i]);
+  console.log("通過確認1");
+  console.log(tags.length);
+
+  if (!(tags.length === 1) && tags[0] === "") {
+    for (let i = 0; i < tags.length; i += 1) {
+      console.log("通過確認2");
+      const tmp = getData(tags[i]);
+    }
   }
+
+  console.log("通過確認3");
 };
 
 /**
