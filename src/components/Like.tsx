@@ -1,25 +1,13 @@
 import React from "react";
-import { HStack, IconButton, Text } from "@chakra-ui/react";
-import { TiHeart } from "react-icons/ti";
+import { HStack, Icon, Text, Box } from "@chakra-ui/react";
+import { AiFillHeart } from "react-icons/ai";
 
 const Like = (): JSX.Element => (
-  <HStack w="100%" spacing={0}>
-    <IconButton
-      w="50%"
-      alignItems="center"
-      aria-label="center"
-      size="xs"
-      backgroundColor="white"
-      icon={<TiHeart />}
-    />
-    <Text
-      w="50%"
-      textAlign="left"
-      padding="10px 0px 10px 15px"
-      fontSize="5px"
-      justify="center"
-      minWidth="50%"
-    >
+  <HStack alignItems="center" spacing={0}>
+    <Box w="50%" h="50%" alignItems="center">
+      <Icon aria-label="center" color="#EEB6B7" as={AiFillHeart} />
+    </Box>
+    <Text w="50%" h="100%" textAlign="center" fontSize="md">
       10
     </Text>
   </HStack>

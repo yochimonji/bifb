@@ -7,6 +7,7 @@ import {
   TagLabel,
   TagCloseButton,
   Select,
+  Wrap,
   SimpleGrid,
 } from "@chakra-ui/react";
 import { DisplayProduct } from "./index";
@@ -21,7 +22,7 @@ const Home = (): JSX.Element => (
       <Box w="10%" padding="37px 20px 35px 0px" minW="90px">
         検索条件:
       </Box>
-      <HStack w="70%" textAlign="center" spacing={4} minW="550px">
+      <HStack w="70%" textAlign="center" spacing={4} minW="450px">
         {["React", "Typescript", "JavaScript", "C++", "Webアプリ"].map(
           (tag) => (
             <Tag
@@ -51,16 +52,22 @@ const Home = (): JSX.Element => (
 
     {/* 作品一覧の表示 */}
     <SimpleGrid
-      bg="blue.50"
       w="100%"
       columns={[1, null, 2]}
-      spacingX="0px"
-      spacingY="30px"
+      spacingX="50px"
+      spacingY="50px"
+      justifyItems="center"
     >
       <DisplayProduct />
       <DisplayProduct />
       <DisplayProduct />
       <DisplayProduct />
+      {/* <Box w="100%" minW="400px" maxW="450px" h="234.9px" bg="green.100" />
+      <Box w="100%" minW="400px" maxW="450px" h="234.9px" bg="green.200" />
+      <Box w="100%" minW="400px" maxW="450px" h="234.9px" bg="green.300" />
+      <Box w="100%" minW="400px" maxW="450px" h="234.9px" bg="green.400" />
+      <Box w="100%" minW="400px" maxW="450px" h="234.9px" bg="green.300" />
+      <Box w="100%" minW="400px" maxW="450px" h="234.9px" bg="green.400" /> */}
     </SimpleGrid>
   </VStack>
 );
