@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { FcGoogle } from "react-icons/fc";
 
-import { AuthContext } from "../auth/AuthProvider";
+import { AuthContext } from "../../auth/AuthProvider";
 
 /**
  * ユーザーアイコンの表示とクリックした際の動作を行う関数
