@@ -44,17 +44,11 @@ export const postTags = (tags: string[], conditions: string) => {
     }
   }
 
-  console.log("通過確認1");
-  console.log(tags.length);
-
   if (!(tags.length === 1) && tags[0] === "") {
     for (let i = 0; i < tags.length; i += 1) {
-      console.log("通過確認2");
       const tmp = getData(tags[i]);
     }
   }
-
-  console.log("通過確認3");
 };
 
 /**
