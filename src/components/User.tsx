@@ -58,6 +58,7 @@ const User = (): JSX.Element => (
             icon={<AiOutlineTwitter />}
             size="lg"
             variant="ghost"
+            colorScheme="twitter"
           />
           <IconButton
             aria-label="Other Icon"
