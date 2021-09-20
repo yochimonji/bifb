@@ -305,7 +305,7 @@ const Post = (): JSX.Element => {
         </Stack>
         {/* 作品タイトルと概要 */}
         <Stack w={{ base: "60%", sm: "70%", md: "80%" }} h="auto" pt="4">
-          <FormControl id="title" w="100%" h="60%">
+          <FormControl w="100%" h="60%">
             <FormLabel>作品タイトル</FormLabel>
             <Input
               fontSize="xl"
@@ -319,7 +319,7 @@ const Post = (): JSX.Element => {
               </FormHelperText>
             )}
           </FormControl>
-          <FormControl id="abstract" w="100%" h="40%">
+          <FormControl w="100%" h="40%">
             <FormLabel fontSize={{ base: "sm", sm: "md" }}>
               この作品を一言で表すと？
             </FormLabel>
@@ -342,7 +342,7 @@ const Post = (): JSX.Element => {
           w={{ base: "100%", md: "20%" }}
           justify={{ base: "flex-start", md: "center" }}
         />
-        <FormControl id="githubUrl" w={{ base: "100%", md: "80%" }}>
+        <FormControl w={{ base: "100%", md: "80%" }}>
           <Input
             variant="flushed"
             type="url"
@@ -358,7 +358,7 @@ const Post = (): JSX.Element => {
           w={{ base: "100%", md: "20%" }}
           justify={{ base: "flex-start", md: "center" }}
         />
-        <FormControl id="productUrl" w={{ base: "100%", md: "80%" }}>
+        <FormControl w={{ base: "100%", md: "80%" }}>
           <Input
             variant="flushed"
             type="url"
@@ -375,7 +375,7 @@ const Post = (): JSX.Element => {
           justify={{ base: "flex-start", md: "center" }}
           pb={{ base: "0", md: "2" }}
         />
-        <FormControl id="tags" w={{ base: "100%", md: "80%" }}>
+        <FormControl w={{ base: "100%", md: "80%" }}>
           <Input variant="flushed" value={tags} onChange={handleTags} />
           {validTags ? (
             <FormHelperText color="red">

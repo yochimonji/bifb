@@ -74,7 +74,7 @@ const MarkdownForm = (props: MarkdownFormProps): JSX.Element => (
       </Stack>
       <TabPanels>
         <TabPanel p="0" pt="4">
-          <FormControl id="mainText">
+          <FormControl>
             <Textarea
               value={props.mainText}
               onChange={props.handleMainText}
