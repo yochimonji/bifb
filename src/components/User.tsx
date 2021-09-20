@@ -22,20 +22,31 @@ const User = (): JSX.Element => (
   <VStack spacing={10} alignItems="flex-start">
     {/* ユーザー情報の部分 */}
     <HStack w="100%" spacing="0">
-      <VStack w="15%" minW="120px" pt="5px" pl="0px" alignSelf="flex-start">
+      <VStack
+        w="10%"
+        minW="120px"
+        padding="5px 10px 0px 0px"
+        alignSelf="flex-start"
+      >
         <Avatar src="https://bit.ly/broken-link" size="xl" />
         <Button colorScheme="black" variant="outline">
           編集
         </Button>
       </VStack>
-      <VStack w="35%" spacing="0" minW="200px" alignSelf="flex-start">
-        <Text w="100%" fontSize="3xl">
-          yochimonjiyochimonjiyochimonjiyochimonji
+      <VStack
+        w="35%"
+        spacing="0"
+        minW="200px"
+        minH="150px"
+        alignSelf="flex-start"
+      >
+        <Text w="100%" minH="50px" fontSize="3xl">
+          yochimonji
         </Text>
-        <Text w="100%" fontSize="md" padding="10px 15px 10px 0px">
-          よろしくお願いします。よろしくお願いします。よろしくお願いします。よろしくお願いします。よろしくお願いします。よろしくお願いします。よろしくお願いします。よろしくお願いします。
+        <Text w="100%" minH="50px" fontSize="md" padding="10px 15px 10px 0px">
+          よろしくお願いします。
         </Text>
-        <Wrap w="100%" alignItems="center">
+        <Wrap w="100%" minH="50px" alignItems="center">
           <IconButton
             aria-label="Github Icon"
             icon={<AiFillGithub />}
@@ -57,7 +68,7 @@ const User = (): JSX.Element => (
         </Wrap>
       </VStack>
       {/* 追加機能をする際のスペース */}
-      <Box w="50%" h="200px" alignSelf="flex-start" />
+      <Box w="55%" h="200px" alignSelf="flex-start" />
     </HStack>
     {/* 作品の表示条件の選択 */}
     <HStack w="100%" spacing={10}>
