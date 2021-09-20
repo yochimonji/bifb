@@ -8,6 +8,9 @@ import {
   Text,
   IconButton,
   Wrap,
+  TabList,
+  Tabs,
+  Tab,
 } from "@chakra-ui/react";
 import {
   AiFillGithub,
@@ -16,16 +19,16 @@ import {
 } from "react-icons/ai";
 
 const User = (): JSX.Element => (
-  <VStack spacing={10}>
+  <VStack spacing={10} alignItems="flex-start">
     {/* ユーザー情報の部分 */}
     <HStack w="100%" spacing="0">
-      <VStack w="15%" minW="120px" pt="5">
-        <Avatar src="https://bit.ly/broken-link" size="xl" padding="2px" />
+      <VStack w="15%" minW="120px" pt="5px" pl="0px" alignSelf="flex-start">
+        <Avatar src="https://bit.ly/broken-link" size="xl" />
         <Button colorScheme="black" variant="outline">
           編集
         </Button>
       </VStack>
-      <VStack w="85%" spacing="0" minW="150px">
+      <VStack w="35%" spacing="0" minW="200px" alignSelf="flex-start">
         <Text w="100%" fontSize="3xl">
           yochimonjiyochimonjiyochimonjiyochimonji
         </Text>
@@ -54,19 +57,35 @@ const User = (): JSX.Element => (
         </Wrap>
       </VStack>
       {/* 追加機能をする際のスペース */}
-      {/* <Box w="30%" h="150px" bg="green.200" /> */}
+      <Box w="50%" h="200px" alignSelf="flex-start" />
     </HStack>
     {/* 作品の表示条件の選択 */}
-    <HStack w="100%" spacing={10} align="center">
-      <Button colorScheme="blackAlpha" variant="outline">
-        投稿済み
-      </Button>
-      <Button colorScheme="blackAlpha" variant="outline">
-        フィード－バック
-      </Button>
-      <Button colorScheme="blackAlpha" variant="outline">
-        いいね
-      </Button>
+    <HStack w="100%" spacing={10}>
+      <Tabs variant="unstyled">
+        <TabList pt="2">
+          <Tab
+            rounded="full"
+            fontSize={{ base: "sm", md: "md" }}
+            _selected={{ color: "#FCFCFC", bg: "#99CED4" }}
+          >
+            投稿済み
+          </Tab>
+          <Tab
+            rounded="full"
+            fontSize={{ base: "sm", md: "md" }}
+            _selected={{ color: "#FCFCFC", bg: "#99CED4" }}
+          >
+            フィードバック
+          </Tab>
+          <Tab
+            rounded="full"
+            fontSize={{ base: "sm", md: "md" }}
+            _selected={{ color: "#FCFCFC", bg: "#99CED4" }}
+          >
+            いいね
+          </Tab>
+        </TabList>
+      </Tabs>
     </HStack>
 
     {/* 作品の表示 */}
