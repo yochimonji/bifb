@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   HStack,
   VStack,
@@ -9,14 +9,17 @@ import {
   Select,
   SimpleGrid,
 } from "@chakra-ui/react";
+import {
+  QueryDocumentSnapshot,
+  QuerySnapshot,
+  DocumentData,
+} from "firebase/firestore";
+import { fetchProducts } from "../firebase/firestore";
 import { DisplayProduct } from "./index";
 
-// 作品情報の表示
-// 実際には、作品情報を変数として、テンプレート枠にその情報を埋め込んでいく
-
 const Home = (): JSX.Element => {
-  // Selectがどの状態にあるのかの把握
-  const [sortType, setSortType] = useState("");
+  const [sortType, setSortType] = useState("TREND");
+  const [productData, setProductData] = useState<QuerySnapshot | undefined>();
 
   // sortTypeの選択の変更を認識する関数
   const onChangeSortType: React.ChangeEventHandler<HTMLSelectElement> = (
@@ -24,6 +27,27 @@ const Home = (): JSX.Element => {
   ) => {
     setSortType(event.target.value);
   };
+
+  // データの取得
+  useEffect(() => {
+    const tmpData = fetchProducts(sortType, "Asce").then(
+      (data: QuerySnapshot<DocumentData> | undefined) => {
+        setProductData(data);
+      }
+    );
+  }, [sortType]);
+
+  console.log("log1");
+  // ユーザーIDからユーザー名とユーザーアイコンの取得
+  const userIconUrl = "";
+  const userName = "";
+
+  // if (productData !== undefined) {
+  //   productData.docs.map((eachObjData) => {
+  //     console.log(eachObjData.data().productTitle);
+  //     return true;
+  //   });
+  // }
 
   return (
     <VStack spacing={10} align="stretch">
@@ -33,22 +57,20 @@ const Home = (): JSX.Element => {
           検索条件:
         </Box>
         <HStack w="70%" textAlign="center" spacing={4} minW="450px">
-          {["React", "Typescript", "JavaScript", "C++", "Webアプリ"].map(
-            (tag) => (
-              <Tag
-                size="lg"
-                key="lg"
-                borderRadius="full"
-                variant="solid"
-                bg="#DEEFF1"
-                textColor="black"
-                justfy="left"
-              >
-                <TagLabel>{tag}</TagLabel>
-                <TagCloseButton />
-              </Tag>
-            )
-          )}
+          {["React", "Typescript", "Webアプリ"].map((tag) => (
+            <Tag
+              size="lg"
+              key="lg"
+              borderRadius="full"
+              variant="solid"
+              bg="#DEEFF1"
+              textColor="black"
+              justfy="left"
+            >
+              <TagLabel>{tag}</TagLabel>
+              <TagCloseButton />
+            </Tag>
+          ))}
         </HStack>
         <Box w="20%" padding="30px 0px">
           <Select name="sortType" onChange={onChangeSortType}>
@@ -59,7 +81,6 @@ const Home = (): JSX.Element => {
           </Select>
         </Box>
       </HStack>
-
       {/* 作品一覧の表示 */}
       <SimpleGrid
         w="100%"
@@ -68,11 +89,27 @@ const Home = (): JSX.Element => {
         spacingY="50px"
         justifyItems="center"
       >
-        <DisplayProduct />
-        <DisplayProduct />
-        <DisplayProduct />
-        <DisplayProduct />
+        {productData &&
+          productData.docs.map(
+            (eachObjData: QueryDocumentSnapshot<DocumentData>) => {
+              console.log("----map関数内Log----");
+              return (
+                <DisplayProduct
+                  {...console.log(eachObjData.data().productTitle as string)}
+                  productIconUrl={eachObjData.data().productIconUrl as string}
+                  userIconUrl={userIconUrl}
+                  userName={userName}
+                  productTitle={eachObjData.data().productTitle as string}
+                  productAbstract={eachObjData.data().productAbstract as string}
+                  postDate={eachObjData.data().postDate as string}
+                  editDate={eachObjData.data().editDate as string}
+                  sumLike={eachObjData.data().sumLike as number}
+                />
+              );
+            }
+          )}
       </SimpleGrid>
+      {console.log("log2")}
     </VStack>
   );
 };

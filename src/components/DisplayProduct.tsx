@@ -10,7 +10,18 @@ import {
 } from "@chakra-ui/react";
 import { Like } from "./index";
 
-const DisplayProduct = (): JSX.Element => (
+type DisplayProductProps = {
+  productIconUrl: string;
+  userIconUrl: string;
+  userName: string;
+  productTitle: string;
+  productAbstract: string;
+  postDate: string;
+  editDate: string;
+  sumLike: number;
+};
+
+const DisplayProduct = (props: DisplayProductProps): JSX.Element => (
   <Button
     w="100%"
     minWidth="350px"
@@ -20,24 +31,25 @@ const DisplayProduct = (): JSX.Element => (
     borderColor="black"
     backgroundColor="white"
   >
+    {console.log("DisplayProduct関数への侵入の確認")}
     <HStack w="100%" spacing={0} alignItems="flex-start">
       <VStack w="36%" h="230px" spacing={0}>
         <Image
           w="100%"
           h="161px"
-          src="https://bit.ly/sage-adebayo"
+          src={props.productIconUrl}
           boxsize="100px"
           padding="20px 10px"
         />
         <HStack w="100%" h="69px" spacing={0}>
-          <Avatar w="30%" src="https://bit.ly/broken-link" size="sm" />
+          <Avatar w="30%" src={props.userIconUrl} size="sm" />
           <Text
             w="70%"
             fontSize="md"
             textAlign="center"
             padding="15px 0px 15px"
           >
-            yochimonji
+            {props.userName}
           </Text>
         </HStack>
       </VStack>
@@ -51,7 +63,7 @@ const DisplayProduct = (): JSX.Element => (
           textAlign="left"
           whiteSpace="pre-wrap"
         >
-          ラクスケ
+          {props.productTitle}
         </Text>
         <Text
           w="100%"
@@ -61,7 +73,7 @@ const DisplayProduct = (): JSX.Element => (
           textAlign="left"
           whiteSpace="pre-wrap"
         >
-          神アプリ！ぜひ使ってねー！
+          {props.productAbstract}
         </Text>
         <HStack w="100%" h="46px" spacing="0px">
           <VStack w="60%" h="46px" spacing="0px">
@@ -73,7 +85,7 @@ const DisplayProduct = (): JSX.Element => (
               padding="5px 5px 5px 0px"
               whiteSpace="pre-wrap"
             >
-              2021年8月28日作成
+              {props.postDate}
             </Text>
             <Text
               w="100%"
@@ -83,11 +95,11 @@ const DisplayProduct = (): JSX.Element => (
               padding="5px 5px 5px 0px"
               whiteSpace="pre-wrap"
             >
-              2021年9月10日更新
+              {props.editDate}
             </Text>
           </VStack>
           <Box w="40%" h="46px">
-            <Like />
+            <Like sumLike={props.sumLike} />
           </Box>
         </HStack>
       </VStack>

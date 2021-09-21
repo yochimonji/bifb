@@ -224,7 +224,6 @@ export const fetchFeedback = async (productId: string) => {
 
 /**
  * トレンド・新着・いいね数によって、作品をソートする
- * ただし現状、リスト的な表示はできず、最後のものしか表示されない 要改善
  * トレンドをどう表現するかについても要検討
  *
  * @param conditions Trend｜New｜LikeLarge｜LikeSmall
@@ -233,26 +232,22 @@ export const fetchFeedback = async (productId: string) => {
  */
 export const fetchProducts = async (conditions: string, sortType: string) => {
   let q;
-  if (conditions === "TREND") {
+  if (conditions === "TREND" || conditions === "") {
     if (sortType === "Desc") {
       q = query(collection(db, "product"), orderBy("sumLike", "desc"));
-    }
-    q = query(collection(db, "product"), orderBy("sumLike"));
+    } else q = query(collection(db, "product"), orderBy("sumLike"));
   } else if (conditions === "NEW") {
     if (sortType === "Desc") {
       q = query(collection(db, "product"), orderBy("postDate", "desc"));
-    }
-    q = query(collection(db, "product"), orderBy("postDate"));
+    } else q = query(collection(db, "product"), orderBy("postDate"));
   } else if (conditions === "LikeLarge") {
     if (sortType === "Desc") {
       q = query(collection(db, "product"), orderBy("postDate", "desc"));
-    }
-    q = query(collection(db, "product"), orderBy("sumLike"));
+    } else q = query(collection(db, "product"), orderBy("sumLike"));
   } else if (conditions === "LikeSmall") {
     if (sortType === "Decs") {
       q = query(collection(db, "product"), orderBy("postDate"));
-    }
-    q = query(collection(db, "product"), orderBy("sumLike", "desc"));
+    } else q = query(collection(db, "product"), orderBy("sumLike", "desc"));
   }
 
   const querySnapshot = await getDocs(q);
