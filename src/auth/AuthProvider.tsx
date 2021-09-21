@@ -9,6 +9,7 @@ import {
 } from "firebase/auth";
 
 import app from "../base";
+import { fetchUserInfo, postUserInfo } from "../firebase/firestore";
 
 // Google Providerの作成
 const provider = new GoogleAuthProvider();
@@ -61,13 +62,46 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
     }
   };
 
+  // ユーザー登録を行う関数
+  const register = async () => {
+    if (currentUser != null && currentUser) {
+      await postUserInfo(
+        currentUser?.displayName as string,
+        currentUser?.photoURL as string,
+        "よろしくお願いします。",
+        "",
+        "",
+        "",
+        [""],
+        [""],
+        currentUser?.uid
+      );
+    }
+  };
+
+  /**
+   * Firestoreにユーザーが登録してあるかをチェックして登録してない場合に登録する関数
+   * @param user Firestoreから取得したユーザー情報
+   */
+  const isRegistered = async (user: User | null): Promise<void> => {
+    if (user) {
+      const userInfo = await fetchUserInfo(user.uid);
+      if (!userInfo) {
+        await register();
+      }
+    }
+  };
+
   // 認証に関する副作用
   // authはFirebaseAppのAuthインスタンスであり、認証情報が変わるたびに呼び出される
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      isRegistered(user);
     });
-  }, [auth]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [auth, currentUser]);
 
   return (
     // Contextを使用して認証に必要な情報をコンポーネントツリーに流し込む。
