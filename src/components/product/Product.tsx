@@ -1,5 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { Stack, HStack, Image, Text, Heading } from "@chakra-ui/react";
+import {
+  Stack,
+  HStack,
+  Image,
+  Text,
+  Heading,
+  Button,
+  Avatar,
+  Icon,
+} from "@chakra-ui/react";
+import { Link, LinkProps } from "react-router-dom";
+import moment from "moment";
 
 import { TagIcon, GithubIcon, ProductIcon } from "../index";
 import {
@@ -22,11 +33,18 @@ const Product = (): JSX.Element => {
   const [userUid, setUserUid] = useState("");
   const [userIcon, setUserIcon] = useState("");
   const [userName, setUserName] = useState("");
+  const [userLink, setUserLink] = useState<LinkProps>();
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const tmp = fetchProduct("4L1WDWkKNTeqfyup4qUW").then((productData) => {
       if (productData) {
+        const formatedPostDate = moment(productData.postDate).format(
+          "YYYY年MM月DD日"
+        );
+        const formatedEditDate = moment(productData.editDate).format(
+          "YYYY年MM月DD日"
+        );
         setTitle(productData.productTitle);
         setAbstract(productData.productAbstract);
         setIconUrl(productData.productIconUrl);
@@ -34,8 +52,8 @@ const Product = (): JSX.Element => {
         setProductUrl(productData.productUrl);
         setTags(productData.tags);
         setMainText(productData.mainText);
-        setPostDate(productData.postDate);
-        setEditDate(productData.editDate);
+        setPostDate(formatedPostDate);
+        setEditDate(formatedEditDate);
         setSumLike(productData.sumLike);
         setUserUid(productData.userUid);
       }
@@ -43,31 +61,59 @@ const Product = (): JSX.Element => {
   }, []);
 
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const tmp = fetchUserInfo(userUid).then((userInfo) => {
-      if (userInfo) {
-        setUserIcon(userInfo.userIcon);
-        setUserName(userInfo.name);
-      }
-    });
+    // 初回読み込み時にuserUidがないためエラーになるためifが必要
+    if (userUid) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const tmp = fetchUserInfo(userUid).then((userInfo) => {
+        if (userInfo) {
+          setUserIcon(userInfo.userIcon);
+          setUserName(userInfo.name);
+        }
+      });
+    }
   }, [userUid]);
 
   return (
-    <Stack spacing={{ base: "4", md: "2" }} pt="8">
+    <Stack spacing={{ base: "4", md: "2" }} pt={{ base: "4", sm: "8" }}>
       <HStack spacing={{ base: "2", sm: "4", md: "6" }} align="flex-start">
-        <Stack w={{ base: "40%", sm: "30%", md: "20%" }}>
+        <Stack w={{ base: "30%", sm: "25%", md: "20%" }}>
           <Image w="100%" fit="cover" src={iconUrl} />
         </Stack>
         {/* 作品タイトルと概要 */}
         <Stack
           pt={{ base: "2", sm: "4", md: "6" }}
-          w={{ base: "60%", sm: "70%", md: "80%" }}
+          w={{ base: "70%", sm: "75%", md: "80%" }}
           spacing={{ base: "4", sm: "8", md: "12" }}
         >
-          <Heading size="lg">{title}</Heading>
+          <Heading fontSize={{ base: "lg", sm: "xl", md: "2xl" }}>
+            {title}
+          </Heading>
           <Text fontSize={{ base: "sm", md: "md" }}>{abstract}</Text>
         </Stack>
       </HStack>
+      <Stack
+        flexDir={{ base: "column", sm: "row" }}
+        justify={{ base: "flex-start", sm: "center" }}
+      >
+        <HStack
+          as={Link}
+          w="20%"
+          minW="115px"
+          justify={{ base: "flex-start", sm: "center" }}
+          to={{ pathname: "/user", state: { userUid } }}
+        >
+          <Avatar name={userName} src={userIcon} size="sm" />
+          <Text>{userName}</Text>
+        </HStack>
+        <Text
+          w="80%"
+          pl={{ base: "0", sm: "6" }}
+          fontSize={{ base: "xs", md: "sm" }}
+        >
+          投稿日{postDate}
+          {postDate === editDate && ` 編集日${editDate}`}
+        </Text>
+      </Stack>
       {/* GitHubリンク入力欄 */}
       <Stack flexDir={{ base: "column", md: "row" }} pl="2">
         <GithubIcon
