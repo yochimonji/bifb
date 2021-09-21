@@ -2,7 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Stack, HStack, Image, Text, Heading } from "@chakra-ui/react";
 
 import { TagIcon, GithubIcon, ProductIcon } from "../index";
-import { fetchProduct } from "../../firebase/firestore";
+import {
+  fetchProduct,
+  fetchUserInfo,
+  fetchFeedback,
+} from "../../firebase/firestore";
 
 const Product = (): JSX.Element => {
   const [title, setTitle] = useState("");
@@ -16,10 +20,12 @@ const Product = (): JSX.Element => {
   const [editDate, setEditDate] = useState("");
   const [sumLike, setSumLike] = useState("");
   const [userUid, setUserUid] = useState("");
+  const [userIcon, setUserIcon] = useState("");
+  const [userName, setUserName] = useState("");
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const temp = fetchProduct("4L1WDWkKNTeqfyup4qUW").then((productData) => {
+    const tmp = fetchProduct("4L1WDWkKNTeqfyup4qUW").then((productData) => {
       if (productData) {
         setTitle(productData.productTitle);
         setAbstract(productData.productAbstract);
@@ -28,9 +34,23 @@ const Product = (): JSX.Element => {
         setProductUrl(productData.productUrl);
         setTags(productData.tags);
         setMainText(productData.mainText);
+        setPostDate(productData.postDate);
+        setEditDate(productData.editDate);
+        setSumLike(productData.sumLike);
+        setUserUid(productData.userUid);
       }
     });
   }, []);
+
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const tmp = fetchUserInfo(userUid).then((userInfo) => {
+      if (userInfo) {
+        setUserIcon(userInfo.userIcon);
+        setUserName(userInfo.name);
+      }
+    });
+  }, [userUid]);
 
   return (
     <Stack spacing={{ base: "4", md: "2" }} pt="8">
