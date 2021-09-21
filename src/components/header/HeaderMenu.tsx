@@ -2,8 +2,8 @@ import React, { useContext } from "react";
 import { Button, Icon, HStack, Link } from "@chakra-ui/react";
 import { MdSearch, MdNotifications, MdNoteAdd } from "react-icons/md";
 
-import { AuthContext } from "../auth/AuthProvider";
-import { HeaderMenuUser } from ".";
+import { AuthContext } from "../../auth/AuthProvider";
+import { HeaderMenuUser } from "..";
 
 /**
  * ヘッダーのメニュー部分を作成する関数

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Menu,
   MenuButton,
@@ -10,7 +10,8 @@ import {
 } from "@chakra-ui/react";
 import { FcGoogle } from "react-icons/fc";
 
-import { AuthContext } from "../auth/AuthProvider";
+import { AuthContext } from "../../auth/AuthProvider";
+import { fetchUserInfo } from "../../firebase/firestore";
 
 /**
  * ユーザーアイコンの表示とクリックした際の動作を行う関数
@@ -18,6 +19,8 @@ import { AuthContext } from "../auth/AuthProvider";
  */
 const HeaderMenuUser = (): JSX.Element => {
   const { googleLogin, logout, currentUser } = useContext(AuthContext);
+  const [userName, setUserName] = useState("");
+  const [userIcon, setUserIcon] = useState("");
 
   const handleGoogleLogin = () => {
     googleLogin();
@@ -27,22 +30,31 @@ const HeaderMenuUser = (): JSX.Element => {
     logout();
   };
 
+  // currentUserの変更に合わせてユーザー名とユーザーアイコンを変更する
+  // Firestoreからユーザー名とユーザーアイコンを取得する
+  useEffect(() => {
+    if (currentUser !== null) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const tmpUserInfo = fetchUserInfo(currentUser.uid).then((userInfo) => {
+        if (userInfo) {
+          setUserName(userInfo.name);
+          setUserIcon(userInfo.userIcon);
+        }
+      });
+    }
+  }, [currentUser]);
+
   return (
     <Menu placement="bottom-start">
       {/* ログイン時と非ログイン時で表示するメニューを変更する */}
       {currentUser ? (
         <>
           <MenuButton color="none" p="1">
-            <Avatar
-              w="10"
-              h="10"
-              src={currentUser?.photoURL as string | undefined}
-              name={currentUser?.displayName as string | undefined}
-            />
+            <Avatar w="10" h="10" src={userIcon} name={userName} />
           </MenuButton>
           <MenuList>
             <MenuItem as="a" href="User">
-              {currentUser?.displayName}
+              {userName}
               <span> さん</span>
             </MenuItem>
             <MenuItem as="a" href="/User">
