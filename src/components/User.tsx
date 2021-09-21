@@ -105,9 +105,13 @@ const User = (): JSX.Element => (
       作品の表示欄 作品の表示関数はmerge前であるため未実装
       ただし、以下のコメントアウトの部分でおそらく実行可能
     </Box>
-    {/* <SimpleGrid w="100%" columns={1, null, 2} spacing={10}>
-      <DisPlayProduct />
-    </SimpleGrid> */}
+    {/* <SimpleGrid
+        w="100%"
+        columns={[1, null, 2]}
+        spacingX="50px"
+        spacingY="50px"
+        justifyItems="center"
+       />     */}
   </VStack>
 );
 
