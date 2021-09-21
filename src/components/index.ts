@@ -13,3 +13,4 @@ export { default as TagIcon } from "./common_part/TagIcon";
 export { default as MarkdownForm } from "./common_part/MarkdownForm";
 export { default as DisplayProduct } from "./DisplayProduct";
 export { default as Like } from "./Like";
+export { default as FetchProductInfo } from "./FetchProductInfo";
