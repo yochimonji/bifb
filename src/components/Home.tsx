@@ -7,7 +7,6 @@ import {
   TagLabel,
   TagCloseButton,
   Select,
-  Wrap,
   SimpleGrid,
 } from "@chakra-ui/react";
 import { DisplayProduct } from "./index";
