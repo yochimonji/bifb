@@ -9,6 +9,7 @@ import {
   orderBy,
   where,
   setDoc,
+  DocumentSnapshot,
   DocumentData,
   deleteDoc,
   updateDoc,
@@ -29,18 +30,15 @@ export const postTags = (tags: string[], conditions: string): void => {
 
   async function getData(name: string) {
     const tagData = await getDoc(doc(db, "tags", name));
+    const tagname = tagData.id;
     if (tagData.exists()) {
-      const tagname = tagData.id;
-      let sum: number;
       if (conditions === "EXIST") {
-        sum = Number(tagData.get("sum"));
+        const temtemA = setData(tagname, Number(tagData.get("sum")));
       } else if (conditions === "NEW") {
-        sum = Number(tagData.get("sum")) + 1;
+        const temtemA = setData(tagname, Number(tagData.get("sum")) + 1);
       }
-      const tmptmp = setData(tagname, sum);
     } else {
-      const tagname = tagData.id;
-      const tmptmptmps = setData(tagname, 1);
+      const tmptmptmp = setData(tagname, 1);
     }
   }
 
@@ -138,7 +136,7 @@ export const postUserInfo = async (
   giveFeedback: string[],
   userUid: string
 ): Promise<void> => {
-  const docUserInfo = await setDoc(doc(db, "userInfo", userUid), {
+  const tmp = await setDoc(doc(db, "userInfo", userUid), {
     name,
     userIcon,
     comment,
@@ -246,24 +244,18 @@ export const fetchProducts = async (
   if (conditions === "Trend") {
     if (sortType === "Desc") {
       q = query(collection(db, "product"), orderBy("sumLike", "desc"));
-    }
-    q = query(collection(db, "product"), orderBy("sumLike"));
+    } else q = query(collection(db, "product"), orderBy("sumLike"));
   } else if (conditions === "New") {
     if (sortType === "Desc") {
       q = query(collection(db, "product"), orderBy("postDate", "desc"));
-    }
-    q = query(collection(db, "product"), orderBy("postDate"));
+    } else q = query(collection(db, "product"), orderBy("postDate"));
   } else if (conditions === "LikeLarge") {
     if (sortType === "Desc") {
-      q = query(collection(db, "product"), orderBy("postDate", "desc"));
-    }
-    q = query(collection(db, "product"), orderBy("sumLike"));
-  } else if (conditions === "LikeSmall") {
-    if (sortType === "Decs") {
-      q = query(collection(db, "product"), orderBy("postDate"));
-    }
-    q = query(collection(db, "product"), orderBy("sumLike", "desc"));
-  }
+      q = query(collection(db, "product"), orderBy("sumLike", "desc"));
+    } else q = query(collection(db, "product"), orderBy("sumLike"));
+  } else if (sortType === "Decs") {
+    q = query(collection(db, "product"), orderBy("postDate"));
+  } else q = query(collection(db, "product"), orderBy("sumLike", "desc"));
 
   const querySnapshot = await getDocs(q);
   return querySnapshot;
@@ -284,7 +276,7 @@ export const fetchProductsUser = async (
 ): Promise<unknown> => {
   let q;
   let querySnapshot;
-  const eachProductIdFeedback: any[] = [];
+  const eachProductIdFeedback: string[] = [];
   const returnProductInfo: (DocumentData | undefined)[] = [];
   if (searchType === "POSTED") {
     q = query(collection(db, "product"), where("userUid", "==", userUid));
@@ -293,21 +285,23 @@ export const fetchProductsUser = async (
   }
   if (searchType === "FEEDBACK") {
     q = query(collection(db, "feedback"), where("userUid", "==", userUid));
-    const querySnapshotTmp = await getDocs(q).then((feedbackDoc) => {
+    const tmp = await getDocs(q).then((feedbackDoc) => {
       feedbackDoc.forEach((feedbackEachData) => {
         eachProductIdFeedback.push(feedbackEachData.get("productId"));
       });
     });
     for (let i = 0; i < eachProductIdFeedback.length; i += 1) {
-      const tmp = fetchProduct(eachProductIdFeedback[i]).then((data) => {
+      const tmp2 = fetchProduct(eachProductIdFeedback[i]).then((data) => {
         returnProductInfo.push(data);
       });
     }
     return returnProductInfo;
   }
   if (searchType === "LIKE") {
-    const giveLikeId = await getDoc(doc(db, "userInfo", userUid));
-    const givedLikeProductId: unknown = giveLikeId.get("giveLike");
+    const giveLikeId: DocumentSnapshot<DocumentData> = await getDoc(
+      doc(db, "userInfo", userUid)
+    );
+    const givedLikeProductId = giveLikeId.get("giveLike");
 
     for (let i = 0; i < givedLikeProductId.length; i += 1) {
       const tmp = fetchProduct(givedLikeProductId[i]).then((data) => {
@@ -438,7 +432,7 @@ export const editProduct = async (
     time = data.get("postDate");
   });
   // 作品情報の取得
-  const existProduct = await setDoc(doc(db, "product", productId), {
+  const tmp3 = await setDoc(doc(db, "product", productId), {
     productTitle,
     productAbstract,
     productIconUrl,
