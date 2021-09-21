@@ -31,7 +31,6 @@ const DisplayProduct = (props: DisplayProductProps): JSX.Element => (
     borderColor="black"
     backgroundColor="white"
   >
-    {console.log("DisplayProduct関数への侵入の確認")}
     <HStack w="100%" spacing={0} alignItems="flex-start">
       <VStack w="36%" h="230px" spacing={0}>
         <Image

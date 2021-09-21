@@ -8,7 +8,6 @@ type SumLikeProps = {
 
 const Like = (props: SumLikeProps): JSX.Element => (
   <HStack alignItems="center" spacing={0}>
-    {console.log("Like関数への侵入確認")}
     <Box w="50%" h="50%" alignItems="center">
       <Icon aria-label="center" color="#EEB6B7" as={AiFillHeart} />
     </Box>

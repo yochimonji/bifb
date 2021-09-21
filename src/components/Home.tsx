@@ -20,6 +20,8 @@ import { DisplayProduct } from "./index";
 const Home = (): JSX.Element => {
   const [sortType, setSortType] = useState("TREND");
   const [productData, setProductData] = useState<QuerySnapshot | undefined>();
+  const userIconUrl = "";
+  const userName = "";
 
   // sortTypeの選択の変更を認識する関数
   const onChangeSortType: React.ChangeEventHandler<HTMLSelectElement> = (
@@ -36,18 +38,6 @@ const Home = (): JSX.Element => {
       }
     );
   }, [sortType]);
-
-  console.log("log1");
-  // ユーザーIDからユーザー名とユーザーアイコンの取得
-  const userIconUrl = "";
-  const userName = "";
-
-  // if (productData !== undefined) {
-  //   productData.docs.map((eachObjData) => {
-  //     console.log(eachObjData.data().productTitle);
-  //     return true;
-  //   });
-  // }
 
   return (
     <VStack spacing={10} align="stretch">
@@ -91,25 +81,21 @@ const Home = (): JSX.Element => {
       >
         {productData &&
           productData.docs.map(
-            (eachObjData: QueryDocumentSnapshot<DocumentData>) => {
-              console.log("----map関数内Log----");
-              return (
-                <DisplayProduct
-                  {...console.log(eachObjData.data().productTitle as string)}
-                  productIconUrl={eachObjData.data().productIconUrl as string}
-                  userIconUrl={userIconUrl}
-                  userName={userName}
-                  productTitle={eachObjData.data().productTitle as string}
-                  productAbstract={eachObjData.data().productAbstract as string}
-                  postDate={eachObjData.data().postDate as string}
-                  editDate={eachObjData.data().editDate as string}
-                  sumLike={eachObjData.data().sumLike as number}
-                />
-              );
-            }
+            (eachObjData: QueryDocumentSnapshot<DocumentData>) => (
+              <DisplayProduct
+                {...console.log(eachObjData.data().productTitle as string)}
+                productIconUrl={eachObjData.data().productIconUrl as string}
+                userIconUrl={userIconUrl}
+                userName={userName}
+                productTitle={eachObjData.data().productTitle as string}
+                productAbstract={eachObjData.data().productAbstract as string}
+                postDate={eachObjData.data().postDate as string}
+                editDate={eachObjData.data().editDate as string}
+                sumLike={eachObjData.data().sumLike as number}
+              />
+            )
           )}
       </SimpleGrid>
-      {console.log("log2")}
     </VStack>
   );
 };
