@@ -233,12 +233,12 @@ export const fetchFeedback = async (productId: string) => {
  */
 export const fetchProducts = async (conditions: string, sortType: string) => {
   let q;
-  if (conditions === "Trend") {
+  if (conditions === "TREND") {
     if (sortType === "Desc") {
       q = query(collection(db, "product"), orderBy("sumLike", "desc"));
     }
     q = query(collection(db, "product"), orderBy("sumLike"));
-  } else if (conditions === "New") {
+  } else if (conditions === "NEW") {
     if (sortType === "Desc") {
       q = query(collection(db, "product"), orderBy("postDate", "desc"));
     }
