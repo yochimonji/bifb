@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   getFirestore,
   collection,
@@ -278,6 +279,7 @@ export const fetchProductsUser = async (
   let querySnapshot;
   const eachProductIdFeedback: string[] = [];
   const returnProductInfo: (DocumentData | undefined)[] = [];
+
   if (searchType === "POSTED") {
     q = query(collection(db, "product"), where("userUid", "==", userUid));
     querySnapshot = await getDocs(q);
@@ -298,10 +300,11 @@ export const fetchProductsUser = async (
     return returnProductInfo;
   }
   if (searchType === "LIKE") {
-    const giveLikeId: DocumentSnapshot<DocumentData> = await getDoc(
-      doc(db, "userInfo", userUid)
+    const tmp = await getDoc(doc(db, "userInfo", userUid)).then(
+      (eachUserInfo: DocumentSnapshot<DocumentData>) => {
+        const givedLikeProductId = eachUserInfo.data();
+      }
     );
-    const givedLikeProductId = giveLikeId.get("giveLike");
 
     for (let i = 0; i < givedLikeProductId.length; i += 1) {
       const tmp = fetchProduct(givedLikeProductId[i]).then((data) => {
