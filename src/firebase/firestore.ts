@@ -14,6 +14,8 @@ import {
   DocumentData,
   deleteDoc,
   updateDoc,
+  arrayUnion,
+  arrayRemove,
 } from "firebase/firestore";
 
 const db = getFirestore();
@@ -346,11 +348,13 @@ export const fetchTags = async (inputText: string): Promise<unknown> => {
  * 作品にいいねが押された時にいいねカウントを変化させる
  * @param productId 作品ID
  * @param conditions UP|DOWN
+ * @param userUid ログイン中のユーザーID
  * @returns 最新のいいね数
  */
 export const countLikeProduct = async (
   productId: string,
-  conditions: string
+  conditions: string,
+  userUid: string
 ): Promise<unknown> => {
   let newSumLike: unknown;
 
@@ -358,9 +362,15 @@ export const countLikeProduct = async (
     await getDoc(doc(db, "product", productId)).then((data) => {
       newSumLike = Number(data.get("sumLike")) + 1;
     });
+    await updateDoc(doc(db, "userInfo", userUid), {
+      giveLike: arrayUnion(productId),
+    });
   } else if (conditions === "DOWN") {
     await getDoc(doc(db, "product", productId)).then((data) => {
       newSumLike = Number(data.get("sumLike")) - 1;
+    });
+    await updateDoc(doc(db, "userInfo", userUid), {
+      giveLike: arrayRemove(productId),
     });
   }
 
@@ -378,7 +388,8 @@ export const countLikeProduct = async (
  */
 export const countLikeFeedback = async (
   feedbackId: string,
-  conditions: string
+  conditions: string,
+  userUid: string
 ): Promise<unknown> => {
   let newSumLike: unknown;
 
@@ -386,9 +397,15 @@ export const countLikeFeedback = async (
     await getDoc(doc(db, "feedback", feedbackId)).then((data) => {
       newSumLike = Number(data.get("sumLike")) + 1;
     });
+    await updateDoc(doc(db, "userInfo", userUid), {
+      giveFeedback: arrayUnion(feedbackId),
+    });
   } else if (conditions === "DOWN") {
     await getDoc(doc(db, "feedback", feedbackId)).then((data) => {
       newSumLike = Number(data.get("sumLike")) - 1;
+    });
+    await updateDoc(doc(db, "userInfo", userUid), {
+      giveFeedback: arrayRemove(feedbackId),
     });
   }
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   Stack,
   HStack,
@@ -18,6 +18,7 @@ import {
   fetchFeedback,
   countLikeProduct,
 } from "../../firebase/firestore";
+import { AuthContext } from "../../auth/AuthProvider";
 
 const Product = (): JSX.Element => {
   const [title, setTitle] = useState("");
@@ -36,6 +37,11 @@ const Product = (): JSX.Element => {
   const [isLike, setIsLike] = useState(false);
   const [productId, setProductId] = useState("4L1WDWkKNTeqfyup4qUW");
 
+  const { currentUser } = useContext(AuthContext);
+
+  /**
+   * いいねボタンをクリックした際の動作を行う関数
+   */
   const handleClickLikeButton: React.MouseEventHandler<HTMLButtonElement> =
     () => {
       setIsLike((prev) => {
@@ -45,18 +51,23 @@ const Product = (): JSX.Element => {
         } else {
           condition = "UP";
         }
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const tmp = countLikeProduct(productId, condition).then(
-          (newSumLike) => {
+        if (currentUser) {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const tmp = countLikeProduct(
+            productId,
+            condition,
+            currentUser?.uid
+          ).then((newSumLike) => {
             if (typeof newSumLike === "number") {
               setSumLike(newSumLike);
             }
-          }
-        );
+          });
+        }
         return !prev;
       });
     };
 
+  // productId読み込み後の各stateの初期化
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const tmp = fetchProduct(productId).then((productData) => {
@@ -82,8 +93,9 @@ const Product = (): JSX.Element => {
     });
   }, [productId]);
 
+  // userUid読み込み後のユーザー情報に関するstateの初期化
   useEffect(() => {
-    // 初回読み込み時にuserUidがないためエラーになるためifが必要
+    // 初回読み込み時にuserUidがなくエラーになるためifが必要
     if (userUid) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const tmp = fetchUserInfo(userUid).then((userInfo) => {
