@@ -11,7 +11,7 @@ import {
 import { Link } from "react-router-dom";
 import moment from "moment";
 
-import { TagIcon, GithubIcon, ProductIcon, LinkLike } from "../index";
+import { TagIcon, LinkLike } from "../index";
 import {
   fetchProduct,
   fetchUserInfo,
@@ -28,7 +28,7 @@ const Product = (): JSX.Element => {
   const [mainText, setMainText] = useState("");
   const [postDate, setPostDate] = useState("");
   const [editDate, setEditDate] = useState("");
-  const [sumLike, setSumLike] = useState("");
+  const [sumLike, setSumLike] = useState(0);
   const [userUid, setUserUid] = useState("");
   const [userIcon, setUserIcon] = useState("");
   const [userName, setUserName] = useState("");
@@ -132,11 +132,19 @@ const Product = (): JSX.Element => {
         </HStack>
       </Stack>
       {/* リンク、いいね、本文を表示 */}
-      <LinkLike githubUrl={githubUrl} productUrl={productUrl} />
+      <LinkLike
+        githubUrl={githubUrl}
+        productUrl={productUrl}
+        sumLike={sumLike}
+      />
       <Text bg="white" p="2">
         {mainText}
       </Text>
-      <LinkLike githubUrl={githubUrl} productUrl={productUrl} />
+      <LinkLike
+        githubUrl={githubUrl}
+        productUrl={productUrl}
+        sumLike={sumLike}
+      />
     </Stack>
   );
 };
