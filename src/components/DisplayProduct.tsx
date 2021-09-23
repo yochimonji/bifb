@@ -42,7 +42,14 @@ const DisplayProduct = (props: DisplayProductProps): JSX.Element => (
         />
         <HStack w="100%" h="69px" spacing={0}>
           <Avatar w="30%" src={props.userIconUrl} size="sm" />
-          <Text w="70%" fontSize="md" textAlign="left" padding="15px 0px 15px">
+          <Text
+            w="70%"
+            fontSize="md"
+            textAlign="left"
+            padding="15px 0px 15px"
+            overflow="hidden"
+            textOverflow="ellipsis"
+          >
             {props.userName}
           </Text>
         </HStack>
@@ -56,16 +63,20 @@ const DisplayProduct = (props: DisplayProductProps): JSX.Element => (
           padding="15px 10px 10px 0px"
           textAlign="left"
           whiteSpace="pre-wrap"
+          overflow="hidden"
+          textOverflow="ellipsis"
         >
           {props.productTitle}
         </Text>
         <Text
           w="100%"
           h="115px"
-          fontSize="lg"
+          fontSize="md"
           padding="10px 10px 10px 0px"
           textAlign="left"
           whiteSpace="pre-wrap"
+          overflow="hidden"
+          textOverflow="ellipsis"
         >
           {props.productAbstract}
         </Text>
@@ -79,7 +90,7 @@ const DisplayProduct = (props: DisplayProductProps): JSX.Element => (
               padding="5px 5px 5px 0px"
               whiteSpace="pre-wrap"
             >
-              投稿:{props.postDate}
+              {props.postDate}
             </Text>
             <Text
               w="100%"
@@ -89,7 +100,7 @@ const DisplayProduct = (props: DisplayProductProps): JSX.Element => (
               padding="5px 5px 5px 0px"
               whiteSpace="pre-wrap"
             >
-              更新:{props.editDate}
+              {props.editDate}
             </Text>
           </VStack>
           <Box w="40%" h="46px">
