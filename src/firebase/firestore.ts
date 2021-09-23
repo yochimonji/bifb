@@ -300,17 +300,20 @@ export const fetchProductsUser = async (
     return returnProductInfo;
   }
   if (searchType === "LIKE") {
+    let givedLikeProductId: DocumentData | undefined;
     const tmp = await getDoc(doc(db, "userInfo", userUid)).then(
       (eachUserInfo: DocumentSnapshot<DocumentData>) => {
-        const givedLikeProductId = eachUserInfo.data();
+        givedLikeProductId = eachUserInfo.data();
       }
     );
 
-    for (let i = 0; i < givedLikeProductId.length; i += 1) {
-      const tmp = fetchProduct(givedLikeProductId[i]).then((data) => {
-        returnProductInfo.push(data);
-      });
-      return returnProductInfo;
+    if (givedLikeProductId) {
+      for (let i = 0; i < givedLikeProductId.length; i += 1) {
+        const temp = fetchProduct(givedLikeProductId[i]).then((data) => {
+          returnProductInfo.push(data);
+        });
+        return returnProductInfo;
+      }
     }
   }
 
