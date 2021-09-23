@@ -15,11 +15,12 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import ChackUIRenderer from "chakra-ui-markdown-renderer";
 
-import { TagIcon, LinkLike } from "../index";
+import { TagIcon, LinkLike, MarkdownForm } from "../index";
 import {
   fetchProduct,
   fetchUserInfo,
   fetchFeedback,
+  postFeedbacks,
   countLikeProduct,
 } from "../../firebase/firestore";
 import { AuthContext } from "../../auth/AuthProvider";
@@ -40,6 +41,7 @@ const Product = (): JSX.Element => {
   const [userName, setUserName] = useState("");
   const [isLike, setIsLike] = useState(false);
   const [productId, setProductId] = useState("4L1WDWkKNTeqfyup4qUW");
+  const [feedbackText, setFeedbackText] = useState("");
 
   const { currentUser } = useContext(AuthContext);
 
@@ -70,6 +72,34 @@ const Product = (): JSX.Element => {
         return !prev;
       });
     };
+
+  /**
+   * マークダウンの入力の変更に合わせてfeedbackTextを変更
+   * @param event マークダウンの入力イベント
+   */
+  const handleFeedbackText: React.ChangeEventHandler<HTMLTextAreaElement> = (
+    event
+  ) => {
+    setFeedbackText(event.target.value);
+  };
+
+  const handlePost: React.MouseEventHandler<HTMLButtonElement> = async () => {
+    // const canPost = validate();
+    // if (currentUser != null && canPost) {
+    if (currentUser !== null && feedbackText) {
+      const feedbackId = await postFeedbacks(
+        currentUser.uid,
+        feedbackText,
+        productId
+      );
+      if (feedbackId) {
+        setFeedbackText("");
+      } else {
+        // eslint-disable-next-line no-alert
+        alert("投稿処理に失敗しました");
+      }
+    }
+  };
 
   // productId読み込み後の各stateの初期化
   useEffect(() => {
@@ -175,8 +205,8 @@ const Product = (): JSX.Element => {
           ))}
         </HStack>
       </Stack>
-      {/* リンク、いいね、本文を表示 */}
       <Divider pt="4" />
+      {/* リンク、いいね、本文を表示 */}
       <LinkLike
         githubUrl={githubUrl}
         productUrl={productUrl}
@@ -204,6 +234,16 @@ const Product = (): JSX.Element => {
         sumLike={sumLike}
         isLike={isLike}
         handleClickLikeButton={handleClickLikeButton}
+      />
+      <Divider pt="4" />
+      {/* フィードバックの入力 */}
+      <Heading size="md">フィードバック</Heading>
+      <MarkdownForm
+        pageType="product"
+        validMainText={false}
+        mainText={feedbackText}
+        handleMainText={handleFeedbackText}
+        handlePost={handlePost}
       />
     </Stack>
   );
