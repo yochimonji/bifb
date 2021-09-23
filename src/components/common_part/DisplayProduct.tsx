@@ -8,7 +8,7 @@ import {
   Avatar,
   Text,
 } from "@chakra-ui/react";
-import { Like } from "./index";
+import { Like } from "../index";
 
 const DisplayProduct = (): JSX.Element => (
   <Button
