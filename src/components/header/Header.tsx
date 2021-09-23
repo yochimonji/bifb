@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Container, HStack, Link } from "@chakra-ui/react";
 
-import { HeaderMenu } from ".";
+import { HeaderMenu } from "..";
 
 /**
  * ヘッダーを生成する関数
