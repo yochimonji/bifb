@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   Box,
   VStack,
@@ -20,7 +20,6 @@ import {
   AiOutlinePlusCircle,
 } from "react-icons/ai";
 import { DocumentSnapshot, DocumentData } from "firebase/firestore";
-import { setCommentRange } from "typescript";
 import { AuthContext } from "../auth/AuthProvider";
 import { fetchUserInfo } from "../firebase/firestore";
 
@@ -28,20 +27,50 @@ const User = (): JSX.Element => {
   const [userName, setUserName] = useState("");
   const [userIconUrl, setUserIconUrl] = useState("");
   const [userComment, setUserComment] = useState("");
+  const [githubUrl, setGithubUrl] = useState("");
+  const [twitterUrl, setTwitterUrl] = useState("");
+  const [otherUrl, setOtherUrl] = useState("");
 
   const { currentUser } = useContext(AuthContext);
 
-  if (currentUser != null) {
-    const tmp = fetchUserInfo(currentUser.uid).then(
-      (userInfo: DocumentSnapshot<DocumentData>) => {
-        if (userInfo) {
-          setUserName(userInfo.data().name);
-          setUserIconUrl(userInfo.data().userIcon);
-          setUserComment(userInfo.data().comment);
+  // ページの遷移用
+  let location: Location;
+
+  useEffect(() => {
+    if (currentUser !== null) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const tmpUserInfo = fetchUserInfo(currentUser.uid).then(
+        (userInfo: DocumentSnapshot<DocumentData>) => {
+          if (userInfo) {
+            setUserName(userInfo.data().name);
+            setUserIconUrl(userInfo.data().userIcon);
+            setUserComment(userInfo.data().comment);
+            setGithubUrl(userInfo.data().githubUrl);
+            setTwitterUrl(userInfo.data().twitterUrl);
+            setOtherUrl(userInfo.data().otherUrl);
+          }
         }
-      }
-    );
-  }
+      );
+    }
+  }, [currentUser]);
+
+  const GithubButtonClick = () => {
+    if (githubUrl) {
+      window.location.href = githubUrl;
+    }
+  };
+
+  const TwitterButtonClick = () => {
+    if (twitterUrl) {
+      window.location.href = twitterUrl;
+    }
+  };
+
+  const OtherButtonClick = () => {
+    if (otherUrl) {
+      window.location.href = otherUrl;
+    }
+  };
 
   return (
     <VStack spacing={10} alignItems="flex-start">
@@ -77,19 +106,24 @@ const User = (): JSX.Element => {
               icon={<AiFillGithub />}
               size="lg"
               variant="ghost"
+              onClick={GithubButtonClick}
             />
             <IconButton
+              id="TwitterButton"
               aria-label="Twitter Icon"
               icon={<AiOutlineTwitter />}
               size="lg"
               variant="ghost"
               colorScheme="twitter"
+              onClick={TwitterButtonClick}
             />
             <IconButton
+              id="OtherButton"
               aria-label="Other Icon"
               icon={<AiOutlinePlusCircle />}
               size="lg"
               variant="ghost"
+              onClick={OtherButtonClick}
             />
           </Wrap>
         </VStack>
@@ -142,5 +176,4 @@ const User = (): JSX.Element => {
     </VStack>
   );
 };
-
 export default User;
