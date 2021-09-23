@@ -16,6 +16,7 @@ import {
   fetchProduct,
   fetchUserInfo,
   fetchFeedback,
+  countLikeProduct,
 } from "../../firebase/firestore";
 
 const Product = (): JSX.Element => {
@@ -32,10 +33,33 @@ const Product = (): JSX.Element => {
   const [userUid, setUserUid] = useState("");
   const [userIcon, setUserIcon] = useState("");
   const [userName, setUserName] = useState("");
+  const [isLike, setIsLike] = useState(false);
+  const [productId, setProductId] = useState("4L1WDWkKNTeqfyup4qUW");
+
+  const handleClickLikeButton: React.MouseEventHandler<HTMLButtonElement> =
+    () => {
+      setIsLike((prev) => {
+        let condition = "UP";
+        if (prev) {
+          condition = "DOWN";
+        } else {
+          condition = "UP";
+        }
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const tmp = countLikeProduct(productId, condition).then(
+          (newSumLike) => {
+            if (typeof newSumLike === "number") {
+              setSumLike(newSumLike);
+            }
+          }
+        );
+        return !prev;
+      });
+    };
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const tmp = fetchProduct("4L1WDWkKNTeqfyup4qUW").then((productData) => {
+    const tmp = fetchProduct(productId).then((productData) => {
       if (productData) {
         const formatedPostDate = moment(productData.postDate).format(
           "YYYY年MM月DD日"
@@ -56,7 +80,7 @@ const Product = (): JSX.Element => {
         setUserUid(productData.userUid);
       }
     });
-  }, []);
+  }, [productId]);
 
   useEffect(() => {
     // 初回読み込み時にuserUidがないためエラーになるためifが必要
@@ -66,10 +90,14 @@ const Product = (): JSX.Element => {
         if (userInfo) {
           setUserIcon(userInfo.userIcon);
           setUserName(userInfo.name);
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          if ([...userInfo.giveLike].includes(productId)) {
+            setIsLike(true);
+          }
         }
       });
     }
-  }, [userUid]);
+  }, [productId, userUid]);
 
   return (
     <Stack spacing={{ base: "4", md: "2" }} pt={{ base: "4", sm: "8" }}>
@@ -136,6 +164,8 @@ const Product = (): JSX.Element => {
         githubUrl={githubUrl}
         productUrl={productUrl}
         sumLike={sumLike}
+        isLike={isLike}
+        handleClickLikeButton={handleClickLikeButton}
       />
       <Text bg="white" p="2">
         {mainText}
@@ -144,6 +174,8 @@ const Product = (): JSX.Element => {
         githubUrl={githubUrl}
         productUrl={productUrl}
         sumLike={sumLike}
+        isLike={isLike}
+        handleClickLikeButton={handleClickLikeButton}
       />
     </Stack>
   );

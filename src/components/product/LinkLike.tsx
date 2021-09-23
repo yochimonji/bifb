@@ -7,6 +7,8 @@ type LinkLikeProps = {
   githubUrl: string;
   productUrl: string;
   sumLike: number;
+  isLike: boolean;
+  handleClickLikeButton: React.MouseEventHandler<HTMLButtonElement>;
 };
 
 const LinkLike = (props: LinkLikeProps): JSX.Element => (
@@ -23,13 +25,25 @@ const LinkLike = (props: LinkLikeProps): JSX.Element => (
       )}
     </HStack>
     {/* いいねボタン表示 */}
-    <Button
-      leftIcon={<Icon as={AiOutlineHeart} w="6" h="6" />}
-      variant="outline"
-      rounded="full"
-    >
-      {props.sumLike}
-    </Button>
+    {props.isLike ? (
+      <Button
+        leftIcon={<Icon as={AiFillHeart} w="6" h="6" color="#EEB6B7" />}
+        variant="outline"
+        rounded="full"
+        onClick={props.handleClickLikeButton}
+      >
+        {props.sumLike}
+      </Button>
+    ) : (
+      <Button
+        leftIcon={<Icon as={AiOutlineHeart} w="6" h="6" />}
+        variant="outline"
+        rounded="full"
+        onClick={props.handleClickLikeButton}
+      >
+        {props.sumLike}
+      </Button>
+    )}
   </HStack>
 );
 
