@@ -8,6 +8,7 @@ import {
   Button,
   Avatar,
   Icon,
+  Tag,
 } from "@chakra-ui/react";
 import { Link, LinkProps } from "react-router-dom";
 import moment from "moment";
@@ -91,6 +92,7 @@ const Product = (): JSX.Element => {
           <Text fontSize={{ base: "sm", md: "md" }}>{abstract}</Text>
         </Stack>
       </HStack>
+      {/* ユーザー名・公開日表示 */}
       <Stack
         flexDir={{ base: "column", sm: "row" }}
         justify={{ base: "flex-start", sm: "center" }}
@@ -111,8 +113,30 @@ const Product = (): JSX.Element => {
           fontSize={{ base: "xs", md: "sm" }}
         >
           投稿日{postDate}
-          {postDate === editDate && ` 編集日${editDate}`}
+          {postDate !== editDate && ` 編集日${editDate}`}
         </Text>
+      </Stack>
+      {/* タグ表示 */}
+      <Stack flexDir={{ base: "column", md: "row" }} pl="2">
+        <TagIcon
+          w={{ base: "100%", md: "20%" }}
+          justify={{ base: "flex-start", md: "center" }}
+          pt={{ base: "0", md: "2" }}
+        />
+        <HStack flexWrap="wrap">
+          {tags.map((tag, i) => (
+            <Tag
+              key={i.toString()}
+              rounded="full"
+              p="2"
+              pl="4"
+              pr="4"
+              fontSize={{ base: "xs", sm: "sm", md: "md" }}
+            >
+              {tag}
+            </Tag>
+          ))}
+        </HStack>
       </Stack>
       {/* GitHubリンク入力欄 */}
       <Stack flexDir={{ base: "column", md: "row" }} pl="2">
@@ -126,14 +150,6 @@ const Product = (): JSX.Element => {
         <ProductIcon
           w={{ base: "100%", md: "20%" }}
           justify={{ base: "flex-start", md: "center" }}
-        />
-      </Stack>
-      {/* タグ入力欄 */}
-      <Stack flexDir={{ base: "column", md: "row" }} pl="2">
-        <TagIcon
-          w={{ base: "100%", md: "20%" }}
-          justify={{ base: "flex-start", md: "center" }}
-          pb={{ base: "0", md: "2" }}
         />
       </Stack>
     </Stack>
