@@ -5,15 +5,13 @@ import {
   Image,
   Text,
   Heading,
-  Button,
   Avatar,
-  Icon,
   Tag,
 } from "@chakra-ui/react";
-import { Link, LinkProps } from "react-router-dom";
+import { Link } from "react-router-dom";
 import moment from "moment";
 
-import { TagIcon, GithubIcon, ProductIcon } from "../index";
+import { TagIcon, GithubIcon, ProductIcon, LinkLike } from "../index";
 import {
   fetchProduct,
   fetchUserInfo,
@@ -34,7 +32,6 @@ const Product = (): JSX.Element => {
   const [userUid, setUserUid] = useState("");
   const [userIcon, setUserIcon] = useState("");
   const [userName, setUserName] = useState("");
-  const [userLink, setUserLink] = useState<LinkProps>();
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -118,11 +115,7 @@ const Product = (): JSX.Element => {
       </Stack>
       {/* タグ表示 */}
       <Stack flexDir={{ base: "column", md: "row" }} pl="2">
-        <TagIcon
-          w={{ base: "100%", md: "20%" }}
-          justify={{ base: "flex-start", md: "center" }}
-          pt={{ base: "0", md: "2" }}
-        />
+        <TagIcon pt={{ base: "0", md: "2" }} minW="80px" />
         <HStack flexWrap="wrap">
           {tags.map((tag, i) => (
             <Tag
@@ -138,20 +131,12 @@ const Product = (): JSX.Element => {
           ))}
         </HStack>
       </Stack>
-      {/* GitHubリンク入力欄 */}
-      <Stack flexDir={{ base: "column", md: "row" }} pl="2">
-        <GithubIcon
-          w={{ base: "100%", md: "20%" }}
-          justify={{ base: "flex-start", md: "center" }}
-        />
-      </Stack>
-      {/* 作品リンク入力欄 */}
-      <Stack flexDir={{ base: "column", md: "row" }} pl="2">
-        <ProductIcon
-          w={{ base: "100%", md: "20%" }}
-          justify={{ base: "flex-start", md: "center" }}
-        />
-      </Stack>
+      {/* リンク、いいね、本文を表示 */}
+      <LinkLike githubUrl={githubUrl} productUrl={productUrl} />
+      <Text bg="white" p="2">
+        {mainText}
+      </Text>
+      <LinkLike githubUrl={githubUrl} productUrl={productUrl} />
     </Stack>
   );
 };

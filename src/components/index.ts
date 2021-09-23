@@ -1,5 +1,6 @@
 export { default as Home } from "./Home";
 export { default as Product } from "./product/Product";
+export { default as LinkLike } from "./product/LinkLike";
 export { default as Search } from "./Search";
 export { default as Post } from "./post/Post";
 export { default as User } from "./User";
