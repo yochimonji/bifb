@@ -11,6 +11,8 @@ import {
   TabList,
   Tabs,
   Tab,
+  TabPanels,
+  TabPanel,
 } from "@chakra-ui/react";
 import {
   AiFillGithub,
@@ -26,12 +28,13 @@ const User = (): JSX.Element => {
   const [userName, setUserName] = useState("");
   const [userIconUrl, setUserIconUrl] = useState("");
   const [userComment, setUserComment] = useState("");
+
   const { currentUser } = useContext(AuthContext);
 
   if (currentUser != null) {
     const tmp = fetchUserInfo(currentUser.uid).then(
-      (userInfo: DocumentSnapshot<DocumentData> | undefined) => {
-        if (userInfo !== undefined) {
+      (userInfo: DocumentSnapshot<DocumentData>) => {
+        if (userInfo) {
           setUserName(userInfo.data().name);
           setUserIconUrl(userInfo.data().userIcon);
           setUserComment(userInfo.data().comment);
@@ -119,17 +122,23 @@ const User = (): JSX.Element => {
               いいね
             </Tab>
           </TabList>
+          <TabPanels w="100%" shadow="md" borderWidth="1px">
+            {/* 作品の表示 */}
+            {/* <SimpleGrid w="100%" columns={1, null, 2} spacing={10}>
+                  <DisPlayProduct />
+                </SimpleGrid> */}
+            <TabPanel p="0" pt="4">
+              投稿済み
+            </TabPanel>
+            <TabPanel p="0" pt="4">
+              フィードバック
+            </TabPanel>
+            <TabPanel p="0" pt="4">
+              いいね
+            </TabPanel>
+          </TabPanels>
         </Tabs>
       </HStack>
-
-      {/* 作品の表示 */}
-      <Box w="100%" shadow="md" borderWidth="1px">
-        作品の表示欄 作品の表示関数はmerge前であるため未実装
-        ただし、以下のコメントアウトの部分でおそらく実行可能
-      </Box>
-      {/* <SimpleGrid w="100%" columns={1, null, 2} spacing={10}>
-      <DisPlayProduct />
-    </SimpleGrid> */}
     </VStack>
   );
 };
