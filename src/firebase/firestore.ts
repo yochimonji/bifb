@@ -172,7 +172,7 @@ export const fetchUserInfo = async (userUid: string) => {
   const searchUserUid = doc(db, "userInfo", userUid);
   const loadUserData = await getDoc(searchUserUid);
 
-  return loadUserData.data();
+  return loadUserData;
 };
 
 /**
