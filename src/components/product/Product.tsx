@@ -7,9 +7,13 @@ import {
   Heading,
   Avatar,
   Tag,
+  Divider,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import moment from "moment";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import ChackUIRenderer from "chakra-ui-markdown-renderer";
 
 import { TagIcon, LinkLike } from "../index";
 import {
@@ -172,6 +176,7 @@ const Product = (): JSX.Element => {
         </HStack>
       </Stack>
       {/* リンク、いいね、本文を表示 */}
+      <Divider pt="4" />
       <LinkLike
         githubUrl={githubUrl}
         productUrl={productUrl}
@@ -179,7 +184,18 @@ const Product = (): JSX.Element => {
         isLike={isLike}
         handleClickLikeButton={handleClickLikeButton}
       />
-      <Text bg="white" p="2">
+      <Text
+        as={ReactMarkdown}
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        components={ChackUIRenderer()}
+        remarkPlugins={[remarkGfm]}
+        bg="#FCFCFC"
+        border="1px"
+        borderColor="gray.200"
+        rounded="md"
+        minH="72"
+        p="4"
+      >
         {mainText}
       </Text>
       <LinkLike
