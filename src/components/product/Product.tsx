@@ -240,9 +240,9 @@ const Product = (): JSX.Element => {
       <Heading size="md">フィードバック</Heading>
       <MarkdownForm
         pageType="product"
-        validMainText={false}
-        mainText={feedbackText}
-        handleMainText={handleFeedbackText}
+        text={feedbackText}
+        validText={false}
+        handleText={handleFeedbackText}
         handlePost={handlePost}
       />
     </Stack>

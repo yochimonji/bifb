@@ -392,9 +392,9 @@ const Post = (): JSX.Element => {
       </Stack>
       <MarkdownForm
         pageType="post"
-        validMainText={validMainText}
-        mainText={mainText}
-        handleMainText={handleMainText}
+        text={mainText}
+        validText={validMainText}
+        handleText={handleMainText}
         handlePost={handlePost}
       />
     </Stack>
