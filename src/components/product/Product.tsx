@@ -20,7 +20,7 @@ import {
   DocumentData,
 } from "firebase/firestore";
 
-import { TagIcon, LinkLike, MarkdownForm, EditRemoveButton } from "../index";
+import { TagIcon, LinkLike, MarkdownForm, EditDeleteButton } from "../index";
 import {
   fetchProduct,
   fetchUserInfo,
@@ -66,7 +66,6 @@ const Product = (): JSX.Element => {
   const [productId, setProductId] = useState("");
   const [feedbackText, setFeedbackText] = useState("");
   const [feedbacks, setFeedbacks] = useState<FeedbackType[]>([]);
-  const [showEditRemove, setShowEditRemove] = useState(false);
 
   const { currentUser } = useContext(AuthContext);
   const history = useHistory();
@@ -227,7 +226,7 @@ const Product = (): JSX.Element => {
 
   return (
     <>
-      {currentUser?.uid === userUid && <EditRemoveButton />}
+      {currentUser?.uid === userUid && <EditDeleteButton />}
       <Stack spacing={{ base: "4", md: "2" }} pt={{ base: "4", sm: "8" }}>
         <HStack spacing={{ base: "2", sm: "4", md: "6" }} align="flex-start">
           <Stack w={{ base: "30%", sm: "25%", md: "20%" }}>
