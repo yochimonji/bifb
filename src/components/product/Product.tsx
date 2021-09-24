@@ -186,9 +186,9 @@ const Product = (): JSX.Element => {
   // userUid読み込み後のユーザー情報に関するstateの初期化
   useEffect(() => {
     // 初回読み込み時にuserUidがなくエラーになるためifが必要
-    if (userUid && productId) {
+    if (currentUser && productId) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const tmpUserInfo = fetchUserInfo(userUid).then((userInfo) => {
+      const tmpUserInfo = fetchUserInfo(currentUser.uid).then((userInfo) => {
         if (userInfo) {
           setUserIcon(userInfo.userIcon);
           setUserName(userInfo.name);
@@ -199,7 +199,7 @@ const Product = (): JSX.Element => {
         }
       });
     }
-  }, [productId, userUid]);
+  }, [currentUser, productId]);
 
   return (
     <Stack spacing={{ base: "4", md: "2" }} pt={{ base: "4", sm: "8" }}>
