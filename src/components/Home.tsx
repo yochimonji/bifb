@@ -14,14 +14,15 @@ import {
   QuerySnapshot,
   DocumentData,
 } from "firebase/firestore";
-import { fetchProducts } from "../firebase/firestore";
+import { fetchProducts, fetchUserInfo } from "../firebase/firestore";
 import { DisplayProduct } from "./index";
 
 const Home = (): JSX.Element => {
   const [sortType, setSortType] = useState("TREND");
   const [productData, setProductData] = useState<QuerySnapshot | undefined>();
-  const userIconUrl = "";
   const userName = "";
+  const userIconUrl = "";
+  const tmpUserName = "";
 
   // sortTypeの選択の変更を認識する関数
   const onChangeSortType: React.ChangeEventHandler<HTMLSelectElement> = (
@@ -30,9 +31,10 @@ const Home = (): JSX.Element => {
     setSortType(event.target.value);
   };
 
-  // データの取得
+  // 作品データの取得
+  console.log("通過POINT1");
   useEffect(() => {
-    const tmpData = fetchProducts(sortType, "Asce").then(
+    const tmpProductData = fetchProducts(sortType, "Desc").then(
       (data: QuerySnapshot<DocumentData> | undefined) => {
         setProductData(data);
       }
@@ -47,7 +49,7 @@ const Home = (): JSX.Element => {
           検索条件:
         </Box>
         <HStack w="70%" textAlign="center" spacing={4} minW="450px">
-          {["React", "Typescript", "Webアプリ"].map((tag) => (
+          {[].map((tag) => (
             <Tag
               size="lg"
               key="lg"
@@ -83,7 +85,6 @@ const Home = (): JSX.Element => {
           productData.docs.map(
             (eachObjData: QueryDocumentSnapshot<DocumentData>) => (
               <DisplayProduct
-                {...console.log(eachObjData.data().productTitle as string)}
                 productIconUrl={eachObjData.data().productIconUrl as string}
                 userIconUrl={userIconUrl}
                 userName={userName}
@@ -95,6 +96,7 @@ const Home = (): JSX.Element => {
               />
             )
           )}
+        ;
       </SimpleGrid>
     </VStack>
   );
