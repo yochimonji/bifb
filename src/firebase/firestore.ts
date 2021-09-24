@@ -12,6 +12,7 @@ import {
   setDoc,
   DocumentSnapshot,
   DocumentData,
+  QuerySnapshot,
   deleteDoc,
   updateDoc,
 } from "firebase/firestore";
@@ -254,8 +255,8 @@ export const fetchProducts = async (
     if (sortType === "Desc") {
       q = query(collection(db, "product"), orderBy("sumLike", "desc"));
     } else q = query(collection(db, "product"), orderBy("sumLike"));
-  } else if (sortType === "Decs") {
-    q = query(collection(db, "product"), orderBy("postDate"));
+  } else if (conditions === "LikeSmall") {
+    q = query(collection(db, "product"), orderBy("sumLike"));
   } else q = query(collection(db, "product"), orderBy("sumLike", "desc"));
 
   const querySnapshot = await getDocs(q);
@@ -318,6 +319,14 @@ export const fetchProductsUser = async (
   }
 
   return true;
+};
+
+export const fetchProductsUserPosted = async (
+  userUid: string
+): Promise<QuerySnapshot<DocumentData>> => {
+  const q = query(collection(db, "product"), where("userUid", "==", userUid));
+  const querySnapshot = await getDocs(q);
+  return querySnapshot;
 };
 
 /**
