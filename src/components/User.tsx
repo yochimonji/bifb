@@ -44,7 +44,6 @@ const User = (): JSX.Element => {
   // ユーザー情報の取得
   useEffect(() => {
     if (currentUser !== null) {
-      console.log(currentUser.uid);
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const tmpUserInfo = fetchUserInfo(currentUser.uid).then(
         (userInfo: DocumentData | undefined) => {
@@ -64,6 +63,7 @@ const User = (): JSX.Element => {
   // 投稿済み作品の情報の取得
   useEffect(() => {
     if (currentUser) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const tmp = fetchProductsUserPosted(currentUser.uid).then((data) => {
         setProductDataPosted(data);
       });
@@ -157,7 +157,7 @@ const User = (): JSX.Element => {
             >
               投稿済み
             </Tab>
-            <Tab
+            {/* <Tab
               rounded="full"
               fontSize={{ base: "sm", md: "md" }}
               _selected={{ color: "#FCFCFC", bg: "#99CED4" }}
@@ -170,9 +170,9 @@ const User = (): JSX.Element => {
               _selected={{ color: "#FCFCFC", bg: "#99CED4" }}
             >
               いいね
-            </Tab>
+            </Tab> */}
           </TabList>
-          <TabPanels w="100%" shadow="md" borderWidth="1px">
+          <TabPanels w="100%">
             <TabPanel>
               {/* 作品一覧の表示 */}
               <SimpleGrid
@@ -182,24 +182,21 @@ const User = (): JSX.Element => {
                 spacingY="50px"
                 justifyItems="center"
               >
-                {console.log("----log1----")}
-                {console.log(productDataPosted?.docs)}
                 {productDataPosted &&
                   productDataPosted.docs.map(
                     (eachObjData: QueryDocumentSnapshot) => (
                       <DisplayProduct
-                        {...console.log(eachObjData.data().productTitle)}
                         productIconUrl={
                           eachObjData.data().productIconUrl as string
                         }
-                        userIconUrl={userIconUrl}
-                        userName={userName}
+                        // userIconUrl={userIconUrl}
+                        // userName={userName}
                         productTitle={eachObjData.data().productTitle as string}
                         productAbstract={
                           eachObjData.data().productAbstract as string
                         }
                         postDate={eachObjData.data().postDate as string}
-                        editDate={eachObjData.data().editDate as string}
+                        // editDate={eachObjData.data().editDate as string}
                       />
                     )
                   )}
