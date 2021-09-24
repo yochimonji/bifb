@@ -9,7 +9,7 @@ import {
   Tag,
   Divider,
 } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import moment from "moment";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -68,6 +68,7 @@ const Product = (): JSX.Element => {
   const [feedbacks, setFeedbacks] = useState<FeedbackType[]>([]);
 
   const { currentUser } = useContext(AuthContext);
+  const history = useHistory();
 
   /**
    * いいねボタンをクリックした際の動作を行う関数
@@ -118,6 +119,7 @@ const Product = (): JSX.Element => {
       );
       if (feedbackId) {
         setFeedbackText("");
+        history.go(0);
       } else {
         // eslint-disable-next-line no-alert
         alert("投稿処理に失敗しました");
@@ -290,6 +292,8 @@ const Product = (): JSX.Element => {
         {feedbacks.map((feedback, i) => (
           <HStack id={i.toString()} align="flex-start" spacing="4">
             <Avatar
+              as={Link}
+              to={{ pathname: "/user", state: { userUid: feedback.userUid } }}
               w={{ base: "8", md: "10" }}
               h={{ base: "8", md: "10" }}
               src={feedback.userIcon}
