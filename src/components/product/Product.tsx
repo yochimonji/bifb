@@ -20,7 +20,7 @@ import {
   DocumentData,
 } from "firebase/firestore";
 
-import { TagIcon, LinkLike, MarkdownForm } from "../index";
+import { TagIcon, LinkLike, MarkdownForm, EditRemoveButton } from "../index";
 import {
   fetchProduct,
   fetchUserInfo,
@@ -66,6 +66,7 @@ const Product = (): JSX.Element => {
   const [productId, setProductId] = useState("");
   const [feedbackText, setFeedbackText] = useState("");
   const [feedbacks, setFeedbacks] = useState<FeedbackType[]>([]);
+  const [showEditRemove, setShowEditRemove] = useState(false);
 
   const { currentUser } = useContext(AuthContext);
   const history = useHistory();
@@ -220,141 +221,144 @@ const Product = (): JSX.Element => {
   }, [currentUser, productId]);
 
   return (
-    <Stack spacing={{ base: "4", md: "2" }} pt={{ base: "4", sm: "8" }}>
-      <HStack spacing={{ base: "2", sm: "4", md: "6" }} align="flex-start">
-        <Stack w={{ base: "30%", sm: "25%", md: "20%" }}>
-          <Image w="100%" fit="cover" src={iconUrl} />
-        </Stack>
-        {/* 作品タイトルと概要 */}
+    <>
+      <EditRemoveButton />
+      <Stack spacing={{ base: "4", md: "2" }} pt={{ base: "4", sm: "8" }}>
+        <HStack spacing={{ base: "2", sm: "4", md: "6" }} align="flex-start">
+          <Stack w={{ base: "30%", sm: "25%", md: "20%" }}>
+            <Image w="100%" fit="cover" src={iconUrl} />
+          </Stack>
+          {/* 作品タイトルと概要 */}
+          <Stack
+            pt={{ base: "2", sm: "4", md: "6" }}
+            w={{ base: "70%", sm: "75%", md: "80%" }}
+            spacing={{ base: "4", sm: "8", md: "12" }}
+          >
+            <Heading fontSize={{ base: "lg", sm: "xl", md: "2xl" }}>
+              {title}
+            </Heading>
+            <Text fontSize={{ base: "sm", md: "md" }}>{abstract}</Text>
+          </Stack>
+        </HStack>
+        {/* ユーザー名・公開日表示 */}
         <Stack
-          pt={{ base: "2", sm: "4", md: "6" }}
-          w={{ base: "70%", sm: "75%", md: "80%" }}
-          spacing={{ base: "4", sm: "8", md: "12" }}
-        >
-          <Heading fontSize={{ base: "lg", sm: "xl", md: "2xl" }}>
-            {title}
-          </Heading>
-          <Text fontSize={{ base: "sm", md: "md" }}>{abstract}</Text>
-        </Stack>
-      </HStack>
-      {/* ユーザー名・公開日表示 */}
-      <Stack
-        flexDir={{ base: "column", sm: "row" }}
-        justify={{ base: "flex-start", sm: "center" }}
-      >
-        <HStack
-          as={Link}
-          w="20%"
-          minW="115px"
+          flexDir={{ base: "column", sm: "row" }}
           justify={{ base: "flex-start", sm: "center" }}
-          to={{ pathname: "/user", state: { userUid } }}
         >
-          <Avatar name={userName} src={userIcon} size="sm" />
-          <Text>{userName}</Text>
-        </HStack>
-        <Text
-          w="80%"
-          pl={{ base: "0", sm: "6" }}
-          fontSize={{ base: "xs", md: "sm" }}
-        >
-          投稿日{postDate}
-          {postDate !== editDate && ` 編集日${editDate}`}
-        </Text>
-      </Stack>
-      {/* タグ表示 */}
-      <Stack flexDir={{ base: "column", md: "row" }} pl="2">
-        <TagIcon pt={{ base: "0", md: "2" }} minW="80px" />
-        <HStack flexWrap="wrap">
-          {tags.map((tag, i) => (
-            <Tag
-              key={i.toString()}
-              rounded="full"
-              p="2"
-              pl="4"
-              pr="4"
-              fontSize={{ base: "xs", sm: "sm", md: "md" }}
-            >
-              {tag}
-            </Tag>
-          ))}
-        </HStack>
-      </Stack>
-      <Divider pt="4" />
-      {/* リンク、いいね、本文を表示 */}
-      <LinkLike
-        githubUrl={githubUrl}
-        productUrl={productUrl}
-        sumLike={sumLike}
-        isLike={isLike}
-        handleClickLikeButton={handleClickLikeButton}
-      />
-      <Text
-        as={ReactMarkdown}
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        components={ChackUIRenderer()}
-        remarkPlugins={[remarkGfm]}
-        bg="#FCFCFC"
-        border="1px"
-        borderColor="gray.200"
-        rounded="md"
-        minH="72"
-        p="4"
-      >
-        {mainText}
-      </Text>
-      <LinkLike
-        githubUrl={githubUrl}
-        productUrl={productUrl}
-        sumLike={sumLike}
-        isLike={isLike}
-        handleClickLikeButton={handleClickLikeButton}
-      />
-      <Divider pt="4" />
-      <Heading size="md">フィードバック</Heading>
-      {/* フィードバックの表示 */}
-      {/* eslint-disable-next-line array-callback-return */}
-      <Stack spacing="6">
-        {feedbacks.map((feedback, i) => (
-          <HStack id={i.toString()} align="flex-start" spacing="4">
-            <Avatar
-              as={Link}
-              to={{ pathname: "/user", state: { userUid: feedback.userUid } }}
-              w={{ base: "8", md: "10" }}
-              h={{ base: "8", md: "10" }}
-              src={feedback.userIcon}
-              name={feedback.userName}
-            />
-            <Stack>
-              <HStack spacing="4">
-                <Text fontSize={{ base: "xs", md: "sm" }}>
-                  {feedback.userName}
-                </Text>
-                <Text fontSize={{ base: "xs", md: "sm" }}>
-                  {moment(feedback.postDate).format("YYYY年MM月DD日")}
-                  {/* {console.log(feedback.postDate)} */}
-                </Text>
-              </HStack>
-              <Text
-                as={ReactMarkdown}
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-                components={ChackUIRenderer()}
-                remarkPlugins={[remarkGfm]}
-              >
-                {feedback.feedbackText}
-              </Text>
-            </Stack>
+          <HStack
+            as={Link}
+            w="20%"
+            minW="115px"
+            justify={{ base: "flex-start", sm: "center" }}
+            to={{ pathname: "/user", state: { userUid } }}
+          >
+            <Avatar name={userName} src={userIcon} size="sm" />
+            <Text>{userName}</Text>
           </HStack>
-        ))}
+          <Text
+            w="80%"
+            pl={{ base: "0", sm: "6" }}
+            fontSize={{ base: "xs", md: "sm" }}
+          >
+            投稿日{postDate}
+            {postDate !== editDate && ` 編集日${editDate}`}
+          </Text>
+        </Stack>
+        {/* タグ表示 */}
+        <Stack flexDir={{ base: "column", md: "row" }} pl="2">
+          <TagIcon pt={{ base: "0", md: "2" }} minW="80px" />
+          <HStack flexWrap="wrap">
+            {tags.map((tag, i) => (
+              <Tag
+                key={i.toString()}
+                rounded="full"
+                p="2"
+                pl="4"
+                pr="4"
+                fontSize={{ base: "xs", sm: "sm", md: "md" }}
+              >
+                {tag}
+              </Tag>
+            ))}
+          </HStack>
+        </Stack>
+        <Divider pt="4" />
+        {/* リンク、いいね、本文を表示 */}
+        <LinkLike
+          githubUrl={githubUrl}
+          productUrl={productUrl}
+          sumLike={sumLike}
+          isLike={isLike}
+          handleClickLikeButton={handleClickLikeButton}
+        />
+        <Text
+          as={ReactMarkdown}
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          components={ChackUIRenderer()}
+          remarkPlugins={[remarkGfm]}
+          bg="#FCFCFC"
+          border="1px"
+          borderColor="gray.200"
+          rounded="md"
+          minH="72"
+          p="4"
+        >
+          {mainText}
+        </Text>
+        <LinkLike
+          githubUrl={githubUrl}
+          productUrl={productUrl}
+          sumLike={sumLike}
+          isLike={isLike}
+          handleClickLikeButton={handleClickLikeButton}
+        />
+        <Divider pt="4" />
+        <Heading size="md">フィードバック</Heading>
+        {/* フィードバックの表示 */}
+        {/* eslint-disable-next-line array-callback-return */}
+        <Stack spacing="6">
+          {feedbacks.map((feedback, i) => (
+            <HStack key={i.toString()} align="flex-start" spacing="4">
+              <Avatar
+                as={Link}
+                to={{ pathname: "/user", state: { userUid: feedback.userUid } }}
+                w={{ base: "8", md: "10" }}
+                h={{ base: "8", md: "10" }}
+                src={feedback.userIcon}
+                name={feedback.userName}
+              />
+              <Stack>
+                <HStack spacing="4">
+                  <Text fontSize={{ base: "xs", md: "sm" }}>
+                    {feedback.userName}
+                  </Text>
+                  <Text fontSize={{ base: "xs", md: "sm" }}>
+                    {moment(feedback.postDate).format("YYYY年MM月DD日")}
+                    {/* {console.log(feedback.postDate)} */}
+                  </Text>
+                </HStack>
+                <Text
+                  as={ReactMarkdown}
+                  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                  components={ChackUIRenderer()}
+                  remarkPlugins={[remarkGfm]}
+                >
+                  {feedback.feedbackText}
+                </Text>
+              </Stack>
+            </HStack>
+          ))}
+        </Stack>
+        {/* フィードバックの入力 */}
+        <MarkdownForm
+          pageType="product"
+          text={feedbackText}
+          validText={false}
+          handleText={handleFeedbackText}
+          handlePost={handlePost}
+        />
       </Stack>
-      {/* フィードバックの入力 */}
-      <MarkdownForm
-        pageType="product"
-        text={feedbackText}
-        validText={false}
-        handleText={handleFeedbackText}
-        handlePost={handlePost}
-      />
-    </Stack>
+    </>
   );
 };
 
