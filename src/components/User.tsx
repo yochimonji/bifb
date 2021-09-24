@@ -36,12 +36,12 @@ const User = (): JSX.Element => {
   const [githubUrl, setGithubUrl] = useState("");
   const [twitterUrl, setTwitterUrl] = useState("");
   const [otherUrl, setOtherUrl] = useState("");
-  const [searchType, setSearchType] = useState("POSTED");
   const [productDataPosted, setProductDataPosted] =
     useState<QuerySnapshot<DocumentData>>();
 
   const { currentUser } = useContext(AuthContext);
 
+  // ユーザー情報の取得
   useEffect(() => {
     if (currentUser !== null) {
       console.log(currentUser.uid);
@@ -58,6 +58,15 @@ const User = (): JSX.Element => {
           }
         }
       );
+    }
+  }, [currentUser]);
+
+  // 投稿済み作品の情報の取得
+  useEffect(() => {
+    if (currentUser) {
+      const tmp = fetchProductsUserPosted(currentUser.uid).then((data) => {
+        setProductDataPosted(data);
+      });
     }
   }, [currentUser]);
 
@@ -78,26 +87,6 @@ const User = (): JSX.Element => {
       window.location.href = otherUrl;
     }
   };
-
-  // sortTypeの選択の変更を認識する関数
-  const onChangesearchType: React.ChangeEventHandler<HTMLSelectElement> = (
-    event
-  ) => {
-    setSearchType(event.target.value);
-  };
-
-  // 投稿済み選択時の作品データの取得
-  useEffect(() => {
-    if (currentUser) {
-      if (searchType === "POSTED") {
-        const tmp = fetchProductsUserPosted(currentUser.uid).then(
-          (data: QuerySnapshot<DocumentData>) => {
-            setProductDataPosted(data);
-          }
-        );
-      }
-    }
-  }, [searchType, currentUser]);
 
   return (
     <VStack spacing={10} alignItems="flex-start">
@@ -160,7 +149,7 @@ const User = (): JSX.Element => {
       {/* 作品の表示条件の選択 */}
       <HStack w="100%" spacing={10}>
         <Tabs variant="unstyled">
-          <TabList pt="2">
+          <TabList>
             <Tab
               rounded="full"
               fontSize={{ base: "sm", md: "md" }}
@@ -184,19 +173,22 @@ const User = (): JSX.Element => {
             </Tab>
           </TabList>
           <TabPanels w="100%" shadow="md" borderWidth="1px">
-            <TabPanel p="0" pt="4">
+            <TabPanel>
               {/* 作品一覧の表示 */}
-              {/* <SimpleGrid
+              <SimpleGrid
                 w="100%"
                 columns={[1, null, 2]}
                 spacingX="50px"
                 spacingY="50px"
                 justifyItems="center"
               >
+                {console.log("----log1----")}
+                {console.log(productDataPosted?.docs)}
                 {productDataPosted &&
                   productDataPosted.docs.map(
-                    (eachObjData: QueryDocumentSnapshot<DocumentData>) => (
+                    (eachObjData: QueryDocumentSnapshot) => (
                       <DisplayProduct
+                        {...console.log(eachObjData.data().productTitle)}
                         productIconUrl={
                           eachObjData.data().productIconUrl as string
                         }
@@ -208,13 +200,10 @@ const User = (): JSX.Element => {
                         }
                         postDate={eachObjData.data().postDate as string}
                         editDate={eachObjData.data().editDate as string}
-                        sumLike={eachObjData.data().sumLike as number}
                       />
                     )
                   )}
-                  
-              </SimpleGrid> */}
-              POST
+              </SimpleGrid>
             </TabPanel>
             <TabPanel p="0" pt="4">
               フィードバック
