@@ -10,7 +10,17 @@ import {
 } from "@chakra-ui/react";
 import { Like } from "../index";
 
-const DisplayProduct = (): JSX.Element => (
+type DisplayProductProps = {
+  productIconUrl: string;
+  userIconUrl: string;
+  userName: string;
+  productTitle: string;
+  productAbstract: string;
+  postDate: string;
+  editDate: string;
+};
+
+const DisplayProduct = (props: DisplayProductProps): JSX.Element => (
   <Button
     w="100%"
     minWidth="350px"
@@ -25,19 +35,21 @@ const DisplayProduct = (): JSX.Element => (
         <Image
           w="100%"
           h="161px"
-          src="https://bit.ly/sage-adebayo"
+          src={props.productIconUrl}
           boxsize="100px"
           padding="20px 10px"
         />
         <HStack w="100%" h="69px" spacing={0}>
-          <Avatar w="30%" src="https://bit.ly/broken-link" size="sm" />
+          <Avatar w="30%" h="60%" src={props.userIconUrl} size="sm" />
           <Text
             w="70%"
             fontSize="md"
-            textAlign="center"
+            textAlign="left"
             padding="15px 0px 15px"
+            overflow="hidden"
+            textOverflow="ellipsis"
           >
-            yochimonji
+            {props.userName}
           </Text>
         </HStack>
       </VStack>
@@ -50,18 +62,22 @@ const DisplayProduct = (): JSX.Element => (
           padding="15px 10px 10px 0px"
           textAlign="left"
           whiteSpace="pre-wrap"
+          overflow="hidden"
+          textOverflow="ellipsis"
         >
-          ラクスケ
+          {props.productTitle}
         </Text>
         <Text
           w="100%"
           h="115px"
-          fontSize="lg"
+          fontSize="md"
           padding="10px 10px 10px 0px"
           textAlign="left"
           whiteSpace="pre-wrap"
+          overflow="hidden"
+          textOverflow="ellipsis"
         >
-          神アプリ！ぜひ使ってねー！
+          {props.productAbstract}
         </Text>
         <HStack w="100%" h="46px" spacing="0px">
           <VStack w="60%" h="46px" spacing="0px">
@@ -73,7 +89,7 @@ const DisplayProduct = (): JSX.Element => (
               padding="5px 5px 5px 0px"
               whiteSpace="pre-wrap"
             >
-              2021年8月28日作成
+              投稿日：{props.postDate}
             </Text>
             <Text
               w="100%"
@@ -83,7 +99,7 @@ const DisplayProduct = (): JSX.Element => (
               padding="5px 5px 5px 0px"
               whiteSpace="pre-wrap"
             >
-              2021年9月10日更新
+              更新日：{props.editDate}
             </Text>
           </VStack>
           <Box w="40%" h="46px">
@@ -94,5 +110,4 @@ const DisplayProduct = (): JSX.Element => (
     </HStack>
   </Button>
 );
-
 export default DisplayProduct;

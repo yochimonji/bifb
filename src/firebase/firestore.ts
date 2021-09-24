@@ -11,6 +11,7 @@ import {
   where,
   setDoc,
   DocumentSnapshot,
+  QueryDocumentSnapshot,
   DocumentData,
   QuerySnapshot,
   deleteDoc,
@@ -272,61 +273,67 @@ export const fetchProducts = async (
  * @returns FEEDBAKの場合：作品一覧の配列
  * @returns LIKEの場合   ：作品一覧の配列
  */
-export const fetchProductsUser = async (
-  userUid: string,
-  searchType: string
-): Promise<unknown> => {
-  let q;
-  let querySnapshot;
-  const eachProductIdFeedback: string[] = [];
-  const returnProductInfo: (DocumentData | undefined)[] = [];
+// export const fetchProductsUser = async (
+//   userUid: string,
+//   searchType: string
+// ): Promise<unknown> => {
+//   let q;
+//   let querySnapshot;
+//   const eachProductIdFeedback: string[] = [];
+//   const returnProductInfo: (DocumentData | undefined)[] = [];
 
-  if (searchType === "POSTED") {
-    q = query(collection(db, "product"), where("userUid", "==", userUid));
-    querySnapshot = await getDocs(q);
-    return querySnapshot;
-  }
-  if (searchType === "FEEDBACK") {
-    q = query(collection(db, "feedback"), where("userUid", "==", userUid));
-    const tmp = await getDocs(q).then((feedbackDoc) => {
-      feedbackDoc.forEach((feedbackEachData) => {
-        eachProductIdFeedback.push(feedbackEachData.get("productId"));
-      });
-    });
-    for (let i = 0; i < eachProductIdFeedback.length; i += 1) {
-      const tmp2 = fetchProduct(eachProductIdFeedback[i]).then((data) => {
-        returnProductInfo.push(data);
-      });
-    }
-    return returnProductInfo;
-  }
-  if (searchType === "LIKE") {
-    let givedLikeProductId: DocumentData | undefined;
-    const tmp = await getDoc(doc(db, "userInfo", userUid)).then(
-      (eachUserInfo: DocumentSnapshot<DocumentData>) => {
-        givedLikeProductId = eachUserInfo.data();
-      }
-    );
+//   if (searchType === "POSTED") {
+//     q = query(collection(db, "product"), where("userUid", "==", userUid));
+//     querySnapshot = await getDocs(q);
+//     return querySnapshot;
+//   }
+//   if (searchType === "FEEDBACK") {
+//     q = query(collection(db, "feedback"), where("userUid", "==", userUid));
+//     const tmp = await getDocs(q).then((feedbackDoc) => {
+//       feedbackDoc.forEach((feedbackEachData) => {
+//         eachProductIdFeedback.push(feedbackEachData.get("productId"));
+//       });
+//     });
+//     for (let i = 0; i < eachProductIdFeedback.length; i += 1) {
+//       const tmp2 = fetchProduct(eachProductIdFeedback[i]).then((data) => {
+//         returnProductInfo.push(data);
+//       });
+//     }
+//     return returnProductInfo;
+//   }
+//   if (searchType === "LIKE") {
+//     let givedLikeProductId: DocumentData | undefined;
+//     const tmp = await getDoc(doc(db, "userInfo", userUid)).then(
+//       (eachUserInfo: DocumentSnapshot<DocumentData>) => {
+//         givedLikeProductId = eachUserInfo.data();
+//       }
+//     );
 
-    if (givedLikeProductId) {
-      for (let i = 0; i < givedLikeProductId.length; i += 1) {
-        const temp = fetchProduct(givedLikeProductId[i]).then((data) => {
-          returnProductInfo.push(data);
-        });
-        return returnProductInfo;
-      }
-    }
-  }
+//     if (givedLikeProductId) {
+//       for (let i = 0; i < givedLikeProductId.length; i += 1) {
+//         const temp = fetchProduct(givedLikeProductId[i]).then((data) => {
+//           returnProductInfo.push(data);
+//         });
+//         return returnProductInfo;
+//       }
+//     }
+//   }
 
-  return true;
-};
+//   return true;
+// };
 
+/**
+ * User画面において、投稿済みが選択されている場合に、UserUidをもとに、自分の投稿している作品の一覧を取得する
+ *
+ * @param userUid : ユーザーID
+ * @return ユーザーIDが自分と一致する作品の一覧(QuerySnapshot)
+ */
 export const fetchProductsUserPosted = async (
   userUid: string
 ): Promise<QuerySnapshot<DocumentData>> => {
   const q = query(collection(db, "product"), where("userUid", "==", userUid));
-  const querySnapshot = await getDocs(q);
-  return querySnapshot;
+  const querySnapshotPost = await getDocs(q);
+  return querySnapshotPost;
 };
 
 /**
