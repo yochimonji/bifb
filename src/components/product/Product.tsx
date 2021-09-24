@@ -27,6 +27,7 @@ import {
   fetchFeedback,
   postFeedbacks,
   countLikeProduct,
+  deleteProduct,
 } from "../../firebase/firestore";
 import { AuthContext } from "../../auth/AuthProvider";
 
@@ -131,6 +132,16 @@ const Product = (): JSX.Element => {
     }
   };
 
+  const handleClickEdit: React.MouseEventHandler<HTMLButtonElement> = () => {
+    console.log("Edit");
+  };
+
+  const handleClickDelete: React.MouseEventHandler<HTMLButtonElement> = () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const tmp = deleteProduct(productId);
+    history.push("/");
+  };
+
   // 初回読み込み時にlocationからproductIdのstateを取得する
   useEffect(() => {
     setProductId((location.state as { productId: string }).productId);
@@ -226,8 +237,13 @@ const Product = (): JSX.Element => {
 
   return (
     <>
-      {currentUser?.uid === userUid && <EditDeleteButton />}
       <Stack spacing={{ base: "4", md: "2" }} pt={{ base: "4", sm: "8" }}>
+        {currentUser?.uid === userUid && (
+          <EditDeleteButton
+            handleClickDelete={handleClickDelete}
+            handleClickEdit={handleClickEdit}
+          />
+        )}
         <HStack spacing={{ base: "2", sm: "4", md: "6" }} align="flex-start">
           <Stack w={{ base: "30%", sm: "25%", md: "20%" }}>
             <Image w="100%" fit="cover" src={iconUrl} />
