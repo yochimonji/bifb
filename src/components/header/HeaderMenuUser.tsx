@@ -57,12 +57,12 @@ const HeaderMenuUser = (): JSX.Element => {
               {userName}
               <span> さん</span>
             </MenuItem>
-            <MenuItem as="a" href="/User">
+            {/* <MenuItem as="a" href="/User">
               フィードバックした投稿
             </MenuItem>
             <MenuItem as="a" href="/User">
               いいねした投稿
-            </MenuItem>
+            </MenuItem> */}
             <MenuDivider />
             <MenuItem as="a" href="/User/Edit">
               設定
