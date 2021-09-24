@@ -52,7 +52,7 @@ const HeaderMenuUser = (): JSX.Element => {
           <MenuButton color="none" p="1">
             <Avatar w="10" h="10" src={userIcon} name={userName} />
           </MenuButton>
-          <MenuList>
+          <MenuList zIndex="2">
             <MenuItem as="a" href="User">
               {userName}
               <span> さん</span>
