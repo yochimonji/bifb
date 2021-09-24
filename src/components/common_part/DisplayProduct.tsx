@@ -8,14 +8,7 @@ import {
   Avatar,
   Text,
 } from "@chakra-ui/react";
-import {
-  BrowserRouter,
-  Switch,
-  Route,
-  Link,
-  useHistory,
-  useLocation,
-} from "react-router-dom";
+import { BrowserRouter, useHistory } from "react-router-dom";
 import moment from "moment";
 import { Like } from "../index";
 
