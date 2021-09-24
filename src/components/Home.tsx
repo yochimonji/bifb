@@ -20,9 +20,9 @@ import { DisplayProduct } from "./index";
 const Home = (): JSX.Element => {
   const [sortType, setSortType] = useState("TREND");
   const [productData, setProductData] = useState<QuerySnapshot | undefined>();
-  const userName = "";
-  const userIconUrl = "";
-  const tmpUserName = "";
+  const userName = "一氏良仁";
+  const userIconUrl =
+    "https://lh3.googleusercontent.com/a-/AOh14GhbShOrlnc53QCIhotYyqXVkDJJE3voTINNU3yV=s96-c";
 
   // sortTypeの選択の変更を認識する関数
   const onChangeSortType: React.ChangeEventHandler<HTMLSelectElement> = (
@@ -32,7 +32,6 @@ const Home = (): JSX.Element => {
   };
 
   // 作品データの取得
-  console.log("通過POINT1");
   useEffect(() => {
     const tmpProductData = fetchProducts(sortType, "Desc").then(
       (data: QuerySnapshot<DocumentData> | undefined) => {
@@ -40,6 +39,8 @@ const Home = (): JSX.Element => {
       }
     );
   }, [sortType]);
+
+  console.log(sortType);
 
   return (
     <VStack spacing={10} align="stretch">
@@ -85,6 +86,7 @@ const Home = (): JSX.Element => {
           productData.docs.map(
             (eachObjData: QueryDocumentSnapshot<DocumentData>) => (
               <DisplayProduct
+                productId={eachObjData.id}
                 productIconUrl={eachObjData.data().productIconUrl as string}
                 userIconUrl={userIconUrl}
                 userName={userName}
@@ -96,7 +98,6 @@ const Home = (): JSX.Element => {
               />
             )
           )}
-        ;
       </SimpleGrid>
     </VStack>
   );
