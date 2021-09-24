@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
-import { Button, Icon, HStack, Link } from "@chakra-ui/react";
-import { MdSearch, MdNotifications, MdNoteAdd } from "react-icons/md";
+import { Icon, HStack, Link } from "@chakra-ui/react";
+import { MdSearch, MdNoteAdd } from "react-icons/md";
 import { Link as ReactLink } from "react-router-dom";
 
 import { AuthContext } from "../../auth/AuthProvider";

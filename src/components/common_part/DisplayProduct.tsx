@@ -1,13 +1,5 @@
 import React from "react";
-import {
-  Button,
-  HStack,
-  VStack,
-  Box,
-  Image,
-  Avatar,
-  Text,
-} from "@chakra-ui/react";
+import { Button, HStack, VStack, Box, Image, Text } from "@chakra-ui/react";
 import { BrowserRouter, useHistory } from "react-router-dom";
 import moment from "moment";
 import { Like } from "../index";
