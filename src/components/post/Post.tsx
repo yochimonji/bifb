@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext } from "react";
+import React, { useState, useRef, useContext, useEffect } from "react";
 import {
   Input,
   HStack,
@@ -21,11 +21,11 @@ import {
 } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
 import loadImage from "blueimp-load-image";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 
 import app from "../../base";
 import { GithubIcon, ProductIcon, TagIcon, MarkdownForm } from "..";
-import { postProduct } from "../../firebase/firestore";
+import { fetchProduct, postProduct } from "../../firebase/firestore";
 import { AuthContext } from "../../auth/AuthProvider";
 
 const storage = getStorage(app);
@@ -45,10 +45,12 @@ const Post = (): JSX.Element => {
   const [validIconUrl, setValidIconUrl] = useState(false);
   const [validTags, setValidTags] = useState(false);
   const [validMainText, setValidMainText] = useState(false);
+  const [editProductId, setEditProductId] = useState("");
 
   const iconInputRef = useRef<HTMLInputElement>(null);
   const { currentUser } = useContext(AuthContext);
   const history = useHistory();
+  const location = useLocation();
 
   /**
    * タイトルの変更に合わせてタイトルのstateを変更
@@ -258,6 +260,31 @@ const Post = (): JSX.Element => {
       }
     }
   };
+
+  useEffect(() => {
+    if (
+      location.state &&
+      (location.state as { productId?: string }).productId
+    ) {
+      const currentProductId = (location.state as { productId: string })
+        .productId;
+      setEditProductId(currentProductId);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const tmpProductData = fetchProduct(currentProductId).then(
+        (productData) => {
+          if (productData) {
+            setTitle(productData.productTitle);
+            setAbstract(productData.productAbstract);
+            setIconUrl(productData.productIconUrl);
+            setGithubUrl(productData.githubUrl);
+            setProductUrl(productData.productUrl);
+            setTags((productData.tags as string[]).join(" "));
+            setMainText(productData.mainText);
+          }
+        }
+      );
+    }
+  }, [location.state]);
 
   return (
     <Stack spacing={{ base: "4", md: "2" }} pt="8">

@@ -133,7 +133,7 @@ const Product = (): JSX.Element => {
   };
 
   const handleClickEdit: React.MouseEventHandler<HTMLButtonElement> = () => {
-    console.log("Edit");
+    history.push("/post", { productId });
   };
 
   const handleClickDelete: React.MouseEventHandler<HTMLButtonElement> = () => {
