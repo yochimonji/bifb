@@ -31,7 +31,7 @@ const EditDeleteButton = (props: EditDeleteButtonType): JSX.Element => {
         position="fixed"
         top={{ base: "auto", sm: "20" }}
         bottom={{ base: "10", sm: "auto" }}
-        right="4"
+        right={{ base: "4", xl: window.outerWidth / 2 - 500 }}
         align={{ base: "flex-end", sm: "flex-start" }}
       >
         <IconButton
