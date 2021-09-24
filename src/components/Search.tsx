@@ -1,33 +1,36 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Input,
   InputGroup,
   InputRightElement,
   VStack,
-  Tag,
-  TagLabel,
-  Wrap,
-  Icon,
   IconButton,
+  SimpleGrid,
+  Button,
 } from "@chakra-ui/react";
-// import { icons } from "react-icons/lib";
 import { MdSearch } from "react-icons/md";
-// 2. Use the `as` prop
-// type OptionType = {
-//   label: string;
-//   value: string;
-// };
-// const createOption = (label: string): OptionType => ({
-//   label,
-//   value: label,
-// });
+import { QueryDocumentSnapshot, DocumentData } from "firebase/firestore";
+import { fetchAllTags } from "../firebase/firestore";
+
 const Search = (): JSX.Element => {
+  const [tags, setTags] = useState<QueryDocumentSnapshot<DocumentData>[]>();
+
+  // 最初1回のみ、すべてのタグの取得
+  useEffect(() => {
+    const tmpFetchTags = fetchAllTags().then((data) => {
+      setTags(data.docs);
+    });
+  }, []);
+
   const handleTag: React.ChangeEventHandler<HTMLInputElement> = (event) => {
     console.log(event.target.value);
   };
+
+  const handleClick = () => {};
+
   return (
-    <VStack spacing={20} align="stretch">
-      <InputGroup>
+    <VStack spacing="40px" align="stretch">
+      <InputGroup pt="40px" size="md">
         <Input
           onChange={handleTag}
           h="60px"
@@ -37,59 +40,36 @@ const Search = (): JSX.Element => {
           size="lg"
           fontSize="1.2em"
         />
-
-        <InputRightElement pointerEvents="none">
+        <InputRightElement pt="70px" width="4.5rem">
           <IconButton
-            aria-label=""
             icon={<MdSearch />}
-            color="gray.300"
+            aria-label="Search database"
             size="lg"
-            alignItems="center"
-            _focus={{
-              bg: "blue.200",
-              outline: "none",
-            }}
+            variant="ghost"
+            onClick={handleClick}
           />
-          {/* <Icon as={MdSearch} color="gray.300" size="lg" /> */}
         </InputRightElement>
       </InputGroup>
-
-      {/* 検索絞り込み結果の表示 */}
-      <Wrap w="100%" spacing="0px" alignItems="center" flexWrap="wrap">
-        <Wrap w="70%" textAlign="center" spacing={4} minW="450px">
-          {["React", "Typescript", "JavaScript", "C++", "Webアプリ"].map(
-            (tag) => (
-              <Tag
-                size="lg"
-                key="lg"
-                borderRadius="5px"
-                variant="solid"
-                bg="#DEEFF1"
-                textColor="black"
-                justfy="left"
-              >
-                <TagLabel>{tag}</TagLabel>
-              </Tag>
-            )
-          )}
-        </Wrap>
-      </Wrap>
-
-      {/* 検索絞り込み結果の表示 */}
-      <Wrap
-        w="100%"
-        columns={[1, null, 2]}
-        spacingX="50px"
-        spacingY="50px"
+      <SimpleGrid
+        columns={[1, 2, 3]}
         justifyItems="center"
+        w="100%"
+        spacing="40px"
+        pb="40px"
       >
-        {/* <Box w="100%" minW="400px" maxW="450px" h="234.9px" bg="green.100" />
-      <Box w="100%" minW="400px" maxW="450px" h="234.9px" bg="green.200" />
-      <Box w="100%" minW="400px" maxW="450px" h="234.9px" bg="green.300" />
-      <Box w="100%" minW="400px" maxW="450px" h="234.9px" bg="green.400" />
-      <Box w="100%" minW="400px" maxW="450px" h="234.9px" bg="green.300" />
-      <Box w="100%" minW="400px" maxW="450px" h="234.9px" bg="green.400" /> */}
-      </Wrap>
+        {tags &&
+          tags.map((eachTags) => (
+            <Button
+              minWidth="200px"
+              width="240px"
+              height="80px"
+              colorScheme="blackAlpha"
+              variant="outline"
+            >
+              {eachTags.id}
+            </Button>
+          ))}
+      </SimpleGrid>
     </VStack>
   );
 };
