@@ -22,12 +22,12 @@ import { Like } from "../index";
 type DisplayProductProps = {
   productId: string;
   productIconUrl: string;
-  userIconUrl: string;
-  userName: string;
+  // userIconUrl: string;
+  // userName: string;
   productTitle: string;
   productAbstract: string;
   postDate: string;
-  editDate: string;
+  // editDate: string;
   sumLike: number;
 };
 
@@ -64,13 +64,13 @@ const DisplayProduct = (props: DisplayProductProps): JSX.Element => {
         minWidth="350px"
         maxWidth="400px"
         h="235px"
-        border="1px"
-        borderColor="black"
         backgroundColor="white"
         onClick={handleClick}
+        variant="ghost"
+        shadow="md"
       >
         <HStack w="100%" spacing={0} alignItems="flex-start">
-          <VStack w="36%" h="230px" spacing={0}>
+          <VStack w="36%" h="230px" spacing={0} pt="3">
             <Image
               w="100%"
               h="161px"
@@ -78,7 +78,7 @@ const DisplayProduct = (props: DisplayProductProps): JSX.Element => {
               boxsize="100px"
               padding="20px 10px"
             />
-            <HStack w="100%" h="69px" spacing={0}>
+            {/* <HStack w="100%" h="69px" spacing={0}>
               <Avatar w="30%" h="60%" src={props.userIconUrl} size="sm" />
               <Text
                 w="70%"
@@ -90,14 +90,14 @@ const DisplayProduct = (props: DisplayProductProps): JSX.Element => {
               >
                 {props.userName}
               </Text>
-            </HStack>
+            </HStack> */}
           </VStack>
 
-          <VStack w="64%" h="230px" spacing="0px">
+          <VStack w="64%" h="230px" spacing="0px" pt="5" pl="2">
             <Text
               w="100%"
               h="69px"
-              fontSize="2xl"
+              fontSize="xl"
               padding="15px 10px 10px 0px"
               textAlign="left"
               whiteSpace="pre-wrap"
@@ -110,7 +110,7 @@ const DisplayProduct = (props: DisplayProductProps): JSX.Element => {
               w="100%"
               h="115px"
               fontSize="md"
-              padding="10px 10px 10px 0px"
+              padding="10px 10px 10px 2px"
               textAlign="left"
               whiteSpace="pre-wrap"
               overflow="hidden"
@@ -119,7 +119,7 @@ const DisplayProduct = (props: DisplayProductProps): JSX.Element => {
               {props.productAbstract}
             </Text>
             <HStack w="100%" h="46px" spacing="0px">
-              <VStack w="60%" h="46px" spacing="0px">
+              <VStack w="80%" h="46px" spacing="0px">
                 <Text
                   w="100%"
                   h="23px"
@@ -130,7 +130,7 @@ const DisplayProduct = (props: DisplayProductProps): JSX.Element => {
                 >
                   投稿日：{formatDate(props.postDate)}
                 </Text>
-                <Text
+                {/* <Text
                   w="100%"
                   h="23px"
                   fontSize="xs"
@@ -139,9 +139,9 @@ const DisplayProduct = (props: DisplayProductProps): JSX.Element => {
                   whiteSpace="pre-wrap"
                 >
                   更新日：{formatDate(props.editDate)}
-                </Text>
+                </Text> */}
               </VStack>
-              <Box w="40%" h="46px">
+              <Box w="20%" h="46px">
                 <Like sumLike={props.sumLike} />
               </Box>
             </HStack>

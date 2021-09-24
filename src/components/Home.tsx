@@ -20,9 +20,9 @@ import { DisplayProduct } from "./index";
 const Home = (): JSX.Element => {
   const [sortType, setSortType] = useState("TREND");
   const [productData, setProductData] = useState<QuerySnapshot | undefined>();
-  const userName = "一氏良仁";
-  const userIconUrl =
-    "https://lh3.googleusercontent.com/a-/AOh14GhbShOrlnc53QCIhotYyqXVkDJJE3voTINNU3yV=s96-c";
+  // const userName = "一氏良仁";
+  // const userIconUrl =
+  //   "https://lh3.googleusercontent.com/a-/AOh14GhbShOrlnc53QCIhotYyqXVkDJJE3voTINNU3yV=s96-c";
 
   // sortTypeの選択の変更を認識する関数
   const onChangeSortType: React.ChangeEventHandler<HTMLSelectElement> = (
@@ -33,14 +33,13 @@ const Home = (): JSX.Element => {
 
   // 作品データの取得
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const tmpProductData = fetchProducts(sortType, "Desc").then(
       (data: QuerySnapshot<DocumentData> | undefined) => {
         setProductData(data);
       }
     );
   }, [sortType]);
-
-  console.log(sortType);
 
   return (
     <VStack spacing={10} align="stretch">
@@ -88,12 +87,12 @@ const Home = (): JSX.Element => {
               <DisplayProduct
                 productId={eachObjData.id}
                 productIconUrl={eachObjData.data().productIconUrl as string}
-                userIconUrl={userIconUrl}
-                userName={userName}
+                // userIconUrl={userIconUrl}
+                // userName={userName}
                 productTitle={eachObjData.data().productTitle as string}
                 productAbstract={eachObjData.data().productAbstract as string}
                 postDate={eachObjData.data().postDate as string}
-                editDate={eachObjData.data().editDate as string}
+                // editDate={eachObjData.data().editDate as string}
                 sumLike={eachObjData.data().sumLike as number}
               />
             )

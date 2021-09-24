@@ -1,6 +1,6 @@
 import React from "react";
 import { HStack, Icon, Text, Box } from "@chakra-ui/react";
-import { AiFillHeart } from "react-icons/ai";
+import { AiOutlineHeart } from "react-icons/ai";
 
 type SumLikeProps = {
   sumLike: number;
@@ -9,7 +9,7 @@ type SumLikeProps = {
 const Like = (props: SumLikeProps): JSX.Element => (
   <HStack alignItems="center" spacing={0}>
     <Box w="50%" h="50%" alignItems="center">
-      <Icon aria-label="center" color="#EEB6B7" as={AiFillHeart} />
+      <Icon aria-label="center" as={AiOutlineHeart} />
     </Box>
     <Text w="50%" h="100%" textAlign="center" fontSize="md">
       {props.sumLike}
