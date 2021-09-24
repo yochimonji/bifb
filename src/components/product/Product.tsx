@@ -110,6 +110,9 @@ const Product = (): JSX.Element => {
     setFeedbackText(event.target.value);
   };
 
+  /**
+   * 投稿ボタンを押した際にFirestoreに登録して際読み込みする関数
+   */
   const handlePost: React.MouseEventHandler<HTMLButtonElement> = async () => {
     // const canPost = validate();
     // if (currentUser != null && canPost) {
@@ -129,6 +132,7 @@ const Product = (): JSX.Element => {
     }
   };
 
+  // 初回読み込み時にlocationからproductIdのstateを取得する
   useEffect(() => {
     setProductId((location.state as { productId: string }).productId);
   }, [location.state]);
@@ -208,6 +212,7 @@ const Product = (): JSX.Element => {
     }
   }, [productId, userUid]);
 
+  // ログイン中のユーザーが作品にいいねしているかを判断
   useEffect(() => {
     if (currentUser && productId) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -222,7 +227,7 @@ const Product = (): JSX.Element => {
 
   return (
     <>
-      <EditRemoveButton />
+      {currentUser?.uid === userUid && <EditRemoveButton />}
       <Stack spacing={{ base: "4", md: "2" }} pt={{ base: "4", sm: "8" }}>
         <HStack spacing={{ base: "2", sm: "4", md: "6" }} align="flex-start">
           <Stack w={{ base: "30%", sm: "25%", md: "20%" }}>
