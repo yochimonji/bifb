@@ -9,7 +9,7 @@ import {
   Tag,
   Divider,
 } from "@chakra-ui/react";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useHistory, useLocation } from "react-router-dom";
 import moment from "moment";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -63,12 +63,13 @@ const Product = (): JSX.Element => {
   const [userIcon, setUserIcon] = useState("");
   const [userName, setUserName] = useState("");
   const [isLike, setIsLike] = useState(false);
-  const [productId, setProductId] = useState("4L1WDWkKNTeqfyup4qUW");
+  const [productId, setProductId] = useState("");
   const [feedbackText, setFeedbackText] = useState("");
   const [feedbacks, setFeedbacks] = useState<FeedbackType[]>([]);
 
   const { currentUser } = useContext(AuthContext);
   const history = useHistory();
+  const location = useLocation();
 
   /**
    * いいねボタンをクリックした際の動作を行う関数
@@ -127,59 +128,65 @@ const Product = (): JSX.Element => {
     }
   };
 
+  useEffect(() => {
+    setProductId((location.state as { productId: string }).productId);
+  }, [location.state]);
+
   // productId読み込み後の各stateの初期化
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const tmpProductData = fetchProduct(productId).then((productData) => {
-      if (productData) {
-        const formatedPostDate = moment(productData.postDate).format(
-          "YYYY年MM月DD日"
-        );
-        const formatedEditDate = moment(productData.editDate).format(
-          "YYYY年MM月DD日"
-        );
-        setTitle(productData.productTitle);
-        setAbstract(productData.productAbstract);
-        setIconUrl(productData.productIconUrl);
-        setGithubUrl(productData.githubUrl);
-        setProductUrl(productData.productUrl);
-        setTags(productData.tags);
-        setMainText(productData.mainText);
-        setPostDate(formatedPostDate);
-        setEditDate(formatedEditDate);
-        setSumLike(productData.sumLike);
-        setUserUid(productData.userUid);
-      }
-    });
+    if (productId) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const tmpProductData = fetchProduct(productId).then((productData) => {
+        if (productData) {
+          const formatedPostDate = moment(productData.postDate).format(
+            "YYYY年MM月DD日"
+          );
+          const formatedEditDate = moment(productData.editDate).format(
+            "YYYY年MM月DD日"
+          );
+          setTitle(productData.productTitle);
+          setAbstract(productData.productAbstract);
+          setIconUrl(productData.productIconUrl);
+          setGithubUrl(productData.githubUrl);
+          setProductUrl(productData.productUrl);
+          setTags(productData.tags);
+          setMainText(productData.mainText);
+          setPostDate(formatedPostDate);
+          setEditDate(formatedEditDate);
+          setSumLike(productData.sumLike);
+          setUserUid(productData.userUid);
+        }
+      });
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const tmpFeedback = fetchFeedback(productId).then((feedbackSnapshot) => {
-      if (feedbackSnapshot) {
-        (feedbackSnapshot as QuerySnapshot<DocumentData>).forEach(
-          (feedbackDoc: QueryDocumentSnapshot<DocumentData>) => {
-            const feedbackData = feedbackDoc.data() as FeedbackDataType;
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const tmpUserInfo = fetchUserInfo(feedbackData.userUid).then(
-              (userInfo) => {
-                if (userInfo) {
-                  const newFeedback = feedbackData as FeedbackType;
-                  newFeedback.userIcon = userInfo.userIcon as string;
-                  newFeedback.userName = userInfo.name as string;
-                  setFeedbacks((prev) => [...prev, newFeedback]);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const tmpFeedback = fetchFeedback(productId).then((feedbackSnapshot) => {
+        if (feedbackSnapshot) {
+          (feedbackSnapshot as QuerySnapshot<DocumentData>).forEach(
+            (feedbackDoc: QueryDocumentSnapshot<DocumentData>) => {
+              const feedbackData = feedbackDoc.data() as FeedbackDataType;
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
+              const tmpUserInfo = fetchUserInfo(feedbackData.userUid).then(
+                (userInfo) => {
+                  if (userInfo) {
+                    const newFeedback = feedbackData as FeedbackType;
+                    newFeedback.userIcon = userInfo.userIcon as string;
+                    newFeedback.userName = userInfo.name as string;
+                    setFeedbacks((prev) => [...prev, newFeedback]);
+                  }
                 }
-              }
-            );
-          }
-        );
-      }
-    });
+              );
+            }
+          );
+        }
+      });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [productId]);
 
   // userUid読み込み後のユーザー情報に関するstateの初期化
   useEffect(() => {
     // 初回読み込み時にuserUidがなくエラーになるためifが必要
-    if (userUid) {
+    if (userUid && productId) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const tmpUserInfo = fetchUserInfo(userUid).then((userInfo) => {
         if (userInfo) {
