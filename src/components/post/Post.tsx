@@ -25,7 +25,11 @@ import { useHistory, useLocation } from "react-router-dom";
 
 import app from "../../base";
 import { GithubIcon, ProductIcon, TagIcon, MarkdownForm } from "..";
-import { fetchProduct, postProduct } from "../../firebase/firestore";
+import {
+  editProduct,
+  fetchProduct,
+  postProduct,
+} from "../../firebase/firestore";
 import { AuthContext } from "../../auth/AuthProvider";
 
 const storage = getStorage(app);
@@ -242,16 +246,31 @@ const Post = (): JSX.Element => {
     const nonDuplicatedTagList = [...new Set(tagList)];
     // ログイン済みでバリデーションOKの場合Firestoreに保存
     if (currentUser != null && canPost) {
-      const productId = await postProduct(
-        title,
-        abstract,
-        iconUrl,
-        githubUrl,
-        productUrl,
-        nonDuplicatedTagList,
-        mainText,
-        currentUser.uid
-      );
+      let productId = "";
+      if (editProductId) {
+        productId = await editProduct(
+          editProductId,
+          title,
+          abstract,
+          iconUrl,
+          githubUrl,
+          productUrl,
+          nonDuplicatedTagList,
+          mainText,
+          currentUser.uid
+        );
+      } else {
+        productId = await postProduct(
+          title,
+          abstract,
+          iconUrl,
+          githubUrl,
+          productUrl,
+          nonDuplicatedTagList,
+          mainText,
+          currentUser.uid
+        );
+      }
       if (productId) {
         history.push("/");
       } else {

@@ -451,8 +451,10 @@ export const editProduct = async (
   const tmp = postTags(tags, "EXIST");
   // 作品のpostDateの取得
   let time: unknown;
+  let sumLike = 0;
   const tmp2 = await getDoc(doc(db, "product", productId)).then((data) => {
     time = data.get("postDate");
+    sumLike = data.get("sumLike") as number;
   });
   // 作品情報の取得
   const tmp3 = await setDoc(doc(db, "product", productId), {
@@ -465,7 +467,7 @@ export const editProduct = async (
     mainText,
     postDate: time,
     editDate: new Date().toLocaleString(),
-    sumLike: 0,
+    sumLike,
     userUid,
   });
   return productId;
