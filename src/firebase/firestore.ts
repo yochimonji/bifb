@@ -343,6 +343,14 @@ export const fetchTags = async (inputText: string): Promise<unknown> => {
 };
 
 /**
+ * すべてのタグのリストを取得
+ * @returns 全タグのリスト
+ */
+export const fetchAllTags = async () => {
+  const tagsList = await getDocs(collection(db, "tags"));
+  return tagsList;
+};
+/**
  * 作品にいいねが押された時にいいねカウントを変化させる
  * @param productId 作品ID
  * @param conditions UP|DOWN
