@@ -186,16 +186,24 @@ const Product = (): JSX.Element => {
   // userUid読み込み後のユーザー情報に関するstateの初期化
   useEffect(() => {
     // 初回読み込み時にuserUidがなくエラーになるためifが必要
-    if (currentUser && productId) {
+    if (userUid && productId) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const tmpUserInfo = fetchUserInfo(currentUser.uid).then((userInfo) => {
+      const tmpUserInfo = fetchUserInfo(userUid).then((userInfo) => {
         if (userInfo) {
           setUserIcon(userInfo.userIcon);
           setUserName(userInfo.name);
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-          if ([...userInfo.giveLike].includes(productId)) {
-            setIsLike(true);
-          }
+        }
+      });
+    }
+  }, [productId, userUid]);
+
+  useEffect(() => {
+    if (currentUser && productId) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const tmpUserInfo = fetchUserInfo(currentUser.uid).then((userInfo) => {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        if (userInfo && [...userInfo.giveLike].includes(productId)) {
+          setIsLike(true);
         }
       });
     }
