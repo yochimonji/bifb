@@ -175,7 +175,7 @@ export const fetchUserInfo = async (
   const searchUserUid = doc(db, "userInfo", userUid);
   const loadUserData = await getDoc(searchUserUid);
 
-  return loadUserData;
+  return loadUserData.data();
 };
 
 /**
