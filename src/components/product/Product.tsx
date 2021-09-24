@@ -14,6 +14,11 @@ import moment from "moment";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import ChackUIRenderer from "chakra-ui-markdown-renderer";
+import {
+  QuerySnapshot,
+  QueryDocumentSnapshot,
+  DocumentData,
+} from "firebase/firestore";
 
 import { TagIcon, LinkLike, MarkdownForm } from "../index";
 import {
@@ -24,6 +29,24 @@ import {
   countLikeProduct,
 } from "../../firebase/firestore";
 import { AuthContext } from "../../auth/AuthProvider";
+
+type FeedbackDataType = {
+  sumLike: number;
+  feedbackText: string;
+  userUid: string;
+  postDate: string;
+  productId: string;
+};
+
+type FeedbackType = {
+  sumLike: number;
+  feedbackText: string;
+  userUid: string;
+  postDate: string;
+  productId: string;
+  userIcon: string;
+  userName: string;
+};
 
 const Product = (): JSX.Element => {
   const [title, setTitle] = useState("");
@@ -42,6 +65,7 @@ const Product = (): JSX.Element => {
   const [isLike, setIsLike] = useState(false);
   const [productId, setProductId] = useState("4L1WDWkKNTeqfyup4qUW");
   const [feedbackText, setFeedbackText] = useState("");
+  const [feedbacks, setFeedbacks] = useState<FeedbackType[]>([]);
 
   const { currentUser } = useContext(AuthContext);
 
@@ -104,7 +128,7 @@ const Product = (): JSX.Element => {
   // productId読み込み後の各stateの初期化
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const tmp = fetchProduct(productId).then((productData) => {
+    const tmpProductData = fetchProduct(productId).then((productData) => {
       if (productData) {
         const formatedPostDate = moment(productData.postDate).format(
           "YYYY年MM月DD日"
@@ -125,6 +149,29 @@ const Product = (): JSX.Element => {
         setUserUid(productData.userUid);
       }
     });
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const tmpFeedback = fetchFeedback(productId).then((feedbackSnapshot) => {
+      if (feedbackSnapshot) {
+        (feedbackSnapshot as QuerySnapshot<DocumentData>).forEach(
+          (feedbackDoc: QueryDocumentSnapshot<DocumentData>) => {
+            const feedbackData = feedbackDoc.data() as FeedbackDataType;
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const tmpUserInfo = fetchUserInfo(feedbackData.userUid).then(
+              (userInfo) => {
+                if (userInfo) {
+                  const newFeedback = feedbackData as FeedbackType;
+                  newFeedback.userIcon = userInfo.userIcon as string;
+                  newFeedback.userName = userInfo.name as string;
+                  setFeedbacks((prev) => [...prev, newFeedback]);
+                }
+              }
+            );
+          }
+        );
+      }
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [productId]);
 
   // userUid読み込み後のユーザー情報に関するstateの初期化
@@ -132,7 +179,7 @@ const Product = (): JSX.Element => {
     // 初回読み込み時にuserUidがなくエラーになるためifが必要
     if (userUid) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const tmp = fetchUserInfo(userUid).then((userInfo) => {
+      const tmpUserInfo = fetchUserInfo(userUid).then((userInfo) => {
         if (userInfo) {
           setUserIcon(userInfo.userIcon);
           setUserName(userInfo.name);
@@ -236,8 +283,40 @@ const Product = (): JSX.Element => {
         handleClickLikeButton={handleClickLikeButton}
       />
       <Divider pt="4" />
-      {/* フィードバックの入力 */}
       <Heading size="md">フィードバック</Heading>
+      {/* フィードバックの表示 */}
+      {/* eslint-disable-next-line array-callback-return */}
+      <Stack spacing="6">
+        {feedbacks.map((feedback, i) => (
+          <HStack id={i.toString()} align="flex-start" spacing="4">
+            <Avatar
+              w={{ base: "8", md: "10" }}
+              h={{ base: "8", md: "10" }}
+              src={feedback.userIcon}
+              name={feedback.userName}
+            />
+            <Stack>
+              <HStack spacing="4">
+                <Text fontSize={{ base: "xs", md: "sm" }}>
+                  {feedback.userName}
+                </Text>
+                <Text fontSize={{ base: "xs", md: "sm" }}>
+                  {moment(feedback.postDate).format("YYYY年MM月DD日")}
+                </Text>
+              </HStack>
+              <Text
+                as={ReactMarkdown}
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                components={ChackUIRenderer()}
+                remarkPlugins={[remarkGfm]}
+              >
+                {feedback.feedbackText}
+              </Text>
+            </Stack>
+          </HStack>
+        ))}
+      </Stack>
+      {/* フィードバックの入力 */}
       <MarkdownForm
         pageType="product"
         text={feedbackText}
