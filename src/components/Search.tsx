@@ -42,14 +42,11 @@ const Search = (): JSX.Element => {
 
   const checkTags = (input: string) => {
     tagsNow = [""];
-    console.log("tagsAll", tagsAll);
-    console.log("tagscom", tagscom);
     if (tagscom) {
       tagscom.forEach((tag: string) => {
         const searchText = new RegExp(input, "i");
         const test = tag.search(searchText);
         if (test !== -1) {
-          console.log(test);
           tagsNow.push(tag);
         }
       });
@@ -76,9 +73,8 @@ const Search = (): JSX.Element => {
 
   // タグボタンが押された時の操作
   const handleClickTagsButton = () => {
-    console.log(document.getElementById("button").value);
     history.push("/", {
-      tag: document.getElementById("button").value as string,
+      searchTag: document.getElementById("button").value as string,
     });
   };
 
