@@ -224,7 +224,8 @@ export const fetchFeedback = async (
 ): Promise<DocumentData | undefined> => {
   const q = query(
     collection(db, "feedback"),
-    where("productId", "==", productId)
+    where("productId", "==", productId),
+    orderBy("postDate")
   );
   const querySnapshot = await getDocs(q);
   return querySnapshot;

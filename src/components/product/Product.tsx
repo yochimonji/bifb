@@ -171,7 +171,17 @@ const Product = (): JSX.Element => {
                     const newFeedback = feedbackData as FeedbackType;
                     newFeedback.userIcon = userInfo.userIcon as string;
                     newFeedback.userName = userInfo.name as string;
-                    setFeedbacks((prev) => [...prev, newFeedback]);
+                    setFeedbacks((prev) =>
+                      [...prev, newFeedback].sort((a, b) => {
+                        if (
+                          moment(a.postDate).format("YYYYMMDDHHmmss") <
+                          moment(b.postDate).format("YYYYMMDDHHmmss")
+                        ) {
+                          return -1;
+                        }
+                        return 1;
+                      })
+                    );
                   }
                 }
               );
@@ -321,6 +331,7 @@ const Product = (): JSX.Element => {
                 </Text>
                 <Text fontSize={{ base: "xs", md: "sm" }}>
                   {moment(feedback.postDate).format("YYYY年MM月DD日")}
+                  {/* {console.log(feedback.postDate)} */}
                 </Text>
               </HStack>
               <Text
