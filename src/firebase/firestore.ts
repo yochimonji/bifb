@@ -176,7 +176,7 @@ export const fetchUserInfo = async (
   const searchUserUid = doc(db, "userInfo", userUid);
   const loadUserData = await getDoc(searchUserUid);
 
-  return loadUserData.data();
+  return loadUserData;
 };
 
 /**
@@ -233,7 +233,6 @@ export const fetchFeedback = async (
 
 /**
  * トレンド・新着・いいね数によって、作品をソートする
- * ただし現状、リスト的な表示はできず、最後のものしか表示されない 要改善
  * トレンドをどう表現するかについても要検討
  *
  * @param conditions Trend｜New｜LikeLarge｜LikeSmall
@@ -245,11 +244,11 @@ export const fetchProducts = async (
   sortType: string
 ): Promise<DocumentData | undefined> => {
   let q;
-  if (conditions === "Trend") {
+  if (conditions === "TREND" || conditions === "") {
     if (sortType === "Desc") {
       q = query(collection(db, "product"), orderBy("sumLike", "desc"));
     } else q = query(collection(db, "product"), orderBy("sumLike"));
-  } else if (conditions === "New") {
+  } else if (conditions === "NEW") {
     if (sortType === "Desc") {
       q = query(collection(db, "product"), orderBy("postDate", "desc"));
     } else q = query(collection(db, "product"), orderBy("postDate"));
@@ -257,8 +256,8 @@ export const fetchProducts = async (
     if (sortType === "Desc") {
       q = query(collection(db, "product"), orderBy("sumLike", "desc"));
     } else q = query(collection(db, "product"), orderBy("sumLike"));
-  } else if (sortType === "Decs") {
-    q = query(collection(db, "product"), orderBy("postDate"));
+  } else if (conditions === "LikeSmall") {
+    q = query(collection(db, "product"), orderBy("sumLike"));
   } else q = query(collection(db, "product"), orderBy("sumLike", "desc"));
 
   const querySnapshot = await getDocs(q);
