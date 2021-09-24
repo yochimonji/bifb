@@ -13,15 +13,21 @@ import {
   Tab,
   TabPanels,
   TabPanel,
+  SimpleGrid,
 } from "@chakra-ui/react";
 import {
   AiFillGithub,
   AiOutlineTwitter,
   AiOutlinePlusCircle,
 } from "react-icons/ai";
-import { DocumentSnapshot, DocumentData } from "firebase/firestore";
+import {
+  DocumentData,
+  QueryDocumentSnapshot,
+  QuerySnapshot,
+} from "firebase/firestore";
 import { AuthContext } from "../auth/AuthProvider";
-import { fetchUserInfo } from "../firebase/firestore";
+import { fetchUserInfo, fetchProductsUserPosted } from "../firebase/firestore";
+import { DisplayProduct } from "./index";
 
 const User = (): JSX.Element => {
   const [userName, setUserName] = useState("");
@@ -30,27 +36,37 @@ const User = (): JSX.Element => {
   const [githubUrl, setGithubUrl] = useState("");
   const [twitterUrl, setTwitterUrl] = useState("");
   const [otherUrl, setOtherUrl] = useState("");
+  const [productDataPosted, setProductDataPosted] =
+    useState<QuerySnapshot<DocumentData>>();
 
   const { currentUser } = useContext(AuthContext);
 
-  // ページの遷移用
-  let location: Location;
-
+  // ユーザー情報の取得
   useEffect(() => {
     if (currentUser !== null) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const tmpUserInfo = fetchUserInfo(currentUser.uid).then(
-        (userInfo: DocumentSnapshot<DocumentData>) => {
+        (userInfo: DocumentData | undefined) => {
           if (userInfo) {
-            setUserName(userInfo.data().name);
-            setUserIconUrl(userInfo.data().userIcon);
-            setUserComment(userInfo.data().comment);
-            setGithubUrl(userInfo.data().githubUrl);
-            setTwitterUrl(userInfo.data().twitterUrl);
-            setOtherUrl(userInfo.data().otherUrl);
+            setUserName(userInfo.name);
+            setUserIconUrl(userInfo.userIcon);
+            setUserComment(userInfo.comment);
+            setGithubUrl(userInfo.githubUrl);
+            setTwitterUrl(userInfo.twitterUrl);
+            setOtherUrl(userInfo.otherUrl);
           }
         }
       );
+    }
+  }, [currentUser]);
+
+  // 投稿済み作品の情報の取得
+  useEffect(() => {
+    if (currentUser) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const tmp = fetchProductsUserPosted(currentUser.uid).then((data) => {
+        setProductDataPosted(data);
+      });
     }
   }, [currentUser]);
 
@@ -133,7 +149,7 @@ const User = (): JSX.Element => {
       {/* 作品の表示条件の選択 */}
       <HStack w="100%" spacing={10}>
         <Tabs variant="unstyled">
-          <TabList pt="2">
+          <TabList>
             <Tab
               rounded="full"
               fontSize={{ base: "sm", md: "md" }}
@@ -141,7 +157,7 @@ const User = (): JSX.Element => {
             >
               投稿済み
             </Tab>
-            <Tab
+            {/* <Tab
               rounded="full"
               fontSize={{ base: "sm", md: "md" }}
               _selected={{ color: "#FCFCFC", bg: "#99CED4" }}
@@ -154,15 +170,37 @@ const User = (): JSX.Element => {
               _selected={{ color: "#FCFCFC", bg: "#99CED4" }}
             >
               いいね
-            </Tab>
+            </Tab> */}
           </TabList>
-          <TabPanels w="100%" shadow="md" borderWidth="1px">
-            {/* 作品の表示 */}
-            {/* <SimpleGrid w="100%" columns={1, null, 2} spacing={10}>
-                  <DisPlayProduct />
-                </SimpleGrid> */}
-            <TabPanel p="0" pt="4">
-              投稿済み
+          <TabPanels w="100%">
+            <TabPanel>
+              {/* 作品一覧の表示 */}
+              <SimpleGrid
+                w="100%"
+                columns={[1, null, 2]}
+                spacingX="50px"
+                spacingY="50px"
+                justifyItems="center"
+              >
+                {productDataPosted &&
+                  productDataPosted.docs.map(
+                    (eachObjData: QueryDocumentSnapshot) => (
+                      <DisplayProduct
+                        productIconUrl={
+                          eachObjData.data().productIconUrl as string
+                        }
+                        // userIconUrl={userIconUrl}
+                        // userName={userName}
+                        productTitle={eachObjData.data().productTitle as string}
+                        productAbstract={
+                          eachObjData.data().productAbstract as string
+                        }
+                        postDate={eachObjData.data().postDate as string}
+                        // editDate={eachObjData.data().editDate as string}
+                      />
+                    )
+                  )}
+              </SimpleGrid>
             </TabPanel>
             <TabPanel p="0" pt="4">
               フィードバック
