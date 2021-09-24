@@ -49,7 +49,7 @@ const DisplayProduct = (props: DisplayProductProps): JSX.Element => {
             padding="20px 10px"
           />
           <HStack w="100%" h="69px" spacing={0}>
-            <Avatar w="30%" src={props.userIconUrl} size="sm" />
+            <Avatar w="30%" h="60%" src={props.userIconUrl} size="sm" />
             <Text
               w="70%"
               fontSize="md"
