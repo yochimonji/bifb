@@ -13,15 +13,21 @@ import {
   Tab,
   TabPanels,
   TabPanel,
+  SimpleGrid,
 } from "@chakra-ui/react";
 import {
   AiFillGithub,
   AiOutlineTwitter,
   AiOutlinePlusCircle,
 } from "react-icons/ai";
-import { DocumentSnapshot, DocumentData } from "firebase/firestore";
+import {
+  DocumentData,
+  QueryDocumentSnapshot,
+  QuerySnapshot,
+} from "firebase/firestore";
 import { AuthContext } from "../auth/AuthProvider";
-import { fetchUserInfo } from "../firebase/firestore";
+import { fetchUserInfo, fetchProductsUserPosted } from "../firebase/firestore";
+import { DisplayProduct } from "./index";
 
 const User = (): JSX.Element => {
   const [userName, setUserName] = useState("");
@@ -30,14 +36,15 @@ const User = (): JSX.Element => {
   const [githubUrl, setGithubUrl] = useState("");
   const [twitterUrl, setTwitterUrl] = useState("");
   const [otherUrl, setOtherUrl] = useState("");
+  const [searchType, setSearchType] = useState("POSTED");
+  const [productDataPosted, setProductDataPosted] =
+    useState<QuerySnapshot<DocumentData>>();
 
   const { currentUser } = useContext(AuthContext);
 
-  // ページの遷移用
-  let location: Location;
-
   useEffect(() => {
     if (currentUser !== null) {
+      console.log(currentUser.uid);
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const tmpUserInfo = fetchUserInfo(currentUser.uid).then(
         (userInfo: DocumentData | undefined) => {
@@ -71,6 +78,26 @@ const User = (): JSX.Element => {
       window.location.href = otherUrl;
     }
   };
+
+  // sortTypeの選択の変更を認識する関数
+  const onChangesearchType: React.ChangeEventHandler<HTMLSelectElement> = (
+    event
+  ) => {
+    setSearchType(event.target.value);
+  };
+
+  // 投稿済み選択時の作品データの取得
+  useEffect(() => {
+    if (currentUser) {
+      if (searchType === "POSTED") {
+        const tmp = fetchProductsUserPosted(currentUser.uid).then(
+          (data: QuerySnapshot<DocumentData>) => {
+            setProductDataPosted(data);
+          }
+        );
+      }
+    }
+  }, [searchType, currentUser]);
 
   return (
     <VStack spacing={10} alignItems="flex-start">
@@ -157,12 +184,37 @@ const User = (): JSX.Element => {
             </Tab>
           </TabList>
           <TabPanels w="100%" shadow="md" borderWidth="1px">
-            {/* 作品の表示 */}
-            {/* <SimpleGrid w="100%" columns={1, null, 2} spacing={10}>
-                  <DisPlayProduct />
-                </SimpleGrid> */}
             <TabPanel p="0" pt="4">
-              投稿済み
+              {/* 作品一覧の表示 */}
+              {/* <SimpleGrid
+                w="100%"
+                columns={[1, null, 2]}
+                spacingX="50px"
+                spacingY="50px"
+                justifyItems="center"
+              >
+                {productDataPosted &&
+                  productDataPosted.docs.map(
+                    (eachObjData: QueryDocumentSnapshot<DocumentData>) => (
+                      <DisplayProduct
+                        productIconUrl={
+                          eachObjData.data().productIconUrl as string
+                        }
+                        userIconUrl={userIconUrl}
+                        userName={userName}
+                        productTitle={eachObjData.data().productTitle as string}
+                        productAbstract={
+                          eachObjData.data().productAbstract as string
+                        }
+                        postDate={eachObjData.data().postDate as string}
+                        editDate={eachObjData.data().editDate as string}
+                        sumLike={eachObjData.data().sumLike as number}
+                      />
+                    )
+                  )}
+                  
+              </SimpleGrid> */}
+              POST
             </TabPanel>
             <TabPanel p="0" pt="4">
               フィードバック
