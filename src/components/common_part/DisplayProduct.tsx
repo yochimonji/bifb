@@ -8,9 +8,7 @@ import {
   Avatar,
   Text,
 } from "@chakra-ui/react";
-
-import moment from "moment";
-import { Like } from "./index";
+import { Like } from "../index";
 
 type DisplayProductProps = {
   productIconUrl: string;
