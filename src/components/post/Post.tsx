@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext } from "react";
+import React, { useState, useRef, useContext, useEffect } from "react";
 import {
   Input,
   HStack,
@@ -21,11 +21,15 @@ import {
 } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
 import loadImage from "blueimp-load-image";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 
 import app from "../../base";
 import { GithubIcon, ProductIcon, TagIcon, MarkdownForm } from "..";
-import { postProduct } from "../../firebase/firestore";
+import {
+  editProduct,
+  fetchProduct,
+  postProduct,
+} from "../../firebase/firestore";
 import { AuthContext } from "../../auth/AuthProvider";
 
 const storage = getStorage(app);
@@ -45,10 +49,12 @@ const Post = (): JSX.Element => {
   const [validIconUrl, setValidIconUrl] = useState(false);
   const [validTags, setValidTags] = useState(false);
   const [validMainText, setValidMainText] = useState(false);
+  const [editProductId, setEditProductId] = useState("");
 
   const iconInputRef = useRef<HTMLInputElement>(null);
   const { currentUser } = useContext(AuthContext);
   const history = useHistory();
+  const location = useLocation();
 
   /**
    * タイトルの変更に合わせてタイトルのstateを変更
@@ -240,16 +246,31 @@ const Post = (): JSX.Element => {
     const nonDuplicatedTagList = [...new Set(tagList)];
     // ログイン済みでバリデーションOKの場合Firestoreに保存
     if (currentUser != null && canPost) {
-      const productId = await postProduct(
-        title,
-        abstract,
-        iconUrl,
-        githubUrl,
-        productUrl,
-        nonDuplicatedTagList,
-        mainText,
-        currentUser.uid
-      );
+      let productId = "";
+      if (editProductId) {
+        productId = await editProduct(
+          editProductId,
+          title,
+          abstract,
+          iconUrl,
+          githubUrl,
+          productUrl,
+          nonDuplicatedTagList,
+          mainText,
+          currentUser.uid
+        );
+      } else {
+        productId = await postProduct(
+          title,
+          abstract,
+          iconUrl,
+          githubUrl,
+          productUrl,
+          nonDuplicatedTagList,
+          mainText,
+          currentUser.uid
+        );
+      }
       if (productId) {
         history.push("/");
       } else {
@@ -258,6 +279,31 @@ const Post = (): JSX.Element => {
       }
     }
   };
+
+  useEffect(() => {
+    if (
+      location.state &&
+      (location.state as { productId?: string }).productId
+    ) {
+      const currentProductId = (location.state as { productId: string })
+        .productId;
+      setEditProductId(currentProductId);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const tmpProductData = fetchProduct(currentProductId).then(
+        (productData) => {
+          if (productData) {
+            setTitle(productData.productTitle);
+            setAbstract(productData.productAbstract);
+            setIconUrl(productData.productIconUrl);
+            setGithubUrl(productData.githubUrl);
+            setProductUrl(productData.productUrl);
+            setTags((productData.tags as string[]).join(" "));
+            setMainText(productData.mainText);
+          }
+        }
+      );
+    }
+  }, [location.state]);
 
   return (
     <Stack spacing={{ base: "4", md: "2" }} pt="8">
@@ -305,7 +351,7 @@ const Post = (): JSX.Element => {
         </Stack>
         {/* 作品タイトルと概要 */}
         <Stack w={{ base: "60%", sm: "70%", md: "80%" }} h="auto" pt="4">
-          <FormControl id="title" w="100%" h="60%">
+          <FormControl w="100%" h="60%">
             <FormLabel>作品タイトル</FormLabel>
             <Input
               fontSize="xl"
@@ -319,7 +365,7 @@ const Post = (): JSX.Element => {
               </FormHelperText>
             )}
           </FormControl>
-          <FormControl id="abstract" w="100%" h="40%">
+          <FormControl w="100%" h="40%">
             <FormLabel fontSize={{ base: "sm", sm: "md" }}>
               この作品を一言で表すと？
             </FormLabel>
@@ -342,7 +388,7 @@ const Post = (): JSX.Element => {
           w={{ base: "100%", md: "20%" }}
           justify={{ base: "flex-start", md: "center" }}
         />
-        <FormControl id="githubUrl" w={{ base: "100%", md: "80%" }}>
+        <FormControl w={{ base: "100%", md: "80%" }}>
           <Input
             variant="flushed"
             type="url"
@@ -358,7 +404,7 @@ const Post = (): JSX.Element => {
           w={{ base: "100%", md: "20%" }}
           justify={{ base: "flex-start", md: "center" }}
         />
-        <FormControl id="productUrl" w={{ base: "100%", md: "80%" }}>
+        <FormControl w={{ base: "100%", md: "80%" }}>
           <Input
             variant="flushed"
             type="url"
@@ -375,7 +421,7 @@ const Post = (): JSX.Element => {
           justify={{ base: "flex-start", md: "center" }}
           pb={{ base: "0", md: "2" }}
         />
-        <FormControl id="tags" w={{ base: "100%", md: "80%" }}>
+        <FormControl w={{ base: "100%", md: "80%" }}>
           <Input variant="flushed" value={tags} onChange={handleTags} />
           {validTags ? (
             <FormHelperText color="red">
@@ -392,9 +438,9 @@ const Post = (): JSX.Element => {
       </Stack>
       <MarkdownForm
         pageType="post"
-        validMainText={validMainText}
-        mainText={mainText}
-        handleMainText={handleMainText}
+        text={mainText}
+        validText={validMainText}
+        handleText={handleMainText}
         handlePost={handlePost}
       />
     </Stack>

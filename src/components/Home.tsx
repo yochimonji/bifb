@@ -14,7 +14,7 @@ import {
   QuerySnapshot,
   DocumentData,
 } from "firebase/firestore";
-import { fetchProducts, fetchUserInfo } from "../firebase/firestore";
+import { fetchProducts } from "../firebase/firestore";
 import { DisplayProduct } from "./index";
 
 const Home = (): JSX.Element => {
@@ -34,11 +34,9 @@ const Home = (): JSX.Element => {
   // 作品データの取得
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const tmpProductData = fetchProducts(sortType, "Desc").then(
-      (data: QuerySnapshot<DocumentData> | undefined) => {
-        setProductData(data);
-      }
-    );
+    const tmpProductData = fetchProducts(sortType, "Desc").then((data) => {
+      setProductData(data as QuerySnapshot<DocumentData> | undefined);
+    });
   }, [sortType]);
 
   return (
@@ -49,10 +47,10 @@ const Home = (): JSX.Element => {
           検索条件:
         </Box>
         <HStack w="70%" textAlign="center" spacing={4} minW="450px">
-          {[].map((tag) => (
+          {[].map((tag, i) => (
             <Tag
               size="lg"
-              key="lg"
+              key={i.toString()}
               borderRadius="full"
               variant="solid"
               bg="#DEEFF1"
@@ -85,6 +83,7 @@ const Home = (): JSX.Element => {
           productData.docs.map(
             (eachObjData: QueryDocumentSnapshot<DocumentData>) => (
               <DisplayProduct
+                key={eachObjData.id}
                 productId={eachObjData.id}
                 productIconUrl={eachObjData.data().productIconUrl as string}
                 // userIconUrl={userIconUrl}

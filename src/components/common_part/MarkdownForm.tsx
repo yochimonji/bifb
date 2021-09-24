@@ -22,9 +22,9 @@ import { AiFillGithub } from "react-icons/ai";
 
 type MarkdownFormProps = {
   pageType: "post" | "product";
-  mainText: string;
-  validMainText: boolean;
-  handleMainText: React.ChangeEventHandler<HTMLTextAreaElement>;
+  text: string;
+  validText: boolean;
+  handleText: React.ChangeEventHandler<HTMLTextAreaElement>;
   handlePost: React.MouseEventHandler<HTMLButtonElement>;
 };
 
@@ -74,17 +74,17 @@ const MarkdownForm = (props: MarkdownFormProps): JSX.Element => (
       </Stack>
       <TabPanels>
         <TabPanel p="0" pt="4">
-          <FormControl id="mainText">
+          <FormControl>
             <Textarea
-              value={props.mainText}
-              onChange={props.handleMainText}
+              value={props.text}
+              onChange={props.handleText}
               placeholder="マークダウン形式で入力"
               bg="#FCFCFC"
               shadow="inner"
               minH="72"
               p="4"
             />
-            {props.validMainText && (
+            {props.validText && (
               <FormHelperText color="red">
                 説明を入力してください。
               </FormHelperText>
@@ -104,7 +104,7 @@ const MarkdownForm = (props: MarkdownFormProps): JSX.Element => (
             minH="72"
             p="4"
           >
-            {props.mainText}
+            {props.text}
           </Text>
         </TabPanel>
       </TabPanels>
