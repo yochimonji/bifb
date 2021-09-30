@@ -20,7 +20,13 @@ import {
   DocumentData,
 } from "firebase/firestore";
 
-import { TagIcon, LinkLike, MarkdownForm, EditDeleteButton } from "../index";
+import {
+  TagIcon,
+  LinkLike,
+  MarkdownForm,
+  EditDeleteButton,
+  MarkdownPreview,
+} from "../index";
 import {
   fetchProduct,
   fetchUserInfo,
@@ -311,20 +317,7 @@ const Product = (): JSX.Element => {
           isLike={isLike}
           handleClickLikeButton={handleClickLikeButton}
         />
-        <Text
-          as={ReactMarkdown}
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-          components={ChackUIRenderer()}
-          remarkPlugins={[remarkGfm]}
-          bg="#FCFCFC"
-          border="1px"
-          borderColor="gray.200"
-          rounded="md"
-          minH="72"
-          p="4"
-        >
-          {mainText}
-        </Text>
+        <MarkdownPreview text={mainText} isFeedback />
         <LinkLike
           githubUrl={githubUrl}
           productUrl={productUrl}
@@ -357,14 +350,7 @@ const Product = (): JSX.Element => {
                     {/* {console.log(feedback.postDate)} */}
                   </Text>
                 </HStack>
-                <Text
-                  as={ReactMarkdown}
-                  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-                  components={ChackUIRenderer()}
-                  remarkPlugins={[remarkGfm]}
-                >
-                  {feedback.feedbackText}
-                </Text>
+                <MarkdownPreview text={feedback.feedbackText} isFeedback />
               </Stack>
             </HStack>
           ))}

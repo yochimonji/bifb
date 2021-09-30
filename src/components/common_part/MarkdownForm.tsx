@@ -76,7 +76,7 @@ const MarkdownForm = (props: MarkdownFormProps): JSX.Element => (
           />
         </TabPanel>
         <TabPanel p="0" pt="4">
-          <MarkdownPreview text={props.text} />
+          <MarkdownPreview text={props.text} isFeedback={false} />
         </TabPanel>
       </TabPanels>
     </Tabs>
