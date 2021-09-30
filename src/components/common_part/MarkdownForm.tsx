@@ -20,6 +20,8 @@ import ChackUIRenderer from "chakra-ui-markdown-renderer";
 import { BsImage } from "react-icons/bs";
 import { AiFillGithub } from "react-icons/ai";
 
+import { MarkdownInput } from "../index";
+
 type MarkdownFormProps = {
   pageType: "post" | "product";
   text: string;
@@ -74,22 +76,11 @@ const MarkdownForm = (props: MarkdownFormProps): JSX.Element => (
       </Stack>
       <TabPanels>
         <TabPanel p="0" pt="4">
-          <FormControl>
-            <Textarea
-              value={props.text}
-              onChange={props.handleText}
-              placeholder="マークダウン形式で入力"
-              bg="#FCFCFC"
-              shadow="inner"
-              minH="72"
-              p="4"
-            />
-            {props.validText && (
-              <FormHelperText color="red">
-                説明を入力してください。
-              </FormHelperText>
-            )}
-          </FormControl>
+          <MarkdownInput
+            text={props.text}
+            validText={props.validText}
+            handleText={props.handleText}
+          />
         </TabPanel>
         <TabPanel p="0" pt="4">
           <Text
