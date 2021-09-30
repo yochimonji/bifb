@@ -89,9 +89,7 @@ const Post = (): JSX.Element => {
       // ファイルが選択されている場合、新しいファイル名を生成
       setError("");
       const icon = event.target.files[0];
-      const newIconName = `icon/${uuidv4()}${icon.name.slice(
-        icon.name.lastIndexOf(".")
-      )}`;
+      const newIconName = `icon/${uuidv4()}.jpg`;
 
       // ファイルを選択し直した時に既存のファイルをStorageから削除
       if (iconName !== "") {
