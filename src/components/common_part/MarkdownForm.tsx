@@ -5,22 +5,15 @@ import {
   Tab,
   TabPanels,
   TabPanel,
-  Text,
-  Textarea,
   Stack,
   HStack,
   Button,
   Icon,
-  FormControl,
-  FormHelperText,
 } from "@chakra-ui/react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import ChackUIRenderer from "chakra-ui-markdown-renderer";
 import { BsImage } from "react-icons/bs";
 import { AiFillGithub } from "react-icons/ai";
 
-import { MarkdownInput } from "../index";
+import { MarkdownInput, MarkdownPreview } from "../index";
 
 type MarkdownFormProps = {
   pageType: "post" | "product";
@@ -83,20 +76,7 @@ const MarkdownForm = (props: MarkdownFormProps): JSX.Element => (
           />
         </TabPanel>
         <TabPanel p="0" pt="4">
-          <Text
-            as={ReactMarkdown}
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            components={ChackUIRenderer()}
-            remarkPlugins={[remarkGfm]}
-            bg="#FCFCFC"
-            border="1px"
-            borderColor="gray.200"
-            rounded="md"
-            minH="72"
-            p="4"
-          >
-            {props.text}
-          </Text>
+          <MarkdownPreview text={props.text} />
         </TabPanel>
       </TabPanels>
     </Tabs>
