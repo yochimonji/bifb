@@ -12,5 +12,6 @@ export { default as ProductIcon } from "./common_part/ProductIcon";
 export { default as TagIcon } from "./common_part/TagIcon";
 export { default as MarkdownForm } from "./common_part/MarkdownForm";
 export { default as DisplayProduct } from "./common_part/DisplayProduct";
+export { default as DisplayProducts } from "./common_part/DisplayProducts";
 export { default as Like } from "./common_part/Like";
 export { default as DisplayTags } from "./Home/DisplayTags";

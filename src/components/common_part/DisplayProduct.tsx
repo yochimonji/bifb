@@ -8,22 +8,15 @@ import {
   Avatar,
   Text,
 } from "@chakra-ui/react";
-import {
-  BrowserRouter,
-  Switch,
-  Route,
-  Link,
-  useHistory,
-  useLocation,
-} from "react-router-dom";
+import { BrowserRouter, useHistory } from "react-router-dom";
 import moment from "moment";
 import { Like } from "../index";
 
 type DisplayProductProps = {
   productId: string;
   productIconUrl: string;
-  // userIconUrl: string;
-  // userName: string;
+  userIconUrl: string;
+  userName: string;
   productTitle: string;
   productAbstract: string;
   postDate: string;
@@ -78,7 +71,7 @@ const DisplayProduct = (props: DisplayProductProps): JSX.Element => {
               boxsize="100px"
               padding="20px 10px"
             />
-            {/* <HStack w="100%" h="69px" spacing={0}>
+            <HStack w="100%" h="69px" spacing={0}>
               <Avatar w="30%" h="60%" src={props.userIconUrl} size="sm" />
               <Text
                 w="70%"
@@ -90,7 +83,7 @@ const DisplayProduct = (props: DisplayProductProps): JSX.Element => {
               >
                 {props.userName}
               </Text>
-            </HStack> */}
+            </HStack>
           </VStack>
 
           <VStack w="64%" h="230px" spacing="0px" pt="5" pl="2">
