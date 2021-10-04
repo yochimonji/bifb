@@ -12,6 +12,7 @@ import {
   setDoc,
   DocumentSnapshot,
   DocumentData,
+  QuerySnapshot,
   deleteDoc,
   updateDoc,
 } from "firebase/firestore";
@@ -239,7 +240,7 @@ export const fetchFeedback = async (
 export const fetchProducts = async (
   conditions: string,
   sortType: string
-): Promise<DocumentData | undefined> => {
+): Promise<QuerySnapshot<DocumentData>> => {
   let q;
   if (conditions === "TREND" || conditions === "") {
     if (sortType === "Desc") {
