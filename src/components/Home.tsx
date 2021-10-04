@@ -14,15 +14,12 @@ import {
   QuerySnapshot,
   DocumentData,
 } from "firebase/firestore";
-import { fetchProducts, fetchUserInfo } from "../firebase/firestore";
+import { fetchProducts } from "../firebase/firestore";
 import { DisplayProduct } from "./index";
 
 const Home = (): JSX.Element => {
   const [sortType, setSortType] = useState("TREND");
   const [productData, setProductData] = useState<QuerySnapshot | undefined>();
-  // const userName = "一氏良仁";
-  // const userIconUrl =
-  //   "https://lh3.googleusercontent.com/a-/AOh14GhbShOrlnc53QCIhotYyqXVkDJJE3voTINNU3yV=s96-c";
 
   // sortTypeの選択の変更を認識する関数
   const onChangeSortType: React.ChangeEventHandler<HTMLSelectElement> = (
@@ -35,7 +32,7 @@ const Home = (): JSX.Element => {
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const tmpProductData = fetchProducts(sortType, "Desc").then(
-      (data: QuerySnapshot<DocumentData> | undefined) => {
+      (data: QuerySnapshot<DocumentData>) => {
         setProductData(data);
       }
     );
@@ -46,7 +43,7 @@ const Home = (): JSX.Element => {
       {/* 上段(検索条件・トレンド等の選択) */}
       <HStack w="100%" spacing="0px" alignItems="center" flexWrap="wrap">
         <Box w="10%" padding="37px 20px 35px 0px" minW="90px">
-          検索条件:
+          検索:
         </Box>
         <HStack w="70%" textAlign="center" spacing={4} minW="450px">
           {[].map((tag) => (
