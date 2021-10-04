@@ -4,7 +4,7 @@ import { LinkIcon } from "@chakra-ui/icons";
 
 const ProductIcon = (props: StackProps): JSX.Element => (
   <HStack {...props}>
-    <LinkIcon h="6" w="6" />
+    <LinkIcon h="5" w="5" />
     <Text fontWeight="bold">作品リンク</Text>
   </HStack>
 );

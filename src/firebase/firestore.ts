@@ -11,10 +11,13 @@ import {
   where,
   setDoc,
   DocumentSnapshot,
+  QueryDocumentSnapshot,
   DocumentData,
   QuerySnapshot,
   deleteDoc,
   updateDoc,
+  arrayUnion,
+  arrayRemove,
 } from "firebase/firestore";
 
 const db = getFirestore();
@@ -175,7 +178,7 @@ export const fetchUserInfo = async (
   const searchUserUid = doc(db, "userInfo", userUid);
   const loadUserData = await getDoc(searchUserUid);
 
-  return loadUserData;
+  return loadUserData.data();
 };
 
 /**
@@ -223,7 +226,8 @@ export const fetchFeedback = async (
 ): Promise<DocumentData | undefined> => {
   const q = query(
     collection(db, "feedback"),
-    where("productId", "==", productId)
+    where("productId", "==", productId),
+    orderBy("postDate")
   );
   const querySnapshot = await getDocs(q);
   return querySnapshot;
@@ -240,7 +244,7 @@ export const fetchFeedback = async (
 export const fetchProducts = async (
   conditions: string,
   sortType: string
-): Promise<QuerySnapshot<DocumentData>> => {
+): Promise<DocumentData | undefined> => {
   let q;
   if (conditions === "TREND" || conditions === "") {
     if (sortType === "Desc") {
@@ -271,53 +275,67 @@ export const fetchProducts = async (
  * @returns FEEDBAKの場合：作品一覧の配列
  * @returns LIKEの場合   ：作品一覧の配列
  */
-export const fetchProductsUser = async (
-  userUid: string,
-  searchType: string
-): Promise<unknown> => {
-  let q;
-  let querySnapshot;
-  const eachProductIdFeedback: string[] = [];
-  const returnProductInfo: (DocumentData | undefined)[] = [];
+// export const fetchProductsUser = async (
+//   userUid: string,
+//   searchType: string
+// ): Promise<unknown> => {
+//   let q;
+//   let querySnapshot;
+//   const eachProductIdFeedback: string[] = [];
+//   const returnProductInfo: (DocumentData | undefined)[] = [];
 
-  if (searchType === "POSTED") {
-    q = query(collection(db, "product"), where("userUid", "==", userUid));
-    querySnapshot = await getDocs(q);
-    return querySnapshot;
-  }
-  if (searchType === "FEEDBACK") {
-    q = query(collection(db, "feedback"), where("userUid", "==", userUid));
-    const tmp = await getDocs(q).then((feedbackDoc) => {
-      feedbackDoc.forEach((feedbackEachData) => {
-        eachProductIdFeedback.push(feedbackEachData.get("productId"));
-      });
-    });
-    for (let i = 0; i < eachProductIdFeedback.length; i += 1) {
-      const tmp2 = fetchProduct(eachProductIdFeedback[i]).then((data) => {
-        returnProductInfo.push(data);
-      });
-    }
-    return returnProductInfo;
-  }
-  if (searchType === "LIKE") {
-    let givedLikeProductId: DocumentData | undefined;
-    const tmp = await getDoc(doc(db, "userInfo", userUid)).then(
-      (eachUserInfo: DocumentSnapshot<DocumentData>) => {
-        givedLikeProductId = eachUserInfo.data();
-      }
-    );
+//   if (searchType === "POSTED") {
+//     q = query(collection(db, "product"), where("userUid", "==", userUid));
+//     querySnapshot = await getDocs(q);
+//     return querySnapshot;
+//   }
+//   if (searchType === "FEEDBACK") {
+//     q = query(collection(db, "feedback"), where("userUid", "==", userUid));
+//     const tmp = await getDocs(q).then((feedbackDoc) => {
+//       feedbackDoc.forEach((feedbackEachData) => {
+//         eachProductIdFeedback.push(feedbackEachData.get("productId"));
+//       });
+//     });
+//     for (let i = 0; i < eachProductIdFeedback.length; i += 1) {
+//       const tmp2 = fetchProduct(eachProductIdFeedback[i]).then((data) => {
+//         returnProductInfo.push(data);
+//       });
+//     }
+//     return returnProductInfo;
+//   }
+//   if (searchType === "LIKE") {
+//     let givedLikeProductId: DocumentData | undefined;
+//     const tmp = await getDoc(doc(db, "userInfo", userUid)).then(
+//       (eachUserInfo: DocumentSnapshot<DocumentData>) => {
+//         givedLikeProductId = eachUserInfo.data();
+//       }
+//     );
 
-    if (givedLikeProductId) {
-      for (let i = 0; i < givedLikeProductId.length; i += 1) {
-        const temp = fetchProduct(givedLikeProductId[i]).then((data) => {
-          returnProductInfo.push(data);
-        });
-        return returnProductInfo;
-      }
-    }
-  }
+//     if (givedLikeProductId) {
+//       for (let i = 0; i < givedLikeProductId.length; i += 1) {
+//         const temp = fetchProduct(givedLikeProductId[i]).then((data) => {
+//           returnProductInfo.push(data);
+//         });
+//         return returnProductInfo;
+//       }
+//     }
+//   }
 
-  return true;
+//   return true;
+// };
+
+/**
+ * User画面において、投稿済みが選択されている場合に、UserUidをもとに、自分の投稿している作品の一覧を取得する
+ *
+ * @param userUid : ユーザーID
+ * @return ユーザーIDが自分と一致する作品の一覧(QuerySnapshot)
+ */
+export const fetchProductsUserPosted = async (
+  userUid: string
+): Promise<QuerySnapshot<DocumentData>> => {
+  const q = query(collection(db, "product"), where("userUid", "==", userUid));
+  const querySnapshotPost = await getDocs(q);
+  return querySnapshotPost;
 };
 
 /**
@@ -343,14 +361,24 @@ export const fetchTags = async (inputText: string): Promise<unknown> => {
 };
 
 /**
+ * すべてのタグのリストを取得
+ * @returns 全タグのリスト
+ */
+export const fetchAllTags = async () => {
+  const tagsList = await getDocs(collection(db, "tags"));
+  return tagsList;
+};
+/**
  * 作品にいいねが押された時にいいねカウントを変化させる
  * @param productId 作品ID
  * @param conditions UP|DOWN
+ * @param userUid ログイン中のユーザーID
  * @returns 最新のいいね数
  */
 export const countLikeProduct = async (
   productId: string,
-  conditions: string
+  conditions: string,
+  userUid: string
 ): Promise<unknown> => {
   let newSumLike: unknown;
 
@@ -358,9 +386,15 @@ export const countLikeProduct = async (
     await getDoc(doc(db, "product", productId)).then((data) => {
       newSumLike = Number(data.get("sumLike")) + 1;
     });
+    await updateDoc(doc(db, "userInfo", userUid), {
+      giveLike: arrayUnion(productId),
+    });
   } else if (conditions === "DOWN") {
     await getDoc(doc(db, "product", productId)).then((data) => {
       newSumLike = Number(data.get("sumLike")) - 1;
+    });
+    await updateDoc(doc(db, "userInfo", userUid), {
+      giveLike: arrayRemove(productId),
     });
   }
 
@@ -378,7 +412,8 @@ export const countLikeProduct = async (
  */
 export const countLikeFeedback = async (
   feedbackId: string,
-  conditions: string
+  conditions: string,
+  userUid: string
 ): Promise<unknown> => {
   let newSumLike: unknown;
 
@@ -386,9 +421,15 @@ export const countLikeFeedback = async (
     await getDoc(doc(db, "feedback", feedbackId)).then((data) => {
       newSumLike = Number(data.get("sumLike")) + 1;
     });
+    await updateDoc(doc(db, "userInfo", userUid), {
+      giveFeedback: arrayUnion(feedbackId),
+    });
   } else if (conditions === "DOWN") {
     await getDoc(doc(db, "feedback", feedbackId)).then((data) => {
       newSumLike = Number(data.get("sumLike")) - 1;
+    });
+    await updateDoc(doc(db, "userInfo", userUid), {
+      giveFeedback: arrayRemove(feedbackId),
     });
   }
 
@@ -434,8 +475,10 @@ export const editProduct = async (
   const tmp = postTags(tags, "EXIST");
   // 作品のpostDateの取得
   let time: unknown;
+  let sumLike = 0;
   const tmp2 = await getDoc(doc(db, "product", productId)).then((data) => {
     time = data.get("postDate");
+    sumLike = data.get("sumLike") as number;
   });
   // 作品情報の取得
   const tmp3 = await setDoc(doc(db, "product", productId), {
@@ -448,7 +491,7 @@ export const editProduct = async (
     mainText,
     postDate: time,
     editDate: new Date().toLocaleString(),
-    sumLike: 0,
+    sumLike,
     userUid,
   });
   return productId;

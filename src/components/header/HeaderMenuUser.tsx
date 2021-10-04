@@ -52,17 +52,17 @@ const HeaderMenuUser = (): JSX.Element => {
           <MenuButton color="none" p="1">
             <Avatar w="10" h="10" src={userIcon} name={userName} />
           </MenuButton>
-          <MenuList>
+          <MenuList zIndex="2">
             <MenuItem as="a" href="User">
               {userName}
               <span> さん</span>
             </MenuItem>
-            <MenuItem as="a" href="/User">
+            {/* <MenuItem as="a" href="/User">
               フィードバックした投稿
             </MenuItem>
             <MenuItem as="a" href="/User">
               いいねした投稿
-            </MenuItem>
+            </MenuItem> */}
             <MenuDivider />
             <MenuItem as="a" href="/User/Edit">
               設定
