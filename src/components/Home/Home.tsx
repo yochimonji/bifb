@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { HStack, VStack, Box, Select, SimpleGrid } from "@chakra-ui/react";
-import {
-  QueryDocumentSnapshot,
-  QuerySnapshot,
-  DocumentData,
-} from "firebase/firestore";
+import { HStack, VStack, Box, Select } from "@chakra-ui/react";
+import { QuerySnapshot, DocumentData } from "firebase/firestore";
 import { fetchProducts } from "../../firebase/firestore";
-import { DisplayProducts, DisplayProduct, DisplayTags } from "../index";
+import { DisplayProducts, DisplayTags } from "../index";
 
 const Home = (): JSX.Element => {
   const [sortType, setSortType] = useState("TREND");
