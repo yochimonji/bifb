@@ -92,7 +92,7 @@ const Post = (): JSX.Element => {
 
       // FileをStorageに保存し、アイコン名とURLをstateにセット
       const icon = event.target.files[0];
-      const newIconName = await postImage(icon, "icon");
+      const newIconName = await postImage(icon, "icon", true);
       const newIconRef = ref(storage, newIconName);
       const downloadUrl = await getDownloadURL(newIconRef);
       setIconName(newIconName);

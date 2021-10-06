@@ -1,28 +1,42 @@
 import { v4 as uuidv4 } from "uuid";
 import loadImage from "blueimp-load-image";
-import {
-  getStorage,
-  ref,
-  uploadBytes,
-  StorageReference,
-} from "firebase/storage";
+import { getStorage, ref, uploadBytes } from "firebase/storage";
 
 import app from "../../base";
 
 const storage = getStorage(app);
 
-const postImage = async (file: File, dir: string): Promise<string> => {
+/**
+ * 画像をjpegに変換してFirebase Storageに保存する関数
+ * @param file 保存する画像
+ * @param dir 保存したいディレクトリ名
+ * @param isCrop 画像のクロップの有無
+ * @returns 保存した画像のファイル名（ダウンロードURLではない）
+ */
+const postImage = async (
+  file: File,
+  dir: string,
+  isCrop: boolean
+): Promise<string> => {
   // 新しいファイル名を生成
   const fileName = `${dir}/${uuidv4()}.jpeg`;
 
   // File -> canvas -> dataUrl に変換する
   // アイコンの圧縮・クロップ処理をおこなう
-  const loadFile = await loadImage(file, {
-    maxHeight: 512,
-    maxWidth: 512,
-    crop: true,
-    canvas: true,
-  });
+  let loadFile: loadImage.LoadImageResult;
+  if (isCrop) {
+    loadFile = await loadImage(file, {
+      maxHeight: 512,
+      maxWidth: 512,
+      crop: true,
+      canvas: true,
+    });
+  } else {
+    loadFile = await loadImage(file, {
+      maxWidth: 1920,
+      canvas: true,
+    });
+  }
 
   // loadImageをblobに変換
   // canvas.toBlobはコールバック関数の中でのみblobを扱うため非同期になる

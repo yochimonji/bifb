@@ -54,7 +54,7 @@ const MarkdownForm = (props: MarkdownFormProps): JSX.Element => {
     if (event.target.files != null && event.target.files[0] != null) {
       // FileをStorageに保存する
       const image = event.target.files[0];
-      const imageName = await postImage(image, "text");
+      const imageName = await postImage(image, "text", false);
 
       // 画像のURLを取得してマークダウンの末尾に追加
       const imageRef = ref(storage, imageName);
