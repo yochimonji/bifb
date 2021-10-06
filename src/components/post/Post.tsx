@@ -93,8 +93,9 @@ const Post = (): JSX.Element => {
         await deleteObject(oldIconRef);
       }
 
+      // FileをStorageに保存し、アイコン名とURLをstateにセット
       const icon = event.target.files[0];
-      const newIconName = await postImage(icon, "test");
+      const newIconName = await postImage(icon, "icon");
       const newIconRef = ref(storage, newIconName);
       const downloadUrl = await getDownloadURL(newIconRef);
       setIconName(newIconName);

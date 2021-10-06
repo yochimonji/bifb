@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import {
   Tabs,
   TabList,
@@ -21,6 +21,7 @@ type MarkdownFormProps = {
   validText: boolean;
   handleText: React.ChangeEventHandler<HTMLTextAreaElement>;
   handlePost: React.MouseEventHandler<HTMLButtonElement>;
+  // setText: React.Dispatch<React.SetStateAction<string>>;
 };
 
 /**
@@ -31,78 +32,89 @@ type MarkdownFormProps = {
  * @param props.handlePost 投稿ボタンを押した際の処理をする関数
  * @returns Markdownのコンポーネント
  */
-const MarkdownForm = (props: MarkdownFormProps): JSX.Element => (
-  <Stack pb="8">
-    <Tabs variant="unstyled">
-      <Stack
-        flexDir={{ base: "column-reverse", sm: "row" }}
-        justify="space-between"
-      >
-        <TabList pt="2">
-          <Tab
-            rounded="full"
-            fontSize={{ base: "sm", md: "md" }}
-            _selected={{ color: "#FCFCFC", bg: "#99CED4" }}
-          >
-            マークダウン
-          </Tab>
-          <Tab
-            rounded="full"
-            fontSize={{ base: "sm", md: "md" }}
-            _selected={{ color: "#FCFCFC", bg: "#99CED4" }}
-          >
-            プレビュー
-          </Tab>
-        </TabList>
-        {props.pageType === "post" && (
-          <Button variant="outline" w="max-content">
-            <Icon
-              as={AiFillGithub}
-              h="10"
-              w="10"
-              pr="2"
+const MarkdownForm = (props: MarkdownFormProps): JSX.Element => {
+  const imageInputRef = useRef<HTMLInputElement>(null);
+
+  const onClickAddButton = () => {
+    if (imageInputRef.current != null) {
+      imageInputRef.current.click();
+      console.log("click! click!!");
+    }
+  };
+
+  return (
+    <Stack pb="8">
+      <Tabs variant="unstyled">
+        <Stack
+          flexDir={{ base: "column-reverse", sm: "row" }}
+          justify="space-between"
+        >
+          <TabList pt="2">
+            <Tab
+              rounded="full"
               fontSize={{ base: "sm", md: "md" }}
+              _selected={{ color: "#FCFCFC", bg: "#99CED4" }}
+            >
+              マークダウン
+            </Tab>
+            <Tab
+              rounded="full"
+              fontSize={{ base: "sm", md: "md" }}
+              _selected={{ color: "#FCFCFC", bg: "#99CED4" }}
+            >
+              プレビュー
+            </Tab>
+          </TabList>
+          {props.pageType === "post" && (
+            <Button variant="outline" w="max-content">
+              <Icon
+                as={AiFillGithub}
+                h="10"
+                w="10"
+                pr="2"
+                fontSize={{ base: "sm", md: "md" }}
+              />
+              GitHubから読み込む
+            </Button>
+          )}
+        </Stack>
+        <TabPanels>
+          <TabPanel p="0" pt="4">
+            <MarkdownInput
+              text={props.text}
+              validText={props.validText}
+              handleText={props.handleText}
             />
-            GitHubから読み込む
-          </Button>
-        )}
-      </Stack>
-      <TabPanels>
-        <TabPanel p="0" pt="4">
-          <MarkdownInput
-            text={props.text}
-            validText={props.validText}
-            handleText={props.handleText}
+          </TabPanel>
+          <TabPanel p="0" pt="4">
+            <MarkdownPreview text={props.text} isFeedback={false} />
+          </TabPanel>
+        </TabPanels>
+      </Tabs>
+      <HStack justify="space-between">
+        {/* 下のinputの代わりの画像変更用ボタン */}
+        <Button
+          leftIcon={<BsImage />}
+          variant="ghost"
+          onClick={onClickAddButton}
+        >
+          {/* 上のButtonをクリックするとinputもクリックされる */}
+          <input
+            hidden
+            ref={imageInputRef}
+            type="file"
+            accept="image/*"
+            // onChange={}
           />
-        </TabPanel>
-        <TabPanel p="0" pt="4">
-          <MarkdownPreview text={props.text} isFeedback={false} />
-        </TabPanel>
-      </TabPanels>
-    </Tabs>
-    <HStack justify="space-between">
-      {/* 下のinputの代わりの画像変更用ボタン */}
-      <Button
-        leftIcon={<BsImage />}
-        variant="ghost"
-        // onClick={}
-      >
-        {/* 上のButtonをクリックするとinputもクリックされる */}
-        <input
-          hidden
-          // ref={}
-          type="file"
-          accept="image/*"
-          // onChange={}
-        />
-        画像を追加
-      </Button>
-      <Button variant="outline" onClick={props.handlePost}>
-        {props.pageType === "post" && "作品を投稿する"}
-        {props.pageType === "product" && "フィードバックを投稿する"}
-      </Button>
-    </HStack>
-  </Stack>
-);
+          画像を追加
+        </Button>
+        <Button variant="outline" onClick={props.handlePost}>
+          {props.pageType === "post" && "作品を投稿する"}
+          {props.pageType === "product" && "フィードバックを投稿する"}
+        </Button>
+      </HStack>
+    </Stack>
+  );
+};
 
 export default MarkdownForm;

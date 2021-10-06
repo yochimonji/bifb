@@ -24,7 +24,9 @@ const postImage = async (file: File, dir: string): Promise<string> => {
     canvas: true,
   });
 
-  // blobに変換
+  // loadImageをblobに変換
+  // canvas.toBlobはコールバック関数の中でのみblobを扱うため非同期になる
+  // toBlobの完了を待つ処理がthenやawaitで実装できなかったためbufferを使用する
   const canvasFile = loadFile.image as HTMLCanvasElement;
   const dataUrl = canvasFile.toDataURL("image/jpeg");
   const bin = atob(dataUrl.split(",")[1]);
