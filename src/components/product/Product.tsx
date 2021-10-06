@@ -362,6 +362,7 @@ const Product = (): JSX.Element => {
           validText={false}
           handleText={handleFeedbackText}
           handlePost={handlePost}
+          setText={setFeedbackText}
         />
       </Stack>
     </>

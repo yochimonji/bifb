@@ -12,8 +12,12 @@ import {
 } from "@chakra-ui/react";
 import { BsImage } from "react-icons/bs";
 import { AiFillGithub } from "react-icons/ai";
+import { getStorage, ref, getDownloadURL } from "firebase/storage";
 
-import { MarkdownInput, MarkdownPreview } from "../index";
+import { MarkdownInput, MarkdownPreview, postImage } from "../index";
+import app from "../../base";
+
+const storage = getStorage(app);
 
 type MarkdownFormProps = {
   pageType: "post" | "product";
@@ -21,7 +25,7 @@ type MarkdownFormProps = {
   validText: boolean;
   handleText: React.ChangeEventHandler<HTMLTextAreaElement>;
   handlePost: React.MouseEventHandler<HTMLButtonElement>;
-  // setText: React.Dispatch<React.SetStateAction<string>>;
+  setText: React.Dispatch<React.SetStateAction<string>>;
 };
 
 /**
@@ -35,10 +39,28 @@ type MarkdownFormProps = {
 const MarkdownForm = (props: MarkdownFormProps): JSX.Element => {
   const imageInputRef = useRef<HTMLInputElement>(null);
 
+  // 画像を追加ボタンクリックで画像追加用のinputタグをクリックする
   const onClickAddButton = () => {
     if (imageInputRef.current != null) {
       imageInputRef.current.click();
-      console.log("click! click!!");
+    }
+  };
+
+  // 画像が選択されたらマークダウンの末尾に画像を表示するマークダウンを追加
+  const handleImage: React.ChangeEventHandler<HTMLInputElement> = async (
+    event
+  ) => {
+    // ファイルが選択されているかチェック
+    if (event.target.files != null && event.target.files[0] != null) {
+      // FileをStorageに保存する
+      const image = event.target.files[0];
+      const imageName = await postImage(image, "text");
+
+      // 画像のURLを取得してマークダウンの末尾に追加
+      const imageRef = ref(storage, imageName);
+      const downloadUrl = await getDownloadURL(imageRef);
+      const addedText = `\n![${image.name}](${downloadUrl})\n`;
+      props.setText((prev) => prev + addedText);
     }
   };
 
@@ -104,7 +126,7 @@ const MarkdownForm = (props: MarkdownFormProps): JSX.Element => {
             ref={imageInputRef}
             type="file"
             accept="image/*"
-            // onChange={}
+            onChange={handleImage}
           />
           画像を追加
         </Button>

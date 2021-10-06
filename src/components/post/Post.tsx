@@ -15,12 +15,9 @@ import { BsImage } from "react-icons/bs";
 import {
   getStorage,
   ref,
-  uploadBytes,
   getDownloadURL,
   deleteObject,
 } from "firebase/storage";
-import { v4 as uuidv4 } from "uuid";
-import loadImage from "blueimp-load-image";
 import { useHistory, useLocation } from "react-router-dom";
 
 import app from "../../base";
@@ -411,6 +408,7 @@ const Post = (): JSX.Element => {
         validText={validMainText}
         handleText={handleMainText}
         handlePost={handlePost}
+        setText={setMainText}
       />
     </Stack>
   );
