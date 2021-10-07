@@ -15,16 +15,13 @@ import { BsImage } from "react-icons/bs";
 import {
   getStorage,
   ref,
-  uploadBytes,
   getDownloadURL,
   deleteObject,
 } from "firebase/storage";
-import { v4 as uuidv4 } from "uuid";
-import loadImage from "blueimp-load-image";
 import { useHistory, useLocation } from "react-router-dom";
 
 import app from "../../base";
-import { GithubIcon, ProductIcon, TagIcon, MarkdownForm } from "..";
+import { GithubIcon, ProductIcon, TagIcon, MarkdownForm, postImage } from "..";
 import {
   editProduct,
   fetchProduct,
@@ -86,51 +83,20 @@ const Post = (): JSX.Element => {
       setError("ファイルが選択されていません");
       setIconUrl("");
     } else {
-      // ファイルが選択されている場合、新しいファイル名を生成
       setError("");
-      const icon = event.target.files[0];
-      const newIconName = `icon/${uuidv4()}${icon.name.slice(
-        icon.name.lastIndexOf(".")
-      )}`;
-
       // ファイルを選択し直した時に既存のファイルをStorageから削除
       if (iconName !== "") {
         const oldIconRef = ref(storage, iconName);
         await deleteObject(oldIconRef);
       }
-      setIconName(newIconName);
 
-      // アイコンの圧縮・クロップ処理してcanvas形式に変換
-      const loadIcon = await loadImage(icon, {
-        maxHeight: 512,
-        maxWidth: 512,
-        crop: true,
-        canvas: true,
-      });
-      const canvasIcon = loadIcon.image as HTMLCanvasElement;
-
-      // canvasをBlobに変換してStorageに保存
+      // FileをStorageに保存し、アイコン名とURLをstateにセット
+      const icon = event.target.files[0];
+      const newIconName = await postImage(icon, "icon", true);
       const newIconRef = ref(storage, newIconName);
-      canvasIcon.toBlob(
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        async (blobIcon) => {
-          if (blobIcon == null) {
-            setError("アイコンの変換に失敗しました");
-          } else {
-            await uploadBytes(newIconRef, blobIcon)
-              .then(() => {
-                setError("");
-              })
-              .catch(() => {
-                setError(`アイコンのアップロードに失敗しました。`);
-              });
-            const downloadUrl = await getDownloadURL(newIconRef);
-            setIconUrl(downloadUrl);
-          }
-        },
-        "image/jpeg",
-        0.95
-      );
+      const downloadUrl = await getDownloadURL(newIconRef);
+      setIconName(newIconName);
+      setIconUrl(downloadUrl);
     }
   };
 
@@ -442,6 +408,7 @@ const Post = (): JSX.Element => {
         validText={validMainText}
         handleText={handleMainText}
         handlePost={handlePost}
+        setText={setMainText}
       />
     </Stack>
   );
