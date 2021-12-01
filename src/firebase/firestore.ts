@@ -10,8 +10,6 @@ import {
   orderBy,
   where,
   setDoc,
-  DocumentSnapshot,
-  QueryDocumentSnapshot,
   DocumentData,
   QuerySnapshot,
   deleteDoc,
