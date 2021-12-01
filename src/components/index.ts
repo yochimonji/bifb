@@ -21,3 +21,4 @@ export { default as Like } from "./common_part/Like";
 export { default as DisplayTagList } from "./Home/DisplayTagList";
 export { default as postImage } from "./common_part/postImage";
 export { default as DisplayUserInfo } from "./user/DisplayUserInfo";
+export { default as DisplayUserProductList } from "./user/DisplayUserProductList";
