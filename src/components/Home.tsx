@@ -20,9 +20,6 @@ import { DisplayProduct } from "./index";
 const Home = (): JSX.Element => {
   const [sortType, setSortType] = useState("TREND");
   const [productData, setProductData] = useState<QuerySnapshot | undefined>();
-  // const userName = "一氏良仁";
-  // const userIconUrl =
-  //   "https://lh3.googleusercontent.com/a-/AOh14GhbShOrlnc53QCIhotYyqXVkDJJE3voTINNU3yV=s96-c";
 
   // sortTypeの選択の変更を認識する関数
   const onChangeSortType: React.ChangeEventHandler<HTMLSelectElement> = (
