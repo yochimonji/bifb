@@ -364,7 +364,7 @@ export const fetchTags = async (inputText: string): Promise<unknown> => {
  * すべてのタグのリストを取得
  * @returns 全タグのリスト
  */
-export const fetchAllTags = async () => {
+export const fetchAllTags = async (): Promise<QuerySnapshot<DocumentData>> => {
   const tagsList = await getDocs(collection(db, "tags"));
   return tagsList;
 };
