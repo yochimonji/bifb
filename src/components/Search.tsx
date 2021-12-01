@@ -23,6 +23,7 @@ const Search = (): JSX.Element => {
 
   // 最初1回のみ、すべてのタグの取得
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const tmpFetchTags = fetchAllTags().then((data) => {
       data.docs.forEach((eachData: QueryDocumentSnapshot<DocumentData>) => {
         tagsAll.push(eachData.id);
@@ -62,7 +63,6 @@ const Search = (): JSX.Element => {
     event
   ) => {
     inputText = event.target.value;
-    console.log(event.target.value);
     checkTags(event.target.value);
   };
 
