@@ -1,12 +1,12 @@
 import React from "react";
 import { Heading } from "@chakra-ui/react";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { v4 as uuidv4 } from "uuid";
-import loadImage from "blueimp-load-image";
+// import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+// import { v4 as uuidv4 } from "uuid";
+// import loadImage from "blueimp-load-image";
 
-import app from "../base";
+// import app from "../base";
 
-const storage = getStorage(app);
+// const storage = getStorage(app);
 
 const UserEdit = (): JSX.Element => <Heading size="4xl">UserEdit</Heading>;
 
