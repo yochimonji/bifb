@@ -18,5 +18,5 @@ export { default as MarkdownPreview } from "./common_part/MarkdownPreview";
 export { default as DisplayProduct } from "./common_part/DisplayProduct";
 export { default as DisplayProducts } from "./common_part/DisplayProducts";
 export { default as Like } from "./common_part/Like";
-export { default as DisplayTags } from "./Home/DisplayTags";
+export { default as DisplayTagList } from "./Home/DisplayTagList";
 export { default as postImage } from "./common_part/postImage";
