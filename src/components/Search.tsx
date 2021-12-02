@@ -72,10 +72,12 @@ const Search = (): JSX.Element => {
   };
 
   // タグボタンが押された時の操作
-  const handleClickTagsButton = () => {
-    history.push("/", {
-      searchTag: document.getElementById("button").value as string,
-    });
+  const handleClickTagButton = (tag: string) => {
+    // history.push("/", {
+    //   searchTag: document.getElementById("button").value as string,
+    // });
+    console.log(tag);
+    history.push("/");
   };
 
   // 入力画面でEnterが押されたときに検索とみなす
@@ -121,6 +123,7 @@ const Search = (): JSX.Element => {
           {tagsList &&
             tagsList.map((eachTags) => (
               <Button
+                key={eachTags}
                 id="button"
                 minWidth="200px"
                 width="240px"
@@ -128,7 +131,7 @@ const Search = (): JSX.Element => {
                 colorScheme="blackAlpha"
                 variant="outline"
                 value={eachTags}
-                onClick={handleClickTagsButton}
+                onClick={() => handleClickTagButton(eachTags)}
               >
                 {eachTags}
               </Button>
