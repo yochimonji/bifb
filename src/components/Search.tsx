@@ -68,16 +68,13 @@ const Search = (): JSX.Element => {
 
   // 検索ボタンが押されたときの操作
   const handleSearch = () => {
-    history.push("/", { searchConditions: inputText });
+    history.push("/", { paramInputText: inputText });
   };
 
   // タグボタンが押された時の操作
   const handleClickTagButton = (tag: string) => {
-    // history.push("/", {
-    //   searchTag: document.getElementById("button").value as string,
-    // });
-    console.log(tag);
-    history.push("/");
+    console.log("Search: ", tag);
+    history.push("/", { parmSearchTags: tag });
   };
 
   // 入力画面でEnterが押されたときに検索とみなす
