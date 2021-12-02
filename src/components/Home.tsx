@@ -1,28 +1,16 @@
 import React, { useState, useEffect } from "react";
-import {
-  HStack,
-  VStack,
-  Box,
-  Tag,
-  TagLabel,
-  TagCloseButton,
-  Select,
-  SimpleGrid,
-} from "@chakra-ui/react";
+import { HStack, VStack, Box, Select, SimpleGrid } from "@chakra-ui/react";
 import {
   QueryDocumentSnapshot,
   QuerySnapshot,
   DocumentData,
 } from "firebase/firestore";
 import { fetchProducts } from "../firebase/firestore";
-import { DisplayProduct } from "./index";
+import { DisplayProduct, DisplayTagList } from "./index";
 
 const Home = (): JSX.Element => {
   const [sortType, setSortType] = useState("TREND");
   const [productData, setProductData] = useState<QuerySnapshot | undefined>();
-  // const userName = "一氏良仁";
-  // const userIconUrl =
-  //   "https://lh3.googleusercontent.com/a-/AOh14GhbShOrlnc53QCIhotYyqXVkDJJE3voTINNU3yV=s96-c";
 
   // sortTypeの選択の変更を認識する関数
   const onChangeSortType: React.ChangeEventHandler<HTMLSelectElement> = (
@@ -46,22 +34,7 @@ const Home = (): JSX.Element => {
         <Box w="10%" padding="37px 20px 35px 0px" minW="90px">
           検索条件:
         </Box>
-        <HStack w="70%" textAlign="center" spacing={4} minW="450px">
-          {[].map((tag, i) => (
-            <Tag
-              size="lg"
-              key={i.toString()}
-              borderRadius="full"
-              variant="solid"
-              bg="#DEEFF1"
-              textColor="black"
-              justfy="left"
-            >
-              <TagLabel>{tag}</TagLabel>
-              <TagCloseButton />
-            </Tag>
-          ))}
-        </HStack>
+        <DisplayTagList />
         <Box w="20%" padding="30px 0px">
           <Select name="sortType" onChange={onChangeSortType}>
             <option value="TREND">トレンド</option>
