@@ -1,3 +1,6 @@
+/* eslint-disable no-restricted-globals */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import React, { useState, useEffect } from "react";
 import { HStack, VStack, Box, Select, SimpleGrid } from "@chakra-ui/react";
 import {
@@ -11,6 +14,7 @@ import { DisplayProduct, DisplayTagList } from "./index";
 const Home = (): JSX.Element => {
   const [sortType, setSortType] = useState("TREND");
   const [productData, setProductData] = useState<QuerySnapshot | undefined>();
+  const [tagList, setTagList] = useState<string[]>([]);
 
   // sortTypeの選択の変更を認識する関数
   const onChangeSortType: React.ChangeEventHandler<HTMLSelectElement> = (
@@ -18,6 +22,21 @@ const Home = (): JSX.Element => {
   ) => {
     setSortType(event.target.value);
   };
+
+  // タグデータの取得
+  useEffect(() => {
+    if (history !== null) {
+      setTagList(history.state.parmSearchTags);
+      // console.log("log");
+      // console.log("parmSearchTags: ", history.state.parmSearchTags);
+    }
+  }, []);
+
+  // Search画面からタグの検索があった場合の処理
+  console.log("history: ", history.state);
+  console.log("tag", tagList);
+  // console.log("location: ", location);
+  // // tagList = history.state.parmSearchTags;
 
   // 作品データの取得
   useEffect(() => {
@@ -34,7 +53,7 @@ const Home = (): JSX.Element => {
         <Box w="10%" padding="37px 20px 35px 0px" minW="90px">
           検索条件:
         </Box>
-        <DisplayTagList />
+        <DisplayTagList tagList={tagList} />
         <Box w="20%" padding="30px 0px">
           <Select name="sortType" onChange={onChangeSortType}>
             <option value="TREND">トレンド</option>
