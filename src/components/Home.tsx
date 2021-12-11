@@ -25,18 +25,14 @@ const Home = (): JSX.Element => {
 
   // タグデータの取得
   useEffect(() => {
-    if (history !== null) {
-      setTagList(history.state.parmSearchTags);
-      // console.log("log");
-      // console.log("parmSearchTags: ", history.state.parmSearchTags);
+    if (history.state) {
+      const tmpTagArray = Object.values(history.state);
+      const tagObject = tmpTagArray[1];
+      if (typeof tagObject === "object" && tagObject != null) {
+        setTagList(Object.values(tagObject));
+      }
     }
   }, []);
-
-  // Search画面からタグの検索があった場合の処理
-  console.log("history: ", history.state);
-  console.log("tag", tagList);
-  // console.log("location: ", location);
-  // // tagList = history.state.parmSearchTags;
 
   // 作品データの取得
   useEffect(() => {
