@@ -73,7 +73,6 @@ const Search = (): JSX.Element => {
 
   // タグボタンが押された時の操作
   const handleClickTagButton = (tag: string) => {
-    console.log("Search: ", tag);
     history.push("/", { parmSearchTags: tag });
   };
 
