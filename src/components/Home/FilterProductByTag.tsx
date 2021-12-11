@@ -12,9 +12,10 @@ import DisplayProduct from "../common_part/DisplayProduct";
 
 type Props = {
   productData: QuerySnapshot<DocumentData> | undefined;
+  tagList: string[];
 };
 export const FilterProductByTag = (props: Props): JSX.Element => {
-  const tmp = "a";
+  console.log("tag", props.tagList);
 
   return (
     <SimpleGrid
@@ -28,7 +29,6 @@ export const FilterProductByTag = (props: Props): JSX.Element => {
         props.productData.docs.map(
           (eachObjData: QueryDocumentSnapshot<DocumentData>) => (
             <DisplayProduct
-              {...console.log(eachObjData.data().tags)}
               key={eachObjData.id}
               productId={eachObjData.id}
               productIconUrl={eachObjData.data().productIconUrl as string}
