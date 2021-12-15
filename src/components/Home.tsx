@@ -2,14 +2,10 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import React, { useState, useEffect } from "react";
-import { HStack, VStack, Box, Select, SimpleGrid } from "@chakra-ui/react";
-import {
-  QueryDocumentSnapshot,
-  QuerySnapshot,
-  DocumentData,
-} from "firebase/firestore";
+import { HStack, VStack, Box, Select } from "@chakra-ui/react";
+import { QuerySnapshot, DocumentData } from "firebase/firestore";
 import { fetchProducts } from "../firebase/firestore";
-import { DisplayProduct, DisplayTagList } from "./index";
+import { DisplayTagList, FilterProductByTag } from "./index";
 
 const Home = (): JSX.Element => {
   const [sortType, setSortType] = useState("TREND");
@@ -60,31 +56,7 @@ const Home = (): JSX.Element => {
         </Box>
       </HStack>
       {/* 作品一覧の表示 */}
-      <SimpleGrid
-        w="100%"
-        columns={[1, null, 2]}
-        spacingX="50px"
-        spacingY="50px"
-        justifyItems="center"
-      >
-        {productData &&
-          productData.docs.map(
-            (eachObjData: QueryDocumentSnapshot<DocumentData>) => (
-              <DisplayProduct
-                key={eachObjData.id}
-                productId={eachObjData.id}
-                productIconUrl={eachObjData.data().productIconUrl as string}
-                // userIconUrl={userIconUrl}
-                // userName={userName}
-                productTitle={eachObjData.data().productTitle as string}
-                productAbstract={eachObjData.data().productAbstract as string}
-                postDate={eachObjData.data().postDate as string}
-                // editDate={eachObjData.data().editDate as string}
-                sumLike={eachObjData.data().sumLike as number}
-              />
-            )
-          )}
-      </SimpleGrid>
+      <FilterProductByTag productData={productData} tagList={tagList} />
     </VStack>
   );
 };
