@@ -139,7 +139,7 @@ export const postUserInfo = async (
   giveFeedback: string[],
   userUid: string
 ): Promise<void> => {
-  const tmp = await setDoc(doc(db, "userInfo", userUid), {
+  const tmp = await addDoc(collection(db, "userInfo"), {
     name,
     userIcon,
     comment,
@@ -148,6 +148,7 @@ export const postUserInfo = async (
     otherUrl,
     giveLike,
     giveFeedback,
+    userUid,
   });
 };
 
@@ -173,10 +174,9 @@ export const postUserInfo = async (
 export const fetchUserInfo = async (
   userUid: string
 ): Promise<DocumentData | undefined> => {
-  const searchUserUid = doc(db, "userInfo", userUid);
-  const loadUserData = await getDoc(searchUserUid);
-
-  return loadUserData.data();
+  const q = query(collection(db, "userInfo"), where("userUid", "==", userUid));
+  const loadUserData = await getDocs(q);
+  return loadUserData.docs[0];
 };
 
 /**

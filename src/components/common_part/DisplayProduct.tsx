@@ -1,5 +1,13 @@
 import React from "react";
-import { Button, HStack, VStack, Box, Image, Text } from "@chakra-ui/react";
+import {
+  Avatar,
+  Button,
+  HStack,
+  VStack,
+  Box,
+  Image,
+  Text,
+} from "@chakra-ui/react";
 import { BrowserRouter, useHistory } from "react-router-dom";
 import moment from "moment";
 import { Like } from "../index";
@@ -7,12 +15,12 @@ import { Like } from "../index";
 type DisplayProductProps = {
   productId: string;
   productIconUrl: string;
-  // userIconUrl: string;
-  // userName: string;
+  userIconUrl: string;
+  userName: string;
   productTitle: string;
   productAbstract: string;
   postDate: string;
-  // editDate: string;
+  editDate: string;
   sumLike: number;
 };
 
@@ -63,7 +71,7 @@ const DisplayProduct = (props: DisplayProductProps): JSX.Element => {
               boxsize="100px"
               padding="20px 10px"
             />
-            {/* <HStack w="100%" h="69px" spacing={0}>
+            <HStack w="100%" h="69px" spacing={0}>
               <Avatar w="30%" h="60%" src={props.userIconUrl} size="sm" />
               <Text
                 w="70%"
@@ -75,7 +83,7 @@ const DisplayProduct = (props: DisplayProductProps): JSX.Element => {
               >
                 {props.userName}
               </Text>
-            </HStack> */}
+            </HStack>
           </VStack>
 
           <VStack w="64%" h="230px" spacing="0px" pt="5" pl="2">
@@ -115,7 +123,7 @@ const DisplayProduct = (props: DisplayProductProps): JSX.Element => {
                 >
                   投稿日：{formatDate(props.postDate)}
                 </Text>
-                {/* <Text
+                <Text
                   w="100%"
                   h="23px"
                   fontSize="xs"
@@ -124,7 +132,7 @@ const DisplayProduct = (props: DisplayProductProps): JSX.Element => {
                   whiteSpace="pre-wrap"
                 >
                   更新日：{formatDate(props.editDate)}
-                </Text> */}
+                </Text>
               </VStack>
               <Box w="20%" h="46px">
                 <Like sumLike={props.sumLike} />

@@ -29,12 +29,12 @@ const DisplayProducts = (props: Props): JSX.Element => {
             <DisplayProduct
               productId={eachObjData.id}
               productIconUrl={eachObjData.data().productIconUrl as string}
-              // userIconUrl={userIconUrl}
-              // userName={userName}
+              userIconUrl={userIconUrl}
+              userName={userName}
               productTitle={eachObjData.data().productTitle as string}
               productAbstract={eachObjData.data().productAbstract as string}
               postDate={eachObjData.data().postDate as string}
-              // editDate={eachObjData.data().editDate as string}
+              editDate={eachObjData.data().editDate as string}
               sumLike={eachObjData.data().sumLike as number}
             />
           )
