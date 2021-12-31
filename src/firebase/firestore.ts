@@ -176,7 +176,7 @@ export const fetchUserInfo = async (
 ): Promise<DocumentData | undefined> => {
   const q = query(collection(db, "userInfo"), where("userUid", "==", userUid));
   const loadUserData = await getDocs(q);
-  return loadUserData.docs[0];
+  return loadUserData.docs[0].data();
 };
 
 /**
