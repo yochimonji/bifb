@@ -8,7 +8,7 @@ import {
 import { DisplayProduct } from "../index";
 
 type Props = {
-  prodactData: QuerySnapshot<DocumentData> | undefined;
+  productData: QuerySnapshot<DocumentData> | undefined;
 };
 
 const DisplayProducts = (props: Props): JSX.Element => {
@@ -23,14 +23,14 @@ const DisplayProducts = (props: Props): JSX.Element => {
       spacingY="50px"
       justifyItems="center"
     >
-      {props.prodactData &&
-        props.prodactData.docs.map(
+      {props.productData &&
+        props.productData.docs.map(
           (eachObjData: QueryDocumentSnapshot<DocumentData>) => (
             <DisplayProduct
               productId={eachObjData.id}
               productIconUrl={eachObjData.data().productIconUrl as string}
-              userIconUrl={userIconUrl}
-              userName={userName}
+              // userIconUrl={userIconUrl}
+              // userName={userName}
               productTitle={eachObjData.data().productTitle as string}
               productAbstract={eachObjData.data().productAbstract as string}
               postDate={eachObjData.data().postDate as string}

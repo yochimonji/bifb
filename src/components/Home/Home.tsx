@@ -41,7 +41,7 @@ const Home = (): JSX.Element => {
         </Box>
       </HStack>
       {/* 作品一覧の表示 */}
-      <DisplayProducts prodactData={productData} />
+      <DisplayProducts productData={productData} />
     </VStack>
   );
 };
