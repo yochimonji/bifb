@@ -173,9 +173,10 @@ export const postUserInfo = async (
  */
 export const fetchUserInfo = async (
   userUid: string
-): Promise<DocumentData | undefined> => {
+): Promise<DocumentData | null> => {
   const q = query(collection(db, "userInfo"), where("userUid", "==", userUid));
   const loadUserData = await getDocs(q);
+  if (loadUserData.empty) return null;
   return loadUserData.docs[0].data();
 };
 
@@ -379,19 +380,21 @@ export const countLikeProduct = async (
   userUid: string
 ): Promise<unknown> => {
   let newSumLike: unknown;
+  const q = query(collection(db, "userInfo"), where("userUid", "==", userUid));
+  const userInfo = await getDocs(q);
 
   if (conditions === "UP") {
     await getDoc(doc(db, "product", productId)).then((data) => {
       newSumLike = Number(data.get("sumLike")) + 1;
     });
-    await updateDoc(doc(db, "userInfo", userUid), {
+    await updateDoc(userInfo.docs[0].ref, {
       giveLike: arrayUnion(productId),
     });
   } else if (conditions === "DOWN") {
     await getDoc(doc(db, "product", productId)).then((data) => {
       newSumLike = Number(data.get("sumLike")) - 1;
     });
-    await updateDoc(doc(db, "userInfo", userUid), {
+    await updateDoc(userInfo.docs[0].ref, {
       giveLike: arrayRemove(productId),
     });
   }
