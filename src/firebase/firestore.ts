@@ -417,19 +417,21 @@ export const countLikeFeedback = async (
   userUid: string
 ): Promise<unknown> => {
   let newSumLike: unknown;
+  const q = query(collection(db, "userInfo"), where("userUid", "==", userUid));
+  const userInfo = await getDocs(q);
 
   if (conditions === "UP") {
     await getDoc(doc(db, "feedback", feedbackId)).then((data) => {
       newSumLike = Number(data.get("sumLike")) + 1;
     });
-    await updateDoc(doc(db, "userInfo", userUid), {
+    await updateDoc(userInfo.docs[0].ref, {
       giveFeedback: arrayUnion(feedbackId),
     });
   } else if (conditions === "DOWN") {
     await getDoc(doc(db, "feedback", feedbackId)).then((data) => {
       newSumLike = Number(data.get("sumLike")) - 1;
     });
-    await updateDoc(doc(db, "userInfo", userUid), {
+    await updateDoc(userInfo.docs[0].ref, {
       giveFeedback: arrayRemove(feedbackId),
     });
   }
