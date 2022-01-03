@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { HStack, VStack, Box, Select } from "@chakra-ui/react";
 import { QuerySnapshot, DocumentData } from "firebase/firestore";
-import { fetchProducts } from "../../firebase/firestore";
-import { DisplayProducts, DisplayTagList } from "../index";
+import { fetchProducts, fetchUserInfos } from "../../firebase/firestore";
+import { DisplayProducts, DisplayTagList, DisplayProductProps } from "../index";
 
 const Home = (): JSX.Element => {
   const [sortType, setSortType] = useState("TREND");
-  const [productData, setProductData] = useState<QuerySnapshot | undefined>();
+  const [productData, setProductData] = useState<DisplayProductProps[]>([]);
 
   // sortTypeの選択の変更を認識する関数
   const onChangeSortType: React.ChangeEventHandler<HTMLSelectElement> = (
@@ -17,10 +17,42 @@ const Home = (): JSX.Element => {
 
   // 作品データの取得
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const tmpProductData = fetchProducts(sortType, "Desc").then((data) => {
-      setProductData(data as QuerySnapshot<DocumentData>);
-    });
+    // 即時関数を使って非同期でプロダクトデータを読み込む
+    // eslint-disable-next-line no-void
+    void (async () => {
+      const userUidList: string[] = [];
+      const newProductData: DisplayProductProps[] = [];
+
+      const products = (await fetchProducts(
+        sortType,
+        "Desc"
+      )) as QuerySnapshot<DocumentData>;
+      products.forEach((product) => {
+        userUidList.push(product.data().userUid);
+      });
+
+      const userInfos = await fetchUserInfos(userUidList);
+      products.forEach((product) => {
+        userInfos.forEach((userInfo) => {
+          const p = product.data();
+          const u = userInfo.data();
+          if (p.userUid === u.userUid) {
+            newProductData.push({
+              productId: product.id,
+              productIconUrl: p.productIconUrl as string,
+              userIconUrl: u.userIcon as string,
+              userName: u.name as string,
+              productTitle: p.productTitle as string,
+              productAbstract: p.productAbstract as string,
+              postDate: p.postDate as string,
+              editDate: p.editDate as string,
+              sumLike: p.sumLike as number,
+            });
+          }
+        });
+      });
+      setProductData(newProductData);
+    })();
   }, [sortType]);
 
   return (
@@ -41,7 +73,7 @@ const Home = (): JSX.Element => {
         </Box>
       </HStack>
       {/* 作品一覧の表示 */}
-      <DisplayProducts productData={productData} />
+      <DisplayProducts {...productData} />
     </VStack>
   );
 };
