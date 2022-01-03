@@ -14,7 +14,7 @@ const DisplayProducts = (props: DisplayProductProps[]): JSX.Element => (
       // props.map()や[...props].mapはエラーが発生
       // Object.valuesを使うことでただの配列でもmap()を使えるようになる
       Object.values(props).map((eachObjData) => (
-        <DisplayProduct {...eachObjData} />
+        <DisplayProduct {...eachObjData} key={eachObjData.productId} />
       ))}
   </SimpleGrid>
 );
