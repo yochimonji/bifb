@@ -49,10 +49,10 @@ const DisplayProduct = (props: DisplayProductProps): JSX.Element => {
         backgroundColor="white"
         onClick={handleClick}
         variant="ghost"
-        shadow="md"
+        shadow="lg"
       >
         <HStack w="100%" spacing={0} alignItems="flex-start">
-          <VStack w="36%" h="230px" spacing={0} pt="3">
+          <VStack w="36%" h="230px" spacing={0} pt="3" justify="center">
             <Image
               w="100%"
               h="161px"
@@ -60,17 +60,18 @@ const DisplayProduct = (props: DisplayProductProps): JSX.Element => {
               boxsize="100px"
               padding="20px 10px"
             />
-            <HStack w="100%" h="69px" spacing={0}>
-              <Avatar w="30%" h="60%" src={props.userIconUrl} size="sm" />
+            <HStack h="69px" spacing={0}>
+              <Avatar w="8" h="8" src={props.userIconUrl} />
               <Text
-                w="70%"
-                fontSize="md"
+                fontSize="xs"
                 textAlign="left"
-                padding="15px 0px 15px"
+                padding="15px 0px 15px 8px"
                 overflow="hidden"
                 textOverflow="ellipsis"
               >
-                {props.userName}
+                {props.userName.length >= 12
+                  ? `${props.userName.slice(0, 12)}...`
+                  : props.userName}
               </Text>
             </HStack>
           </VStack>
@@ -107,23 +108,15 @@ const DisplayProduct = (props: DisplayProductProps): JSX.Element => {
                   h="23px"
                   fontSize="xs"
                   textAlign="left"
-                  padding="5px 5px 5px 0px"
+                  padding="7px 5px 5px 0px"
                   whiteSpace="pre-wrap"
                 >
-                  投稿日：{formatDate(props.postDate)}
-                </Text>
-                <Text
-                  w="100%"
-                  h="23px"
-                  fontSize="xs"
-                  textAlign="left"
-                  padding="5px 5px 5px 0px"
-                  whiteSpace="pre-wrap"
-                >
-                  更新日：{formatDate(props.editDate)}
+                  {props.postDate === props.editDate
+                    ? `投稿日：${formatDate(props.postDate)}`
+                    : `更新日：${formatDate(props.editDate)}`}
                 </Text>
               </VStack>
-              <Box w="20%" h="46px">
+              <Box w="20%" h="46px" pt="2px" pr="4px">
                 <Like sumLike={props.sumLike} />
               </Box>
             </HStack>
