@@ -32,25 +32,27 @@ const Home = (): JSX.Element => {
       });
 
       const userInfos = await fetchUserInfos(userUidList);
-      products.forEach((product) => {
-        userInfos.forEach((userInfo) => {
-          const p = product.data();
-          const u = userInfo.data();
-          if (p.userUid === u.userUid) {
-            newProductData.push({
-              productId: product.id,
-              productIconUrl: p.productIconUrl as string,
-              userIconUrl: u.userIcon as string,
-              userName: u.name as string,
-              productTitle: p.productTitle as string,
-              productAbstract: p.productAbstract as string,
-              postDate: p.postDate as string,
-              editDate: p.editDate as string,
-              sumLike: p.sumLike as number,
-            });
-          }
+      if (userInfos) {
+        products.forEach((product) => {
+          userInfos.forEach((userInfo) => {
+            const p = product.data();
+            const u = userInfo.data();
+            if (p.userUid === u.userUid) {
+              newProductData.push({
+                productId: product.id,
+                productIconUrl: p.productIconUrl as string,
+                userIconUrl: u.userIcon as string,
+                userName: u.name as string,
+                productTitle: p.productTitle as string,
+                productAbstract: p.productAbstract as string,
+                postDate: p.postDate as string,
+                editDate: p.editDate as string,
+                sumLike: p.sumLike as number,
+              });
+            }
+          });
         });
-      });
+      }
       setProductData(newProductData);
     })();
   }, [sortType]);

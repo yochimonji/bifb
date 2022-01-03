@@ -187,7 +187,8 @@ export const fetchUserInfo = async (
  */
 export const fetchUserInfos = async (
   userUidList: string[]
-): Promise<QuerySnapshot<DocumentData>> => {
+): Promise<QuerySnapshot<DocumentData> | null> => {
+  if (!userUidList) return null;
   const q = query(
     collection(db, "userInfo"),
     where("userUid", "in", userUidList)
