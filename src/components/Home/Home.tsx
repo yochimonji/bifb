@@ -20,7 +20,7 @@ const Home = (): JSX.Element => {
     // 即時関数を使って非同期でプロダクトデータを読み込む
     // eslint-disable-next-line no-void
     void (async () => {
-      const userUidList: string[] = [];
+      const userUidSet: Set<string> = new Set();
       const newProductData: DisplayProductProps[] = [];
 
       const products = (await fetchProducts(
@@ -28,10 +28,10 @@ const Home = (): JSX.Element => {
         "Desc"
       )) as QuerySnapshot<DocumentData>;
       products.forEach((product) => {
-        userUidList.push(product.data().userUid);
+        userUidSet.add(product.data().userUid);
       });
+      const userInfos = await fetchUserInfos([...userUidSet]);
 
-      const userInfos = await fetchUserInfos(userUidList);
       if (userInfos) {
         products.forEach((product) => {
           userInfos.forEach((userInfo) => {
@@ -52,8 +52,8 @@ const Home = (): JSX.Element => {
             }
           });
         });
+        setProductData(newProductData);
       }
-      setProductData(newProductData);
     })();
   }, [sortType]);
 
