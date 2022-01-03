@@ -180,7 +180,14 @@ export const fetchUserInfo = async (
   return loadUserData.docs[0].data();
 };
 
-export const fetchUserInfos = async (userUidList: string[]) => {
+/**
+ * userUidListに存在する全てのユーザー情報をFirebaseから取得してくる関数
+ * @param userUidList userUidの配列
+ * @returns userUidListと一致する全てのユーザー情報のオブジェクト
+ */
+export const fetchUserInfos = async (
+  userUidList: string[]
+): Promise<QuerySnapshot<DocumentData>> => {
   const q = query(
     collection(db, "userInfo"),
     where("userUid", "in", userUidList)
