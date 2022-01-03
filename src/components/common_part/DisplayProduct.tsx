@@ -10,19 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { BrowserRouter, useHistory } from "react-router-dom";
 import moment from "moment";
-import { Like } from "../index";
-
-type DisplayProductProps = {
-  productId: string;
-  productIconUrl: string;
-  userIconUrl: string;
-  userName: string;
-  productTitle: string;
-  productAbstract: string;
-  postDate: string;
-  editDate: string;
-  sumLike: number;
-};
+import { Like, DisplayProductProps } from "../index";
 
 const DisplayProduct = (props: DisplayProductProps): JSX.Element => {
   const formatDate = (date: string) => {
