@@ -180,6 +180,15 @@ export const fetchUserInfo = async (
   return loadUserData.docs[0].data();
 };
 
+export const fetchUserInfos = async (userUidList: string[]) => {
+  const q = query(
+    collection(db, "userInfo"),
+    where("userUid", "in", userUidList)
+  );
+  const loadUserDatas = await getDocs(q);
+  return loadUserDatas;
+};
+
 /**
  * productIdを使って作品情報をFirestoreから取得してくる関数
  *
