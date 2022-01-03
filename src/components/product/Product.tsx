@@ -160,12 +160,10 @@ const Product = (): JSX.Element => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const tmpProductData = fetchProduct(productId).then((productData) => {
         if (productData) {
-          const formatedPostDate = moment(productData.postDate).format(
-            "YYYY年MM月DD日"
-          );
-          const formatedEditDate = moment(productData.editDate).format(
-            "YYYY年MM月DD日"
-          );
+          const postDateISO = new Date(productData.postDate).toISOString();
+          const editDateISO = new Date(productData.editDate).toISOString();
+          const formatedPostDate = moment(postDateISO).format("YYYY年MM月DD日");
+          const formatedEditDate = moment(editDateISO).format("YYYY年MM月DD日");
           setTitle(productData.productTitle);
           setAbstract(productData.productAbstract);
           setIconUrl(productData.productIconUrl);

@@ -14,8 +14,9 @@ import { Like, DisplayProductProps } from "../index";
 
 const DisplayProduct = (props: DisplayProductProps): JSX.Element => {
   const formatDate = (date: string) => {
+    const dateISO = new Date(date).toISOString();
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const afterFormatDate: string = moment(date).format("YYYY年MM月DD日");
+    const afterFormatDate: string = moment(dateISO).format("YYYY年MM月DD日");
     return afterFormatDate;
   };
 
