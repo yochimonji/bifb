@@ -1,5 +1,6 @@
 import React from "react";
 import { Heading } from "@chakra-ui/react";
+import { useLocation } from "react-router-dom";
 // import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 // import { v4 as uuidv4 } from "uuid";
 // import loadImage from "blueimp-load-image";
@@ -8,7 +9,11 @@ import { Heading } from "@chakra-ui/react";
 
 // const storage = getStorage(app);
 
-const UserEdit = (): JSX.Element => <Heading size="4xl">UserEdit</Heading>;
+const UserEdit = (): JSX.Element => {
+  const location = useLocation();
+  console.log(location.state);
+  return <Heading size="4xl">UserEdit</Heading>;
+};
 
 export default UserEdit;
 

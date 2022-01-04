@@ -9,6 +9,7 @@ import {
   Icon,
 } from "@chakra-ui/react";
 import { FcGoogle } from "react-icons/fc";
+import { Link } from "react-router-dom";
 
 import { AuthContext } from "../../auth/AuthProvider";
 import { fetchUserInfo } from "../../firebase/firestore";
@@ -53,7 +54,10 @@ const HeaderMenuUser = (): JSX.Element => {
             <Avatar w="10" h="10" src={userIcon} name={userName} />
           </MenuButton>
           <MenuList zIndex="2">
-            <MenuItem as="a" href="User">
+            <MenuItem
+              as={Link}
+              to={{ pathname: "/user", state: { userUid: currentUser.uid } }}
+            >
               {userName}
               <span> さん</span>
             </MenuItem>
@@ -64,7 +68,13 @@ const HeaderMenuUser = (): JSX.Element => {
               いいねした投稿
             </MenuItem> */}
             <MenuDivider />
-            <MenuItem as="a" href="/User/Edit">
+            <MenuItem
+              as={Link}
+              to={{
+                pathname: "/user/edit",
+                state: { userUid: currentUser.uid },
+              }}
+            >
               設定
             </MenuItem>
             <MenuItem
