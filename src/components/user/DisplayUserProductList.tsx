@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   HStack,
   TabList,
@@ -6,32 +6,49 @@ import {
   Tab,
   TabPanels,
   TabPanel,
-  SimpleGrid,
 } from "@chakra-ui/react";
+import { useLocation } from "react-router-dom";
 import {
-  DocumentData,
-  QueryDocumentSnapshot,
-  QuerySnapshot,
-} from "firebase/firestore";
-import { AuthContext } from "../../auth/AuthProvider";
-import { fetchProductsUserPosted } from "../../firebase/firestore";
-import { DisplayProduct } from "../index";
+  fetchProductsUserPosted,
+  fetchUserInfo,
+} from "../../firebase/firestore";
+import { DisplayProductProps, DisplayProducts } from "../index";
 
 export const DisplayUserProductList = (): JSX.Element => {
-  const [productDataPosted, setProductDataPosted] =
-    useState<QuerySnapshot<DocumentData>>();
+  const [productDataPosted, setProductDataPosted] = useState<
+    DisplayProductProps[]
+  >([]);
 
-  const { currentUser } = useContext(AuthContext);
+  const location = useLocation();
 
   // 投稿済み作品の情報の取得
   useEffect(() => {
-    if (currentUser) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const tmp = fetchProductsUserPosted(currentUser.uid).then((data) => {
-        setProductDataPosted(data);
-      });
-    }
-  }, [currentUser]);
+    // 即時関数を使って非同期でプロダクトデータを読み込む
+    // eslint-disable-next-line no-void
+    void (async () => {
+      const displayedUserUid = (location.state as { userUid: string }).userUid;
+      const displayedUserInfo = await fetchUserInfo(displayedUserUid);
+      if (displayedUserInfo) {
+        const postedList: DisplayProductProps[] = [];
+        const postedData = await fetchProductsUserPosted(displayedUserUid);
+        postedData.forEach((posted) => {
+          const p = posted.data();
+          postedList.push({
+            productId: posted.id,
+            productIconUrl: p.productIconUrl as string,
+            userIconUrl: displayedUserInfo.userIcon as string,
+            userName: displayedUserInfo.name as string,
+            productTitle: p.productTitle as string,
+            productAbstract: p.productAbstract as string,
+            postDate: p.postDate as string,
+            editDate: p.editDate as string,
+            sumLike: p.sumLike as number,
+          });
+        });
+        setProductDataPosted(postedList);
+      }
+    })();
+  }, [location.state]);
 
   return (
     <HStack w="100%" spacing={10}>
@@ -44,52 +61,25 @@ export const DisplayUserProductList = (): JSX.Element => {
           >
             投稿済み
           </Tab>
-          {/* <Tab
-              rounded="full"
-              fontSize={{ base: "sm", md: "md" }}
-              _selected={{ color: "#FCFCFC", bg: "#99CED4" }}
-            >
-              フィードバック
-            </Tab>
-            <Tab
-              rounded="full"
-              fontSize={{ base: "sm", md: "md" }}
-              _selected={{ color: "#FCFCFC", bg: "#99CED4" }}
-            >
-              いいね
-            </Tab> */}
+          <Tab
+            rounded="full"
+            fontSize={{ base: "sm", md: "md" }}
+            _selected={{ color: "#FCFCFC", bg: "#99CED4" }}
+          >
+            フィードバック
+          </Tab>
+          <Tab
+            rounded="full"
+            fontSize={{ base: "sm", md: "md" }}
+            _selected={{ color: "#FCFCFC", bg: "#99CED4" }}
+          >
+            いいね
+          </Tab>
         </TabList>
         <TabPanels w="100%">
           <TabPanel>
             {/* 作品一覧の表示 */}
-            <SimpleGrid
-              w="100%"
-              columns={[1, null, 2]}
-              spacingX="50px"
-              spacingY="50px"
-              justifyItems="center"
-            >
-              {productDataPosted &&
-                productDataPosted.docs.map(
-                  (eachObjData: QueryDocumentSnapshot) => (
-                    <DisplayProduct
-                      productId={eachObjData.id}
-                      productIconUrl={
-                        eachObjData.data().productIconUrl as string
-                      }
-                      // userIconUrl={userIconUrl}
-                      // userName={userName}
-                      productTitle={eachObjData.data().productTitle as string}
-                      productAbstract={
-                        eachObjData.data().productAbstract as string
-                      }
-                      postDate={eachObjData.data().postDate as string}
-                      // editDate={eachObjData.data().editDate as string}
-                      sumLike={eachObjData.data().sumLike as number}
-                    />
-                  )
-                )}
-            </SimpleGrid>
+            <DisplayProducts {...productDataPosted} />
           </TabPanel>
           <TabPanel p="0" pt="4">
             フィードバック
