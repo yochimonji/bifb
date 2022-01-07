@@ -1,6 +1,6 @@
 import React from "react";
 import { VStack } from "@chakra-ui/react";
-import { DisplayUserProductList, DisplayUserInfo } from "./index";
+import { DisplayUserProductList, DisplayUserInfo } from "../index";
 
 const User = (): JSX.Element => (
   <VStack spacing={10} alignItems="flex-start">
