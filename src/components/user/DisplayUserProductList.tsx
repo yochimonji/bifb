@@ -7,26 +7,29 @@ import {
   TabPanels,
   TabPanel,
 } from "@chakra-ui/react";
-import { useLocation } from "react-router-dom";
 import {
   fetchProductsUserPosted,
   fetchUserInfo,
 } from "../../firebase/firestore";
 import { DisplayProductProps, DisplayProducts } from "../index";
 
-export const DisplayUserProductList = (): JSX.Element => {
+type DisplayUserProductListProps = {
+  userUid: string;
+};
+
+export const DisplayUserProductList = (
+  props: DisplayUserProductListProps
+): JSX.Element => {
   const [productDataPosted, setProductDataPosted] = useState<
     DisplayProductProps[]
   >([]);
-
-  const location = useLocation();
 
   // 投稿済み作品の情報の取得
   useEffect(() => {
     // 即時関数を使って非同期でプロダクトデータを読み込む
     // eslint-disable-next-line no-void
     void (async () => {
-      const displayedUserUid = (location.state as { userUid: string }).userUid;
+      const displayedUserUid = props.userUid;
       const displayedUserInfo = await fetchUserInfo(displayedUserUid);
       if (displayedUserInfo) {
         const postedList: DisplayProductProps[] = [];
@@ -48,7 +51,7 @@ export const DisplayUserProductList = (): JSX.Element => {
         setProductDataPosted(postedList);
       }
     })();
-  }, [location.state]);
+  }, [props.userUid]);
 
   return (
     <HStack w="100%" spacing={10}>
