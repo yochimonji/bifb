@@ -7,14 +7,15 @@ import {
   TabPanels,
   TabPanel,
 } from "@chakra-ui/react";
+
 import {
   fetchProductsUserPosted,
-  fetchUserInfo,
+  fetchUserInfos,
 } from "../../firebase/firestore";
 import { DisplayProductProps, DisplayProducts } from "../index";
 
 type DisplayUserProductListProps = {
-  userUid: string;
+  displayedUserUid: string;
 };
 
 export const DisplayUserProductList = (
@@ -29,29 +30,38 @@ export const DisplayUserProductList = (
     // 即時関数を使って非同期でプロダクトデータを読み込む
     // eslint-disable-next-line no-void
     void (async () => {
-      const displayedUserUid = props.userUid;
-      const displayedUserInfo = await fetchUserInfo(displayedUserUid);
-      if (displayedUserInfo) {
-        const postedList: DisplayProductProps[] = [];
-        const postedData = await fetchProductsUserPosted(displayedUserUid);
-        postedData.forEach((posted) => {
-          const p = posted.data();
-          postedList.push({
-            productId: posted.id,
-            productIconUrl: p.productIconUrl as string,
-            userIconUrl: displayedUserInfo.userIcon as string,
-            userName: displayedUserInfo.name as string,
-            productTitle: p.productTitle as string,
-            productAbstract: p.productAbstract as string,
-            postDate: p.postDate as string,
-            editDate: p.editDate as string,
-            sumLike: p.sumLike as number,
+      const userUidSet: Set<string> = new Set();
+      const newProductData: DisplayProductProps[] = [];
+      const productData = await fetchProductsUserPosted(props.displayedUserUid);
+      productData.forEach((product) => {
+        userUidSet.add(product.data().userUid);
+      });
+      const userInfos = await fetchUserInfos([...userUidSet]);
+
+      if (userInfos) {
+        productData.forEach((product) => {
+          userInfos.forEach((userInfo) => {
+            const p = product.data();
+            const u = userInfo.data();
+            if (p.userUid === u.userUid) {
+              newProductData.push({
+                productId: product.id,
+                productIconUrl: p.productIconUrl as string,
+                userIconUrl: u.userIcon as string,
+                userName: u.name as string,
+                productTitle: p.productTitle as string,
+                productAbstract: p.productAbstract as string,
+                postDate: p.postDate as string,
+                editDate: p.editDate as string,
+                sumLike: p.sumLike as number,
+              });
+            }
           });
         });
-        setProductDataPosted(postedList);
+        setProductDataPosted(newProductData);
       }
     })();
-  }, [props.userUid]);
+  }, [props.displayedUserUid]);
 
   return (
     <HStack w="100%" spacing={10}>

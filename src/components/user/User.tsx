@@ -13,7 +13,7 @@ const User = (): JSX.Element => {
       <DisplayUserInfo />
       {/* 作品の表示条件の選択 */}
       <DisplayUserProductList
-        userUid={(location.state as { userUid: string }).userUid}
+        displayedUserUid={(location.state as { userUid: string }).userUid}
       />
     </VStack>
   );
