@@ -105,12 +105,20 @@ export const postFeedbacks = async (
   feedbackText: string,
   productId: string
 ): Promise<string> => {
+  // feedbackコレクションに登録
   const newFeedback = await addDoc(collection(db, "feedback"), {
     userUid,
     feedbackText,
     productId,
     postDate: new Date().toLocaleString(),
     sumLike: 0,
+  });
+
+  // userInfoコレクションに登録
+  const q = query(collection(db, "userInfo"), where("userUid", "==", userUid));
+  const userInfo = await getDocs(q);
+  await updateDoc(userInfo.docs[0].ref, {
+    giveFeedback: arrayUnion(productId),
   });
   return newFeedback.id;
 };
