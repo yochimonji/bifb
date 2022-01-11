@@ -8,10 +8,7 @@ import {
   TabPanel,
 } from "@chakra-ui/react";
 
-import {
-  fetchProductsUserPosted,
-  fetchUserInfos,
-} from "../../firebase/firestore";
+import { fetchProductsUser, fetchUserInfos } from "../../firebase/firestore";
 import { DisplayProductProps, DisplayProducts } from "../index";
 
 type DisplayUserProductListProps = {
@@ -24,6 +21,9 @@ export const DisplayUserProductList = (
   const [productDataPosted, setProductDataPosted] = useState<
     DisplayProductProps[]
   >([]);
+  const [tabType, setTabType] = useState<"posted" | "like" | "feedback">(
+    "posted"
+  );
 
   // 投稿済み作品の情報の取得
   useEffect(() => {
@@ -32,7 +32,11 @@ export const DisplayUserProductList = (
     void (async () => {
       const userUidSet: Set<string> = new Set();
       const newProductData: DisplayProductProps[] = [];
-      const productData = await fetchProductsUserPosted(props.displayedUserUid);
+
+      const productData = await fetchProductsUser(
+        props.displayedUserUid,
+        tabType
+      );
       productData.forEach((product) => {
         userUidSet.add(product.data().userUid);
       });
@@ -58,10 +62,10 @@ export const DisplayUserProductList = (
             }
           });
         });
-        setProductDataPosted(newProductData);
       }
+      setProductDataPosted(newProductData);
     })();
-  }, [props.displayedUserUid]);
+  }, [props.displayedUserUid, tabType]);
 
   return (
     <HStack w="100%" spacing={10}>
@@ -71,6 +75,7 @@ export const DisplayUserProductList = (
             rounded="full"
             fontSize={{ base: "sm", md: "md" }}
             _selected={{ color: "#FCFCFC", bg: "#99CED4" }}
+            onClick={() => setTabType("posted")}
           >
             投稿済み
           </Tab>
@@ -78,15 +83,17 @@ export const DisplayUserProductList = (
             rounded="full"
             fontSize={{ base: "sm", md: "md" }}
             _selected={{ color: "#FCFCFC", bg: "#99CED4" }}
+            onClick={() => setTabType("like")}
           >
-            フィードバック
+            いいね
           </Tab>
           <Tab
             rounded="full"
             fontSize={{ base: "sm", md: "md" }}
             _selected={{ color: "#FCFCFC", bg: "#99CED4" }}
+            onClick={() => setTabType("feedback")}
           >
-            いいね
+            フィードバック
           </Tab>
         </TabList>
         <TabPanels w="100%">
@@ -95,10 +102,10 @@ export const DisplayUserProductList = (
             <DisplayProducts {...productDataPosted} />
           </TabPanel>
           <TabPanel p="0" pt="4">
-            フィードバック
+            <DisplayProducts {...productDataPosted} />
           </TabPanel>
           <TabPanel p="0" pt="4">
-            いいね
+            <DisplayProducts {...productDataPosted} />
           </TabPanel>
         </TabPanels>
       </Tabs>

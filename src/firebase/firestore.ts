@@ -354,10 +354,24 @@ export const fetchProducts = async (
  * @param userUid : ユーザーID
  * @return ユーザーIDが自分と一致する作品の一覧(QuerySnapshot)
  */
-export const fetchProductsUserPosted = async (
-  userUid: string
+export const fetchProductsUser = async (
+  userUid: string,
+  tabType: "posted" | "like" | "feedback"
 ): Promise<QuerySnapshot<DocumentData>> => {
-  const q = query(collection(db, "product"), where("userUid", "==", userUid));
+  if (tabType === "posted") {
+    const q = query(collection(db, "product"), where("userUid", "==", userUid));
+    const querySnapshotPost = await getDocs(q);
+    return querySnapshotPost;
+  }
+  if (tabType === "like") {
+    const q = query(collection(db, "product"), where("userUid", "==", userUid));
+    const querySnapshotPost = await getDocs(q);
+    return querySnapshotPost;
+  }
+  const q = query(
+    collection(db, "product"),
+    where("userUid", "==", "9TT8P7AVnEPLpWs7nH8bX5tFMJk2")
+  );
   const querySnapshotPost = await getDocs(q);
   return querySnapshotPost;
 };
