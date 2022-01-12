@@ -64,7 +64,7 @@ export const DisplayUserInfo = (
   };
 
   return (
-    <HStack w="100%" spacing="0">
+    <HStack w="100%" spacing="0" mt="8">
       <VStack
         w="10%"
         minW="120px"
@@ -72,7 +72,7 @@ export const DisplayUserInfo = (
         alignSelf="flex-start"
       >
         <Avatar src={userIconUrl} size="xl" />
-        <Button colorScheme="black" variant="outline">
+        <Button colorScheme="black" variant="outline" size="sm">
           編集
         </Button>
       </VStack>
@@ -83,7 +83,7 @@ export const DisplayUserInfo = (
         minH="150px"
         alignSelf="flex-start"
       >
-        <Text w="100%" minH="50px" fontSize="3xl">
+        <Text w="100%" minH="50px" fontSize="2xl">
           {userName}
         </Text>
         <Text w="100%" minH="50px" fontSize="md" padding="10px 15px 10px 0px">
@@ -117,7 +117,7 @@ export const DisplayUserInfo = (
         </Wrap>
       </VStack>
       {/* 追加機能をする際のスペース */}
-      <Box w="55%" h="200px" alignSelf="flex-start" />
+      {/* <Box w="55%" h="200px" alignSelf="flex-start" /> */}
     </HStack>
   );
 };
