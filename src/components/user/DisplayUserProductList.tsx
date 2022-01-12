@@ -37,32 +37,34 @@ export const DisplayUserProductList = (
         props.displayedUserUid,
         tabType
       );
+      if (!productData) return;
+
       productData.forEach((product) => {
         userUidSet.add(product.data().userUid);
       });
       const userInfos = await fetchUserInfos([...userUidSet]);
+      if (!userInfos) return;
 
-      if (userInfos) {
-        productData.forEach((product) => {
-          userInfos.forEach((userInfo) => {
-            const p = product.data();
-            const u = userInfo.data();
-            if (p.userUid === u.userUid) {
-              newProductData.push({
-                productId: product.id,
-                productIconUrl: p.productIconUrl as string,
-                userIconUrl: u.userIcon as string,
-                userName: u.name as string,
-                productTitle: p.productTitle as string,
-                productAbstract: p.productAbstract as string,
-                postDate: p.postDate as string,
-                editDate: p.editDate as string,
-                sumLike: p.sumLike as number,
-              });
-            }
-          });
+      productData.forEach((product) => {
+        userInfos.forEach((userInfo) => {
+          const p = product.data();
+          const u = userInfo.data();
+          if (p.userUid === u.userUid) {
+            newProductData.push({
+              productId: product.id,
+              productIconUrl: p.productIconUrl as string,
+              userIconUrl: u.userIcon as string,
+              userName: u.name as string,
+              productTitle: p.productTitle as string,
+              productAbstract: p.productAbstract as string,
+              postDate: p.postDate as string,
+              editDate: p.editDate as string,
+              sumLike: p.sumLike as number,
+            });
+          }
         });
-      }
+      });
+
       setProductDataPosted(newProductData);
     })();
   }, [props.displayedUserUid, tabType]);
