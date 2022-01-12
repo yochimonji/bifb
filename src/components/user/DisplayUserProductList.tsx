@@ -11,6 +11,50 @@ import {
 import { fetchProductsUser, fetchUserInfos } from "../../firebase/firestore";
 import { DisplayProductProps, DisplayProducts } from "../index";
 
+/**
+ * 作品データを取得・フォーマットする関数
+ * @param userUid 表示したいユーザーのuid
+ * @param tabType 投稿済み・いいね・フィードバック
+ * @returns
+ */
+const fetchNewProductData = async (
+  userUid: string,
+  tabType: "posted" | "like" | "feedback"
+): Promise<DisplayProductProps[] | null> => {
+  const userUidSet: Set<string> = new Set();
+  const newProducts: DisplayProductProps[] = [];
+
+  const products = await fetchProductsUser(userUid, tabType);
+  if (!products) return null;
+
+  products.forEach((product) => {
+    userUidSet.add(product.data().userUid);
+  });
+  const userInfos = await fetchUserInfos([...userUidSet]);
+  if (!userInfos) return null;
+
+  products.forEach((product) => {
+    userInfos.forEach((userInfo) => {
+      const p = product.data();
+      const u = userInfo.data();
+      if (p.userUid === u.userUid) {
+        newProducts.push({
+          productId: product.id,
+          productIconUrl: p.productIconUrl as string,
+          userIconUrl: u.userIcon as string,
+          userName: u.name as string,
+          productTitle: p.productTitle as string,
+          productAbstract: p.productAbstract as string,
+          postDate: p.postDate as string,
+          editDate: p.editDate as string,
+          sumLike: p.sumLike as number,
+        });
+      }
+    });
+  });
+  return newProducts;
+};
+
 type DisplayUserProductListProps = {
   displayedUserUid: string;
 };
@@ -18,56 +62,38 @@ type DisplayUserProductListProps = {
 export const DisplayUserProductList = (
   props: DisplayUserProductListProps
 ): JSX.Element => {
-  const [productDataPosted, setProductDataPosted] = useState<
+  const [productsPosted, setProductsPosted] = useState<DisplayProductProps[]>(
+    []
+  );
+  const [productsLike, setProductsLike] = useState<DisplayProductProps[]>([]);
+  const [productsFeedback, setProductsFeedback] = useState<
     DisplayProductProps[]
   >([]);
-  const [tabType, setTabType] = useState<"posted" | "like" | "feedback">(
-    "posted"
-  );
 
   // 投稿済み作品の情報の取得
   useEffect(() => {
     // 即時関数を使って非同期でプロダクトデータを読み込む
     // eslint-disable-next-line no-void
     void (async () => {
-      const userUidSet: Set<string> = new Set();
-      const newProductData: DisplayProductProps[] = [];
-
-      const productData = await fetchProductsUser(
+      const newProductsPosted = await fetchNewProductData(
         props.displayedUserUid,
-        tabType
+        "posted"
       );
-      if (!productData) return;
+      if (newProductsPosted) setProductsPosted(newProductsPosted);
 
-      productData.forEach((product) => {
-        userUidSet.add(product.data().userUid);
-      });
-      const userInfos = await fetchUserInfos([...userUidSet]);
-      if (!userInfos) return;
+      const newProductsLike = await fetchNewProductData(
+        props.displayedUserUid,
+        "like"
+      );
+      if (newProductsLike) setProductsLike(newProductsLike);
 
-      productData.forEach((product) => {
-        userInfos.forEach((userInfo) => {
-          const p = product.data();
-          const u = userInfo.data();
-          if (p.userUid === u.userUid) {
-            newProductData.push({
-              productId: product.id,
-              productIconUrl: p.productIconUrl as string,
-              userIconUrl: u.userIcon as string,
-              userName: u.name as string,
-              productTitle: p.productTitle as string,
-              productAbstract: p.productAbstract as string,
-              postDate: p.postDate as string,
-              editDate: p.editDate as string,
-              sumLike: p.sumLike as number,
-            });
-          }
-        });
-      });
-
-      setProductDataPosted(newProductData);
+      const newProductsFeedback = await fetchNewProductData(
+        props.displayedUserUid,
+        "feedback"
+      );
+      if (newProductsFeedback) setProductsFeedback(newProductsFeedback);
     })();
-  }, [props.displayedUserUid, tabType]);
+  }, [props.displayedUserUid]);
 
   return (
     <HStack w="100%" spacing={10}>
@@ -77,7 +103,6 @@ export const DisplayUserProductList = (
             rounded="full"
             fontSize={{ base: "sm", md: "md" }}
             _selected={{ color: "#FCFCFC", bg: "#99CED4" }}
-            onClick={() => setTabType("posted")}
           >
             投稿済み
           </Tab>
@@ -85,7 +110,6 @@ export const DisplayUserProductList = (
             rounded="full"
             fontSize={{ base: "sm", md: "md" }}
             _selected={{ color: "#FCFCFC", bg: "#99CED4" }}
-            onClick={() => setTabType("like")}
           >
             いいね
           </Tab>
@@ -93,7 +117,6 @@ export const DisplayUserProductList = (
             rounded="full"
             fontSize={{ base: "sm", md: "md" }}
             _selected={{ color: "#FCFCFC", bg: "#99CED4" }}
-            onClick={() => setTabType("feedback")}
           >
             フィードバック
           </Tab>
@@ -101,13 +124,13 @@ export const DisplayUserProductList = (
         <TabPanels w="100%">
           <TabPanel>
             {/* 作品一覧の表示 */}
-            <DisplayProducts {...productDataPosted} />
+            <DisplayProducts {...productsPosted} />
           </TabPanel>
           <TabPanel p="0" pt="4">
-            <DisplayProducts {...productDataPosted} />
+            <DisplayProducts {...productsLike} />
           </TabPanel>
           <TabPanel p="0" pt="4">
-            <DisplayProducts {...productDataPosted} />
+            <DisplayProducts {...productsFeedback} />
           </TabPanel>
         </TabPanels>
       </Tabs>
