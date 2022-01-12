@@ -147,7 +147,7 @@ export const postUserInfo = async (
   giveFeedback: string[],
   userUid: string
 ): Promise<void> => {
-  const tmp = await addDoc(collection(db, "userInfo"), {
+  const tmp = await setDoc(doc(db, "userInfo", userUid), {
     name,
     userIcon,
     comment,
@@ -357,13 +357,17 @@ export const fetchProducts = async (
 export const fetchProductsUser = async (
   userUid: string,
   tabType: "posted" | "like" | "feedback"
-): Promise<QuerySnapshot<DocumentData>> => {
+): Promise<QuerySnapshot<DocumentData> | null> => {
   if (tabType === "posted") {
     const q = query(collection(db, "product"), where("userUid", "==", userUid));
     const querySnapshotPost = await getDocs(q);
     return querySnapshotPost;
   }
   if (tabType === "like") {
+    const likeSnap = await getDoc(doc(db, "userInfo", userUid));
+    const giveLike = likeSnap.data();
+    if (!giveLike) return null;
+    console.log(giveLike.giveLike);
     const q = query(collection(db, "product"), where("userUid", "==", userUid));
     const querySnapshotPost = await getDocs(q);
     return querySnapshotPost;
