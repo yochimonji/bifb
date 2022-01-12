@@ -69,6 +69,8 @@ export const DisplayUserProductList = (
   const [productsFeedback, setProductsFeedback] = useState<
     DisplayProductProps[]
   >([]);
+  const [isClickLike, setIsClickLike] = useState(false);
+  const [isClickFeedback, setIsClickFeedback] = useState(false);
 
   // 投稿済み作品の情報の取得
   useEffect(() => {
@@ -80,20 +82,30 @@ export const DisplayUserProductList = (
         "posted"
       );
       if (newProductsPosted) setProductsPosted(newProductsPosted);
-
-      const newProductsLike = await fetchNewProductData(
-        props.displayedUserUid,
-        "like"
-      );
-      if (newProductsLike) setProductsLike(newProductsLike);
-
-      const newProductsFeedback = await fetchNewProductData(
-        props.displayedUserUid,
-        "feedback"
-      );
-      if (newProductsFeedback) setProductsFeedback(newProductsFeedback);
     })();
   }, [props.displayedUserUid]);
+
+  // 初めにクリックした時だけ作品データを読み込む
+  // 無駄な通信を抑える
+  const onClickLike = async () => {
+    if (isClickLike) return;
+    setIsClickLike(true);
+    const newProductsLike = await fetchNewProductData(
+      props.displayedUserUid,
+      "like"
+    );
+    if (newProductsLike) setProductsLike(newProductsLike);
+  };
+
+  const onClickFeedback = async () => {
+    if (isClickFeedback) return;
+    setIsClickFeedback(true);
+    const newProductsFeedback = await fetchNewProductData(
+      props.displayedUserUid,
+      "feedback"
+    );
+    if (newProductsFeedback) setProductsFeedback(newProductsFeedback);
+  };
 
   return (
     <HStack w="100%" spacing={10}>
@@ -110,6 +122,7 @@ export const DisplayUserProductList = (
             rounded="full"
             fontSize={{ base: "sm", md: "md" }}
             _selected={{ color: "#FCFCFC", bg: "#99CED4" }}
+            onClick={onClickLike}
           >
             いいね
           </Tab>
@@ -117,6 +130,7 @@ export const DisplayUserProductList = (
             rounded="full"
             fontSize={{ base: "sm", md: "md" }}
             _selected={{ color: "#FCFCFC", bg: "#99CED4" }}
+            onClick={onClickFeedback}
           >
             フィードバック
           </Tab>
