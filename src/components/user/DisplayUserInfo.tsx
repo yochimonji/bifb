@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   VStack,
@@ -14,11 +14,15 @@ import {
   AiOutlineTwitter,
   AiOutlinePlusCircle,
 } from "react-icons/ai";
-import { DocumentData } from "firebase/firestore";
-import { AuthContext } from "../../auth/AuthProvider";
 import { fetchUserInfo } from "../../firebase/firestore";
 
-export const DisplayUserInfo = (): JSX.Element => {
+type DisplayUserProductListProps = {
+  displayedUserUid: string;
+};
+
+export const DisplayUserInfo = (
+  props: DisplayUserProductListProps
+): JSX.Element => {
   const [userName, setUserName] = useState("");
   const [userIconUrl, setUserIconUrl] = useState("");
   const [userComment, setUserComment] = useState("");
@@ -26,26 +30,20 @@ export const DisplayUserInfo = (): JSX.Element => {
   const [twitterUrl, setTwitterUrl] = useState("");
   const [otherUrl, setOtherUrl] = useState("");
 
-  const { currentUser } = useContext(AuthContext);
-
   // ユーザー情報の取得
   useEffect(() => {
-    if (currentUser !== null) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const tmpUserInfo = fetchUserInfo(currentUser.uid).then(
-        (userInfo: DocumentData | undefined) => {
-          if (userInfo) {
-            setUserName(userInfo.name);
-            setUserIconUrl(userInfo.userIcon);
-            setUserComment(userInfo.comment);
-            setGithubUrl(userInfo.githubUrl);
-            setTwitterUrl(userInfo.twitterUrl);
-            setOtherUrl(userInfo.otherUrl);
-          }
-        }
-      );
-    }
-  }, [currentUser]);
+    // eslint-disable-next-line no-void
+    void (async () => {
+      const userInfo = await fetchUserInfo(props.displayedUserUid);
+      if (!userInfo) return;
+      setUserName(userInfo.name);
+      setUserIconUrl(userInfo.userIcon);
+      setUserComment(userInfo.comment);
+      setGithubUrl(userInfo.githubUrl);
+      setTwitterUrl(userInfo.twitterUrl);
+      setOtherUrl(userInfo.otherUrl);
+    })();
+  }, [props.displayedUserUid]);
 
   const GithubButtonClick = () => {
     if (githubUrl) {

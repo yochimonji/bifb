@@ -10,7 +10,9 @@ const User = (): JSX.Element => {
   return (
     <VStack spacing={10} alignItems="flex-start">
       {/* ユーザー情報の部分 */}
-      <DisplayUserInfo />
+      <DisplayUserInfo
+        displayedUserUid={(location.state as { userUid: string }).userUid}
+      />
       {/* 作品の表示条件の選択 */}
       <DisplayUserProductList
         displayedUserUid={(location.state as { userUid: string }).userUid}
