@@ -17,6 +17,7 @@ import {
   arrayUnion,
   arrayRemove,
 } from "firebase/firestore";
+import { v4 as uuidv4 } from "uuid";
 
 const db = getFirestore();
 
@@ -76,8 +77,9 @@ export const postProduct = async (
 ): Promise<string> => {
   // 現時点で存在しないタグをタグコレクションに追加
   const tmp = postTags(tags, "NEW");
-  // 作品情報の取得
-  const newProduct = await addDoc(collection(db, "product"), {
+  // 作品情報の送信
+  const productId = uuidv4();
+  const newProduct = await setDoc(doc(db, "product", productId), {
     productTitle,
     productAbstract,
     productIconUrl,
@@ -89,8 +91,9 @@ export const postProduct = async (
     editDate: new Date().toLocaleString(),
     sumLike: 0,
     userUid,
+    productId,
   });
-  return newProduct.id;
+  return productId;
 };
 
 /**
@@ -363,11 +366,12 @@ export const fetchProductsUser = async (
     const querySnapshotPost = await getDocs(q);
     return querySnapshotPost;
   }
+
+  const userInfoSnap = await getDoc(doc(db, "userInfo", userUid));
+  const userInfos = userInfoSnap.data();
+  if (!userInfos) return null;
+
   if (tabType === "like") {
-    const likeSnap = await getDoc(doc(db, "userInfo", userUid));
-    const giveLike = likeSnap.data();
-    if (!giveLike) return null;
-    console.log(giveLike.giveLike);
     const q = query(collection(db, "product"), where("userUid", "==", userUid));
     const querySnapshotPost = await getDocs(q);
     return querySnapshotPost;
