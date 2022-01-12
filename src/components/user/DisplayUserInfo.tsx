@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import {
-  Box,
   VStack,
   HStack,
   Avatar,
@@ -8,12 +7,10 @@ import {
   Text,
   IconButton,
   Wrap,
+  Link,
 } from "@chakra-ui/react";
-import {
-  AiFillGithub,
-  AiOutlineTwitter,
-  AiOutlinePlusCircle,
-} from "react-icons/ai";
+import { AiFillGithub, AiOutlineTwitter } from "react-icons/ai";
+
 import { fetchUserInfo } from "../../firebase/firestore";
 
 type DisplayUserProductListProps = {
@@ -28,7 +25,6 @@ export const DisplayUserInfo = (
   const [userComment, setUserComment] = useState("");
   const [githubUrl, setGithubUrl] = useState("");
   const [twitterUrl, setTwitterUrl] = useState("");
-  const [otherUrl, setOtherUrl] = useState("");
 
   // ユーザー情報の取得
   useEffect(() => {
@@ -41,27 +37,8 @@ export const DisplayUserInfo = (
       setUserComment(userInfo.comment);
       setGithubUrl(userInfo.githubUrl);
       setTwitterUrl(userInfo.twitterUrl);
-      setOtherUrl(userInfo.otherUrl);
     })();
   }, [props.displayedUserUid]);
-
-  const GithubButtonClick = () => {
-    if (githubUrl) {
-      window.location.href = githubUrl;
-    }
-  };
-
-  const TwitterButtonClick = () => {
-    if (twitterUrl) {
-      window.location.href = twitterUrl;
-    }
-  };
-
-  const OtherButtonClick = () => {
-    if (otherUrl) {
-      window.location.href = otherUrl;
-    }
-  };
 
   return (
     <HStack w="100%" spacing="0" mt="8">
@@ -95,7 +72,8 @@ export const DisplayUserInfo = (
             icon={<AiFillGithub />}
             size="lg"
             variant="ghost"
-            onClick={GithubButtonClick}
+            as={Link}
+            href={githubUrl}
           />
           <IconButton
             id="TwitterButton"
@@ -104,20 +82,11 @@ export const DisplayUserInfo = (
             size="lg"
             variant="ghost"
             colorScheme="twitter"
-            onClick={TwitterButtonClick}
-          />
-          <IconButton
-            id="OtherButton"
-            aria-label="Other Icon"
-            icon={<AiOutlinePlusCircle />}
-            size="lg"
-            variant="ghost"
-            onClick={OtherButtonClick}
+            as={Link}
+            href={twitterUrl}
           />
         </Wrap>
       </VStack>
-      {/* 追加機能をする際のスペース */}
-      {/* <Box w="55%" h="200px" alignSelf="flex-start" /> */}
     </HStack>
   );
 };
