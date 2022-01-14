@@ -15,6 +15,7 @@ type Props = {
   tagList: string[];
 };
 export const FilterProductByTag = (props: Props): JSX.Element => {
+  const FilteringProductData = [];
   console.log("tag", props.tagList);
 
   return (
