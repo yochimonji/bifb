@@ -78,24 +78,28 @@ export const DisplayUserInfo = (
           {userComment}
         </Text>
         <Wrap w="100%" minH="50px" alignItems="center">
-          <IconButton
-            aria-label="Github Icon"
-            icon={<AiFillGithub />}
-            size="lg"
-            variant="ghost"
-            as={Link}
-            href={githubUrl}
-          />
-          <IconButton
-            id="TwitterButton"
-            aria-label="Twitter Icon"
-            icon={<AiOutlineTwitter />}
-            size="lg"
-            variant="ghost"
-            colorScheme="twitter"
-            as={Link}
-            href={twitterUrl}
-          />
+          {githubUrl && (
+            <IconButton
+              aria-label="Github Icon"
+              icon={<AiFillGithub />}
+              size="lg"
+              variant="ghost"
+              as={Link}
+              href={githubUrl}
+            />
+          )}
+          {twitterUrl && (
+            <IconButton
+              id="TwitterButton"
+              aria-label="Twitter Icon"
+              icon={<AiOutlineTwitter />}
+              size="lg"
+              variant="ghost"
+              colorScheme="twitter"
+              as={Link}
+              href={twitterUrl}
+            />
+          )}
         </Wrap>
       </VStack>
     </HStack>
