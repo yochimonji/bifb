@@ -10,6 +10,7 @@ export { default as Header } from "./header/Header";
 export { default as HeaderMenu } from "./header/HeaderMenu";
 export { default as HeaderMenuUser } from "./header/HeaderMenuUser";
 export { default as GithubIcon } from "./common_part/GithubIcon";
+export { default as TwitterIcon } from "./common_part/TwitterIcon";
 export { default as ProductIcon } from "./common_part/ProductIcon";
 export { default as TagIcon } from "./common_part/TagIcon";
 export { default as MarkdownForm } from "./common_part/MarkdownForm";

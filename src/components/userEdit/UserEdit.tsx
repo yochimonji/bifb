@@ -3,9 +3,6 @@ import {
   VStack,
   Stack,
   Avatar,
-  IconButton,
-  Wrap,
-  Link,
   Input,
   Textarea,
   Text,
@@ -20,11 +17,9 @@ import {
 
 // const storage = getStorage(app);
 
-import { AiFillGithub, AiOutlineTwitter } from "react-icons/ai";
-
 import { fetchUserInfo } from "../../firebase/firestore";
 import { AuthContext } from "../../auth/AuthProvider";
-import { GithubIcon } from "..";
+import { GithubIcon, TwitterIcon } from "..";
 
 const UserEdit = (): JSX.Element => {
   const [userName, setUserName] = useState("");
@@ -103,7 +98,6 @@ const UserEdit = (): JSX.Element => {
           </Box>
         </Stack>
       </Stack>
-
       {/* GitHubリンク入力欄 */}
       <Stack flexDir={{ base: "column", md: "row" }}>
         <GithubIcon
@@ -116,6 +110,20 @@ const UserEdit = (): JSX.Element => {
           w={{ base: "100%", md: "90%" }}
           value={githubUrl}
           onChange={(e) => setGithubUrl(e.target.value)}
+        />
+      </Stack>
+      {/* Twitterリンク入力欄 */}
+      <Stack flexDir={{ base: "column", md: "row" }}>
+        <TwitterIcon
+          w={{ base: "100%", md: "10%" }}
+          minW="120px"
+          justify={{ base: "flex-start", md: "center" }}
+        />
+        <Input
+          type="url"
+          w={{ base: "100%", md: "90%" }}
+          value={githubUrl}
+          onChange={(e) => setTwitterUrl(e.target.value)}
         />
       </Stack>
     </Stack>
