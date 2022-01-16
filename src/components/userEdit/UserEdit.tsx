@@ -24,6 +24,7 @@ import { AiFillGithub, AiOutlineTwitter } from "react-icons/ai";
 
 import { fetchUserInfo } from "../../firebase/firestore";
 import { AuthContext } from "../../auth/AuthProvider";
+import { GithubIcon } from "..";
 
 const UserEdit = (): JSX.Element => {
   const [userName, setUserName] = useState("");
@@ -51,74 +52,71 @@ const UserEdit = (): JSX.Element => {
   }, [currentUser]);
 
   return (
-    <Stack
-      w="100%"
-      spacing="0"
-      mt="8"
-      direction={{ base: "column", sm: "row" }}
-    >
-      <VStack
-        w="10%"
-        minW="120px"
-        padding="5px 10px 0px 0px"
-        mb="4"
-        alignSelf="flex-start"
-      >
-        <Avatar src={userIconUrl} size="xl" />
-      </VStack>
+    <Stack spacing="4">
       <Stack
-        w={{ base: "100%", sm: "90%" }}
+        w="100%"
         spacing="0"
-        minW="200px"
-        minH="150px"
-        alignSelf="flex-start"
+        mt="8"
+        direction={{ base: "column", sm: "row" }}
       >
-        <Box mb="4">
-          <Text mb="2" pl="4">
-            ユーザー名
-          </Text>
-          <Input
-            w="100%"
-            minH="50px"
-            fontSize="2xl"
-            value={userName}
-            onChange={(e) => setUserName(e.target.value)}
-          />
-        </Box>
-        <Box mb="4">
-          <Text mb="2" pl="4">
-            自己紹介
-          </Text>
-          <Textarea
-            w="100%"
-            minH="50px"
-            fontSize="md"
-            rows={4}
-            resize="none"
-            value={userComment}
-            onChange={(e) => setUserComment(e.target.value)}
-          />
-        </Box>
-        <Wrap w="100%" minH="50px" alignItems="center">
-          <IconButton
-            aria-label="Github Icon"
-            icon={<AiFillGithub />}
-            size="lg"
-            variant="ghost"
-            as={Link}
-            href={githubUrl}
-          />
-          <IconButton
-            id="TwitterButton"
-            aria-label="Twitter Icon"
-            icon={<AiOutlineTwitter />}
-            size="lg"
-            variant="ghost"
-            colorScheme="twitter"
-            as={Link}
-            href={twitterUrl}
-          />
-        </Wrap>
+        <VStack
+          w="10%"
+          minW="120px"
+          padding="5px 10px 0px 0px"
+          mb="4"
+          alignSelf="flex-start"
+        >
+          <Avatar src={userIconUrl} size="xl" />
+        </VStack>
+        <Stack
+          w={{ base: "100%", sm: "90%" }}
+          spacing="4"
+          minW="200px"
+          minH="150px"
+          alignSelf="flex-start"
+        >
+          <Box>
+            <Text mb="2" pl="4">
+              ユーザー名
+            </Text>
+            <Input
+              w="100%"
+              minH="50px"
+              fontSize="2xl"
+              value={userName}
+              onChange={(e) => setUserName(e.target.value)}
+            />
+          </Box>
+          <Box>
+            <Text mb="2" pl="4">
+              自己紹介
+            </Text>
+            <Textarea
+              w="100%"
+              minH="50px"
+              fontSize="md"
+              rows={4}
+              resize="none"
+              value={userComment}
+              onChange={(e) => setUserComment(e.target.value)}
+            />
+          </Box>
+        </Stack>
+      </Stack>
+
+      {/* GitHubリンク入力欄 */}
+      <Stack flexDir={{ base: "column", md: "row" }}>
+        <GithubIcon
+          w={{ base: "100%", md: "10%" }}
+          minW="120px"
+          justify={{ base: "flex-start", md: "center" }}
+        />
+        <Input
+          type="url"
+          w={{ base: "100%", md: "90%" }}
+          value={githubUrl}
+          onChange={(e) => setGithubUrl(e.target.value)}
+        />
       </Stack>
     </Stack>
   );
