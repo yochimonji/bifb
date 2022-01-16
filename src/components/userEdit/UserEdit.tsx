@@ -58,21 +58,29 @@ const UserEdit = (): JSX.Element => {
 
   const handleSave = async () => {
     if (!currentUser) return;
-    await postUserInfo(
-      userName,
-      userIconUrl,
-      userComment,
-      githubUrl,
-      twitterUrl,
-      otherUrl,
-      giveLike,
-      giveFeedback,
-      currentUser.uid
-    );
-    toast({
-      title: "保存しました!",
-      status: "success",
-    });
+
+    if (!userName) {
+      toast({
+        title: "ユーザー名を入力してください。",
+        status: "error",
+      });
+    } else {
+      await postUserInfo(
+        userName,
+        userIconUrl,
+        userComment,
+        githubUrl,
+        twitterUrl,
+        otherUrl,
+        giveLike,
+        giveFeedback,
+        currentUser.uid
+      );
+      toast({
+        title: "保存しました!",
+        status: "success",
+      });
+    }
   };
 
   return (
