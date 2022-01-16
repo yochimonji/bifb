@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   VStack,
   HStack,
@@ -12,6 +12,7 @@ import {
 import { AiFillGithub, AiOutlineTwitter } from "react-icons/ai";
 
 import { fetchUserInfo } from "../../firebase/firestore";
+import { AuthContext } from "../../auth/AuthProvider";
 
 type DisplayUserProductListProps = {
   displayedUserUid: string;
@@ -25,6 +26,8 @@ export const DisplayUserInfo = (
   const [userComment, setUserComment] = useState("");
   const [githubUrl, setGithubUrl] = useState("");
   const [twitterUrl, setTwitterUrl] = useState("");
+
+  const { currentUser } = useContext(AuthContext);
 
   // ユーザー情報の取得
   useEffect(() => {
@@ -49,9 +52,17 @@ export const DisplayUserInfo = (
         alignSelf="flex-start"
       >
         <Avatar src={userIconUrl} size="xl" />
-        <Button colorScheme="black" variant="outline" size="sm">
-          編集
-        </Button>
+        {props.displayedUserUid === currentUser?.uid && (
+          <Button
+            colorScheme="black"
+            variant="outline"
+            size="sm"
+            as={Link}
+            href="/user/edit"
+          >
+            編集
+          </Button>
+        )}
       </VStack>
       <VStack
         w="35%"
