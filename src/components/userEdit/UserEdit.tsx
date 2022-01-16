@@ -7,6 +7,7 @@ import {
   Textarea,
   Text,
   Box,
+  Button,
 } from "@chakra-ui/react";
 // import { useLocation } from "react-router-dom";
 // import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -46,13 +47,15 @@ const UserEdit = (): JSX.Element => {
     })();
   }, [currentUser]);
 
+  const handleSave = () => {};
+
   return (
-    <Stack spacing="4">
+    <VStack spacing="4">
       <Stack
         w="100%"
         spacing="0"
         mt="8"
-        direction={{ base: "column", sm: "row" }}
+        direction={{ base: "column", md: "row" }}
       >
         <VStack
           w="10%"
@@ -77,7 +80,7 @@ const UserEdit = (): JSX.Element => {
             <Input
               w="100%"
               minH="50px"
-              fontSize="2xl"
+              fontSize="xl"
               value={userName}
               onChange={(e) => setUserName(e.target.value)}
             />
@@ -99,7 +102,7 @@ const UserEdit = (): JSX.Element => {
         </Stack>
       </Stack>
       {/* GitHubリンク入力欄 */}
-      <Stack flexDir={{ base: "column", md: "row" }}>
+      <Stack flexDir={{ base: "column", md: "row" }} w="100%">
         <GithubIcon
           w={{ base: "100%", md: "10%" }}
           minW="120px"
@@ -113,7 +116,7 @@ const UserEdit = (): JSX.Element => {
         />
       </Stack>
       {/* Twitterリンク入力欄 */}
-      <Stack flexDir={{ base: "column", md: "row" }}>
+      <Stack flexDir={{ base: "column", md: "row" }} w="100%">
         <TwitterIcon
           w={{ base: "100%", md: "10%" }}
           minW="120px"
@@ -122,11 +125,22 @@ const UserEdit = (): JSX.Element => {
         <Input
           type="url"
           w={{ base: "100%", md: "90%" }}
-          value={githubUrl}
+          value={twitterUrl}
           onChange={(e) => setTwitterUrl(e.target.value)}
         />
       </Stack>
-    </Stack>
+      <Button
+        bg="#99CED4"
+        textColor="gray.100"
+        fontSize="xl"
+        w="24"
+        h="12"
+        shadow="md"
+        onClick={handleSave}
+      >
+        保存
+      </Button>
+    </VStack>
   );
 };
 
