@@ -1,13 +1,15 @@
 import React, { useContext, useEffect, useState } from "react";
 import {
   VStack,
-  HStack,
+  Stack,
   Avatar,
-  Button,
-  Text,
   IconButton,
   Wrap,
   Link,
+  Input,
+  Textarea,
+  Text,
+  Box,
 } from "@chakra-ui/react";
 // import { useLocation } from "react-router-dom";
 // import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -49,31 +51,54 @@ const UserEdit = (): JSX.Element => {
   }, [currentUser]);
 
   return (
-    <HStack w="100%" spacing="0" mt="8">
+    <Stack
+      w="100%"
+      spacing="0"
+      mt="8"
+      direction={{ base: "column", sm: "row" }}
+    >
       <VStack
         w="10%"
         minW="120px"
         padding="5px 10px 0px 0px"
+        mb="4"
         alignSelf="flex-start"
       >
         <Avatar src={userIconUrl} size="xl" />
-        <Button colorScheme="black" variant="outline" size="sm">
-          編集
-        </Button>
       </VStack>
-      <VStack
-        w="35%"
+      <Stack
+        w={{ base: "100%", sm: "90%" }}
         spacing="0"
         minW="200px"
         minH="150px"
         alignSelf="flex-start"
       >
-        <Text w="100%" minH="50px" fontSize="2xl">
-          {userName}
-        </Text>
-        <Text w="100%" minH="50px" fontSize="md" padding="10px 15px 10px 0px">
-          {userComment}
-        </Text>
+        <Box mb="4">
+          <Text mb="2" pl="4">
+            ユーザー名
+          </Text>
+          <Input
+            w="100%"
+            minH="50px"
+            fontSize="2xl"
+            value={userName}
+            onChange={(e) => setUserName(e.target.value)}
+          />
+        </Box>
+        <Box mb="4">
+          <Text mb="2" pl="4">
+            自己紹介
+          </Text>
+          <Textarea
+            w="100%"
+            minH="50px"
+            fontSize="md"
+            rows={4}
+            resize="none"
+            value={userComment}
+            onChange={(e) => setUserComment(e.target.value)}
+          />
+        </Box>
         <Wrap w="100%" minH="50px" alignItems="center">
           <IconButton
             aria-label="Github Icon"
@@ -94,8 +119,8 @@ const UserEdit = (): JSX.Element => {
             href={twitterUrl}
           />
         </Wrap>
-      </VStack>
-    </HStack>
+      </Stack>
+    </Stack>
   );
 };
 
