@@ -8,6 +8,7 @@ import {
   Text,
   Box,
   Button,
+  useToast,
 } from "@chakra-ui/react";
 // import { useLocation } from "react-router-dom";
 // import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -18,7 +19,7 @@ import {
 
 // const storage = getStorage(app);
 
-import { fetchUserInfo } from "../../firebase/firestore";
+import { fetchUserInfo, postUserInfo } from "../../firebase/firestore";
 import { AuthContext } from "../../auth/AuthProvider";
 import { GithubIcon, TwitterIcon } from "..";
 
@@ -28,8 +29,13 @@ const UserEdit = (): JSX.Element => {
   const [userComment, setUserComment] = useState("");
   const [githubUrl, setGithubUrl] = useState("");
   const [twitterUrl, setTwitterUrl] = useState("");
+  const [otherUrl, setOtherUrl] = useState("");
+  const [giveLike, setGiveLike] = useState<string[]>([]);
+  const [giveFeedback, setGiveFeedback] = useState<string[]>([]);
 
   const { currentUser } = useContext(AuthContext);
+
+  const toast = useToast();
 
   // ユーザー情報の取得
   useEffect(() => {
@@ -44,10 +50,30 @@ const UserEdit = (): JSX.Element => {
       setUserComment(userInfo.comment);
       setGithubUrl(userInfo.githubUrl);
       setTwitterUrl(userInfo.twitterUrl);
+      setOtherUrl(userInfo.otherUrl);
+      setGiveLike(userInfo.giveLike);
+      setGiveFeedback(userInfo.giveFeedback);
     })();
   }, [currentUser]);
 
-  const handleSave = () => {};
+  const handleSave = async () => {
+    if (!currentUser) return;
+    await postUserInfo(
+      userName,
+      userIconUrl,
+      userComment,
+      githubUrl,
+      twitterUrl,
+      otherUrl,
+      giveLike,
+      giveFeedback,
+      currentUser.uid
+    );
+    toast({
+      title: "保存しました!",
+      status: "success",
+    });
+  };
 
   return (
     <VStack spacing="4">
