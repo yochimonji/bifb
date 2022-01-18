@@ -1,4 +1,4 @@
-export { default as Home } from "./Home";
+export { default as Home } from "./Home/Home";
 export { default as Product } from "./product/Product";
 export { default as LinkLike } from "./product/LinkLike";
 export { default as EditDeleteButton } from "./product/EditDeleteButton";
@@ -20,5 +20,6 @@ export { default as DisplayProducts } from "./common_part/DisplayProducts";
 export { default as Like } from "./common_part/Like";
 export { default as DisplayTagList } from "./Home/DisplayTagList";
 export { default as postImage } from "./common_part/postImage";
+export type { default as DisplayProductProps } from "./common_part/DisplayProductProps";
 export { default as DisplayUserInfo } from "./user/DisplayUserInfo";
 export { default as DisplayUserProductList } from "./user/DisplayUserProductList";
