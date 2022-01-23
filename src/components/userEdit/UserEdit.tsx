@@ -10,18 +10,19 @@ import {
   Button,
   useToast,
 } from "@chakra-ui/react";
-// import { useLocation } from "react-router-dom";
-// import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-// import { v4 as uuidv4 } from "uuid";
-// import loadImage from "blueimp-load-image";
-
-// import app from "../base";
-
-// const storage = getStorage(app);
+import {
+  getStorage,
+  ref,
+  deleteObject,
+  getDownloadURL,
+} from "firebase/storage";
 
 import { fetchUserInfo, postUserInfo } from "../../firebase/firestore";
+import app from "../../base";
 import { AuthContext } from "../../auth/AuthProvider";
-import { GithubIcon, TwitterIcon } from "..";
+import { GithubIcon, TwitterIcon, postImage } from "..";
+
+const storage = getStorage(app);
 
 const UserEdit = (): JSX.Element => {
   const [userName, setUserName] = useState("");
@@ -45,7 +46,6 @@ const UserEdit = (): JSX.Element => {
     void (async () => {
       if (!currentUser) return;
       const userInfo = await fetchUserInfo(currentUser.uid);
-
       if (!userInfo) return;
       setUserName(userInfo.name);
       setUserIconUrl(userInfo.userIcon);
@@ -94,6 +94,46 @@ const UserEdit = (): JSX.Element => {
     }
   };
 
+  /**
+   * アップロードされた画像ファイルのプレビューを表示する関数
+   * @param event fileをアップロードするイベント
+   */
+  const handleIcon: React.ChangeEventHandler<HTMLInputElement> = async (
+    event
+  ) => {
+    // ファイルが選択されているかチェック
+    if (event.target.files == null || event.target.files[0] == null) {
+      return;
+    }
+
+    if (!currentUser) return;
+
+    // ファイルを選択し直した時に既存のファイルをStorageから削除
+    if (!/googleusercontent.com/.exec(userIconUrl) && userIconUrl !== "") {
+      const oldIconRef = ref(storage, userIconUrl);
+      await deleteObject(oldIconRef);
+    }
+
+    // FileをStorageに保存し、アイコン名とURLをstateにセット
+    const icon = event.target.files[0];
+    const newIconName = await postImage(icon, "user_icon", true);
+    const newIconRef = ref(storage, newIconName);
+    const downloadUrl = await getDownloadURL(newIconRef);
+    setUserIconUrl(downloadUrl);
+
+    await postUserInfo(
+      userName,
+      downloadUrl,
+      userComment,
+      githubUrl,
+      twitterUrl,
+      otherUrl,
+      giveLike,
+      giveFeedback,
+      currentUser.uid
+    );
+  };
+
   return (
     <VStack spacing="4">
       <Stack
@@ -125,7 +165,7 @@ const UserEdit = (): JSX.Element => {
             ref={userIconRef}
             type="file"
             accept="image/*"
-            // onChange={handleIcon}
+            onChange={handleIcon}
           />
         </VStack>
         <Stack
@@ -207,38 +247,3 @@ const UserEdit = (): JSX.Element => {
 };
 
 export default UserEdit;
-
-// 初回にユーザー登録時にgoogleアカウントの画像をFirebase Storageに登録する処理を実装しようとしたが、セキュリティ上の問題で実装できなかった
-// https://developer.mozilla.org/ja/docs/Web/HTML/CORS_enabled_image
-// 関数自体はほぼそのまま使えるため置いておく
-// 古いuserIconを削除する処理が未実装
-// const [iconUrl, setIconUrl] = useState("");
-// const postUserIcon = async () => {
-//   if (currentUser != null && currentUser) {
-//     const fileName = `user_icon/${uuidv4()}.jpeg`;
-//     const loadIcon = await loadImage(currentUser.photoURL as string, {
-//       maxHeight: 128,
-//       maxWidth: 128,
-//       crop: true,
-//       canvas: true,
-//     });
-//     console.log(loadIcon);
-//     const canvasIcon = loadIcon.image as HTMLCanvasElement;
-
-//     const fileRef = ref(storage, fileName);
-//     canvasIcon.toBlob(
-//       // eslint-disable-next-line @typescript-eslint/no-misused-promises
-//       async (blobIcon) => {
-//         if (blobIcon) {
-//           await uploadBytes(fileRef, blobIcon).catch(() => {
-//             console.log(`アイコンのアップロードに失敗しました。`);
-//           });
-//           const downloadUrl = await getDownloadURL(fileRef);
-//           setIconUrl(downloadUrl);
-//         }
-//       },
-//       "image/jpeg",
-//       0.95
-//     );
-//   }
-// };
