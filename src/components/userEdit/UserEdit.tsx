@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   VStack,
   Stack,
@@ -34,6 +34,8 @@ const UserEdit = (): JSX.Element => {
   const [giveFeedback, setGiveFeedback] = useState<string[]>([]);
 
   const { currentUser } = useContext(AuthContext);
+
+  const userIconRef = useRef<HTMLInputElement>(null);
 
   const toast = useToast();
 
@@ -83,6 +85,15 @@ const UserEdit = (): JSX.Element => {
     }
   };
 
+  /**
+   * 画像変更ボタンクリックでRefのhidden属性の画像用inputタグをクリックする関数
+   */
+  const onClickChangeIcon: React.MouseEventHandler<HTMLButtonElement> = () => {
+    if (userIconRef.current != null) {
+      userIconRef.current.click();
+    }
+  };
+
   return (
     <VStack spacing="4">
       <Stack
@@ -99,6 +110,23 @@ const UserEdit = (): JSX.Element => {
           alignSelf="flex-start"
         >
           <Avatar src={userIconUrl} size="xl" />
+          <Button
+            colorScheme="black"
+            variant="outline"
+            size="sm"
+            onClick={onClickChangeIcon}
+          >
+            画像変更
+          </Button>
+          {/* 画像アップロード用のhidden属性を付与したinput */}
+          {/* 下のButtonをクリックするとinputもクリックされる */}
+          <input
+            hidden
+            ref={userIconRef}
+            type="file"
+            accept="image/*"
+            // onChange={handleIcon}
+          />
         </VStack>
         <Stack
           w={{ base: "100%", sm: "90%" }}
