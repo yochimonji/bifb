@@ -139,7 +139,7 @@ export const postUserInfo = async (
   giveFeedback: string[],
   userUid: string
 ): Promise<void> => {
-  const tmp = await setDoc(doc(db, "userInfo", userUid), {
+  const tmp = await addDoc(collection(db, "userInfo"), {
     name,
     userIcon,
     comment,
@@ -148,6 +148,7 @@ export const postUserInfo = async (
     otherUrl,
     giveLike,
     giveFeedback,
+    userUid,
   });
 };
 
@@ -172,11 +173,28 @@ export const postUserInfo = async (
  */
 export const fetchUserInfo = async (
   userUid: string
-): Promise<DocumentData | undefined> => {
-  const searchUserUid = doc(db, "userInfo", userUid);
-  const loadUserData = await getDoc(searchUserUid);
+): Promise<DocumentData | null> => {
+  const q = query(collection(db, "userInfo"), where("userUid", "==", userUid));
+  const loadUserData = await getDocs(q);
+  if (loadUserData.empty) return null;
+  return loadUserData.docs[0].data();
+};
 
-  return loadUserData.data();
+/**
+ * userUidListに存在する全てのユーザー情報をFirebaseから取得してくる関数
+ * @param userUidList userUidの配列
+ * @returns userUidListと一致する全てのユーザー情報のオブジェクト
+ */
+export const fetchUserInfos = async (
+  userUidList: string[]
+): Promise<QuerySnapshot<DocumentData> | null> => {
+  if (userUidList.length === 0) return null;
+  const q = query(
+    collection(db, "userInfo"),
+    where("userUid", "in", userUidList)
+  );
+  const loadUserDatas = await getDocs(q);
+  return loadUserDatas;
 };
 
 /**
@@ -379,19 +397,21 @@ export const countLikeProduct = async (
   userUid: string
 ): Promise<unknown> => {
   let newSumLike: unknown;
+  const q = query(collection(db, "userInfo"), where("userUid", "==", userUid));
+  const userInfo = await getDocs(q);
 
   if (conditions === "UP") {
     await getDoc(doc(db, "product", productId)).then((data) => {
       newSumLike = Number(data.get("sumLike")) + 1;
     });
-    await updateDoc(doc(db, "userInfo", userUid), {
+    await updateDoc(userInfo.docs[0].ref, {
       giveLike: arrayUnion(productId),
     });
   } else if (conditions === "DOWN") {
     await getDoc(doc(db, "product", productId)).then((data) => {
       newSumLike = Number(data.get("sumLike")) - 1;
     });
-    await updateDoc(doc(db, "userInfo", userUid), {
+    await updateDoc(userInfo.docs[0].ref, {
       giveLike: arrayRemove(productId),
     });
   }
@@ -414,19 +434,21 @@ export const countLikeFeedback = async (
   userUid: string
 ): Promise<unknown> => {
   let newSumLike: unknown;
+  const q = query(collection(db, "userInfo"), where("userUid", "==", userUid));
+  const userInfo = await getDocs(q);
 
   if (conditions === "UP") {
     await getDoc(doc(db, "feedback", feedbackId)).then((data) => {
       newSumLike = Number(data.get("sumLike")) + 1;
     });
-    await updateDoc(doc(db, "userInfo", userUid), {
+    await updateDoc(userInfo.docs[0].ref, {
       giveFeedback: arrayUnion(feedbackId),
     });
   } else if (conditions === "DOWN") {
     await getDoc(doc(db, "feedback", feedbackId)).then((data) => {
       newSumLike = Number(data.get("sumLike")) - 1;
     });
-    await updateDoc(doc(db, "userInfo", userUid), {
+    await updateDoc(userInfo.docs[0].ref, {
       giveFeedback: arrayRemove(feedbackId),
     });
   }

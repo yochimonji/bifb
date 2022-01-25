@@ -1,46 +1,21 @@
 import React from "react";
 import { SimpleGrid } from "@chakra-ui/react";
-import {
-  QueryDocumentSnapshot,
-  QuerySnapshot,
-  DocumentData,
-} from "firebase/firestore";
-import { DisplayProduct } from "../index";
+import { DisplayProduct, DisplayProductProps } from "../index";
 
-type Props = {
-  prodactData: QuerySnapshot<DocumentData> | undefined;
-};
-
-const DisplayProducts = (props: Props): JSX.Element => {
-  const userIconUrl = "";
-  const userName = "testName";
-
-  return (
-    <SimpleGrid
-      w="100%"
-      columns={[1, null, 2]}
-      spacingX="50px"
-      spacingY="50px"
-      justifyItems="center"
-    >
-      {props.prodactData &&
-        props.prodactData.docs.map(
-          (eachObjData: QueryDocumentSnapshot<DocumentData>) => (
-            <DisplayProduct
-              productId={eachObjData.id}
-              productIconUrl={eachObjData.data().productIconUrl as string}
-              userIconUrl={userIconUrl}
-              userName={userName}
-              productTitle={eachObjData.data().productTitle as string}
-              productAbstract={eachObjData.data().productAbstract as string}
-              postDate={eachObjData.data().postDate as string}
-              // editDate={eachObjData.data().editDate as string}
-              sumLike={eachObjData.data().sumLike as number}
-            />
-          )
-        )}
-    </SimpleGrid>
-  );
-};
-
+const DisplayProducts = (props: DisplayProductProps[]): JSX.Element => (
+  <SimpleGrid
+    w="100%"
+    columns={[1, null, 2]}
+    spacingX="50px"
+    spacingY="50px"
+    justifyItems="center"
+  >
+    {props &&
+      // props.map()や[...props].mapはエラーが発生
+      // Object.valuesを使うことでただの配列でもmap()を使えるようになる
+      Object.values(props).map((eachObjData) => (
+        <DisplayProduct {...eachObjData} key={eachObjData.productId} />
+      ))}
+  </SimpleGrid>
+);
 export default DisplayProducts;
