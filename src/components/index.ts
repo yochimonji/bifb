@@ -23,4 +23,3 @@ export { default as postImage } from "./common_part/postImage";
 export type { default as DisplayProductProps } from "./common_part/DisplayProductProps";
 export { default as DisplayUserInfo } from "./user/DisplayUserInfo";
 export { default as DisplayUserProductList } from "./user/DisplayUserProductList";
-export { default as FilterProductByTag } from "./Home/FilterProductByTag";
