@@ -4,7 +4,7 @@ export { default as LinkLike } from "./product/LinkLike";
 export { default as EditDeleteButton } from "./product/EditDeleteButton";
 export { default as Search } from "./Search";
 export { default as Post } from "./post/Post";
-export { default as User } from "./User";
+export { default as User } from "./user/User";
 export { default as UserEdit } from "./UserEdit";
 export { default as Header } from "./header/Header";
 export { default as HeaderMenu } from "./header/HeaderMenu";
