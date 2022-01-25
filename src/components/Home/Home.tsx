@@ -87,7 +87,11 @@ const Home = (): JSX.Element => {
         </Box>
       </HStack>
       {/* 作品一覧の表示 */}
-      <DisplayProducts {...productData} />
+      {tagList.length === 0 ? (
+        <DisplayProducts {...productData} />
+      ) : (
+        console.log("Flaseゾーン")
+      )}
     </VStack>
   );
 };
