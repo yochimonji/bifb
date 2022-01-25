@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 import React, { useState, useEffect } from "react";
 import { HStack, VStack, Box, Select } from "@chakra-ui/react";
 import { QuerySnapshot, DocumentData } from "firebase/firestore";
@@ -7,6 +8,7 @@ import { DisplayProducts, DisplayTagList, DisplayProductProps } from "../index";
 const Home = (): JSX.Element => {
   const [sortType, setSortType] = useState("TREND");
   const [productData, setProductData] = useState<DisplayProductProps[]>([]);
+  const [tagList, setTagList] = useState<string[]>([]);
 
   // sortTypeの選択の変更を認識する関数
   const onChangeSortType: React.ChangeEventHandler<HTMLSelectElement> = (
@@ -57,6 +59,16 @@ const Home = (): JSX.Element => {
     })();
   }, [sortType]);
 
+  useEffect(() => {
+    if (history.state) {
+      const tmpTagArray = Object.values(history.state);
+      const tagObject = tmpTagArray[1];
+      if (typeof tagObject === "object" && tagObject != null) {
+        setTagList(Object.values(tagObject));
+      }
+    }
+  }, []);
+
   return (
     <VStack spacing={10} align="stretch" pt="4" pb="12">
       {/* 上段(検索条件・トレンド等の選択) */}
@@ -64,7 +76,7 @@ const Home = (): JSX.Element => {
         <Box w="10%" padding="37px 20px 35px 0px" minW="90px">
           検索条件:
         </Box>
-        <DisplayTagList />
+        <DisplayTagList tagList={tagList} />
         <Box w="20%" padding="30px 0px">
           <Select name="sortType" onChange={onChangeSortType}>
             <option value="TREND">トレンド</option>
