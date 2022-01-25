@@ -17,6 +17,7 @@ import {
   arrayUnion,
   arrayRemove,
 } from "firebase/firestore";
+import { v4 as uuidv4 } from "uuid";
 
 const db = getFirestore();
 
@@ -76,8 +77,9 @@ export const postProduct = async (
 ): Promise<string> => {
   // 現時点で存在しないタグをタグコレクションに追加
   const tmp = postTags(tags, "NEW");
-  // 作品情報の取得
-  const newProduct = await addDoc(collection(db, "product"), {
+  // 作品情報の送信
+  const productId = uuidv4();
+  const newProduct = await setDoc(doc(db, "product", productId), {
     productTitle,
     productAbstract,
     productIconUrl,
@@ -89,8 +91,9 @@ export const postProduct = async (
     editDate: new Date().toLocaleString(),
     sumLike: 0,
     userUid,
+    productId,
   });
-  return newProduct.id;
+  return productId;
 };
 
 /**
@@ -105,12 +108,20 @@ export const postFeedbacks = async (
   feedbackText: string,
   productId: string
 ): Promise<string> => {
+  // feedbackコレクションに登録
   const newFeedback = await addDoc(collection(db, "feedback"), {
     userUid,
     feedbackText,
     productId,
     postDate: new Date().toLocaleString(),
     sumLike: 0,
+  });
+
+  // userInfoコレクションに登録
+  const q = query(collection(db, "userInfo"), where("userUid", "==", userUid));
+  const userInfo = await getDocs(q);
+  await updateDoc(userInfo.docs[0].ref, {
+    giveFeedback: arrayUnion(productId),
   });
   return newFeedback.id;
 };
@@ -139,7 +150,7 @@ export const postUserInfo = async (
   giveFeedback: string[],
   userUid: string
 ): Promise<void> => {
-  const tmp = await addDoc(collection(db, "userInfo"), {
+  const tmp = await setDoc(doc(db, "userInfo", userUid), {
     name,
     userIcon,
     comment,
@@ -344,14 +355,38 @@ export const fetchProducts = async (
  * User画面において、投稿済みが選択されている場合に、UserUidをもとに、自分の投稿している作品の一覧を取得する
  *
  * @param userUid : ユーザーID
+ * @param tabType :
  * @return ユーザーIDが自分と一致する作品の一覧(QuerySnapshot)
  */
-export const fetchProductsUserPosted = async (
-  userUid: string
-): Promise<QuerySnapshot<DocumentData>> => {
-  const q = query(collection(db, "product"), where("userUid", "==", userUid));
-  const querySnapshotPost = await getDocs(q);
-  return querySnapshotPost;
+export const fetchProductsUser = async (
+  userUid: string,
+  tabType: "posted" | "like" | "feedback"
+): Promise<QuerySnapshot<DocumentData> | null> => {
+  let productQuery;
+
+  if (tabType === "posted") {
+    productQuery = query(
+      collection(db, "product"),
+      where("userUid", "==", userUid)
+    );
+  } else {
+    const userInfoSnap = await getDoc(doc(db, "userInfo", userUid));
+    const userInfos = userInfoSnap.data();
+    if (!userInfos) return null;
+
+    if (tabType === "like")
+      productQuery = query(
+        collection(db, "product"),
+        where("productId", "in", userInfos.giveLike)
+      );
+    else
+      productQuery = query(
+        collection(db, "product"),
+        where("productId", "in", userInfos.giveFeedback)
+      );
+  }
+  const productSnapshot = await getDocs(productQuery);
+  return productSnapshot;
 };
 
 /**
