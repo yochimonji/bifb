@@ -8,6 +8,9 @@ import {
   Text,
   Box,
   Button,
+  HStack,
+  FormControl,
+  FormHelperText,
 } from "@chakra-ui/react";
 import {
   getStorage,
@@ -33,6 +36,9 @@ const UserEdit = (): JSX.Element => {
   const [otherUrl, setOtherUrl] = useState("");
   const [giveLike, setGiveLike] = useState<string[]>([]);
   const [giveFeedback, setGiveFeedback] = useState<string[]>([]);
+  const [validUserName, setValidUserName] = useState(false);
+  const [validGithubUrl, setValidGithubUrl] = useState(false);
+  const [validTwitterUrl, setValidTwitterUrl] = useState(false);
 
   const { currentUser, setIsReload } = useContext(AuthContext);
   const userIconRef = useRef<HTMLInputElement>(null);
@@ -58,19 +64,43 @@ const UserEdit = (): JSX.Element => {
 
   const handleSave = async () => {
     if (!currentUser) return;
-    await postUserInfo(
-      userName,
-      userIconUrl,
-      userComment,
-      githubUrl,
-      twitterUrl,
-      otherUrl,
-      giveLike,
-      giveFeedback,
-      currentUser.uid
-    );
-    setIsReload(true);
-    history.push("/user", { userUid: currentUser.uid });
+
+    // 入力値のバリデーション
+    let canPost = true;
+    if (!userName) {
+      canPost = false;
+      setValidUserName(true);
+    } else {
+      setValidUserName(false);
+    }
+    if (githubUrl && !/^(https:\/\/github.com\/)/.exec(githubUrl)) {
+      canPost = false;
+      setValidGithubUrl(true);
+    } else {
+      setValidGithubUrl(false);
+    }
+    if (twitterUrl && !/^(https:\/\/twitter.com\/)/.exec(twitterUrl)) {
+      canPost = false;
+      setValidTwitterUrl(true);
+    } else {
+      setValidTwitterUrl(false);
+    }
+
+    if (canPost) {
+      await postUserInfo(
+        userName,
+        userIconUrl,
+        userComment,
+        githubUrl,
+        twitterUrl,
+        otherUrl,
+        giveLike,
+        giveFeedback,
+        currentUser.uid
+      );
+      setIsReload(true);
+      history.push("/user", { userUid: currentUser.uid });
+    }
   };
 
   /**
@@ -166,16 +196,22 @@ const UserEdit = (): JSX.Element => {
           alignSelf="flex-start"
         >
           <Box>
-            <Text mb="2" pl="4">
-              ユーザー名
-            </Text>
-            <Input
-              w="100%"
-              minH="50px"
-              fontSize="xl"
-              value={userName}
-              onChange={(e) => setUserName(e.target.value)}
-            />
+            <HStack mb="2" pl="4">
+              <Text>ユーザー名</Text>
+              <Text textColor="red">*</Text>
+            </HStack>
+            <FormControl w="100%" minH="50px">
+              <Input
+                fontSize="xl"
+                value={userName}
+                onChange={(e) => setUserName(e.target.value)}
+              />
+              {validUserName && (
+                <FormHelperText color="red" pl="4">
+                  ユーザー名を入力してください。
+                </FormHelperText>
+              )}
+            </FormControl>
           </Box>
           <Box>
             <Text mb="2" pl="4">
@@ -200,12 +236,18 @@ const UserEdit = (): JSX.Element => {
           minW="120px"
           justify={{ base: "flex-start", md: "center" }}
         />
-        <Input
-          type="url"
-          w={{ base: "100%", md: "80%" }}
-          value={githubUrl}
-          onChange={(e) => setGithubUrl(e.target.value)}
-        />
+        <FormControl w={{ base: "100%", md: "80%" }}>
+          <Input
+            type="url"
+            value={githubUrl}
+            onChange={(e) => setGithubUrl(e.target.value)}
+          />
+          {validGithubUrl && (
+            <FormHelperText color="red" pl="4">
+              https://github.com/[ユーザー名]
+            </FormHelperText>
+          )}
+        </FormControl>
       </Stack>
       {/* Twitterリンク入力欄 */}
       <Stack flexDir={{ base: "column", md: "row" }} w="100%">
@@ -214,12 +256,19 @@ const UserEdit = (): JSX.Element => {
           minW="120px"
           justify={{ base: "flex-start", md: "center" }}
         />
-        <Input
-          type="url"
-          w={{ base: "100%", md: "80%" }}
-          value={twitterUrl}
-          onChange={(e) => setTwitterUrl(e.target.value)}
-        />
+        <FormControl w={{ base: "100%", md: "80%" }}>
+          <Input
+            type="url"
+            w={{ base: "100%", md: "80%" }}
+            value={twitterUrl}
+            onChange={(e) => setTwitterUrl(e.target.value)}
+          />
+          {validTwitterUrl && (
+            <FormHelperText color="red" pl="4">
+              https://twitter.com/[ユーザー名]
+            </FormHelperText>
+          )}
+        </FormControl>
       </Stack>
       <Button
         bg="#99CED4"
