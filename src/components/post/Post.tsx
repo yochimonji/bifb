@@ -370,8 +370,8 @@ const Post = (): JSX.Element => {
       {/* GitHubリンク入力欄 */}
       <Stack flexDir={{ base: "column", md: "row" }} pl="2">
         <GithubIcon
-          w={{ base: "100%", md: "20%" }}
-          justify={{ base: "flex-start", md: "center" }}
+          w={{ base: "100%", md: "18%" }}
+          ml={{ base: "0", sm: "2", md: "4", lg: "6" }}
         />
         <FormControl w={{ base: "100%", md: "80%" }}>
           <Input
@@ -386,8 +386,8 @@ const Post = (): JSX.Element => {
       {/* 作品リンク入力欄 */}
       <Stack flexDir={{ base: "column", md: "row" }} pl="2">
         <ProductIcon
-          w={{ base: "100%", md: "20%" }}
-          justify={{ base: "flex-start", md: "center" }}
+          w={{ base: "100%", md: "18%" }}
+          ml={{ base: "0", sm: "2", md: "4", lg: "6" }}
         />
         <FormControl w={{ base: "100%", md: "80%" }}>
           <Input
@@ -402,8 +402,8 @@ const Post = (): JSX.Element => {
       {/* タグ入力欄 */}
       <Stack flexDir={{ base: "column", md: "row" }} pl="2">
         <TagIcon
-          w={{ base: "100%", md: "20%" }}
-          justify={{ base: "flex-start", md: "center" }}
+          w={{ base: "100%", md: "18%" }}
+          ml={{ base: "0", sm: "2", md: "4", lg: "6" }}
           pb={{ base: "0", md: "2" }}
         />
         <FormControl w={{ base: "100%", md: "80%" }}>
