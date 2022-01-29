@@ -274,17 +274,46 @@ const Post = (): JSX.Element => {
   return (
     <Stack spacing={{ base: "4", md: "2" }} pt="8">
       <HStack align="center">
-        <Stack w={{ base: "40%", sm: "30%", md: "20%" }}>
+        <Stack
+          w={{ base: "40%", sm: "30%", md: "20%" }}
+          justify="center"
+          alignItems="center"
+        >
           {/* 画像はstateの変数から読み込む */}
           {iconUrl ? (
-            <Image w="100%" fit="cover" src={iconUrl} />
+            <>
+              <Image w="100%" fit="cover" src={iconUrl} />
+              {/* inputの代わりのアイコン変更用ボタン */}
+              <Button
+                variant="outline"
+                flexDir="row"
+                w="100%"
+                h="100%"
+                py="2"
+                fontSize="sm"
+                onClick={onClickIconButton}
+              >
+                <Text>アイコン選択</Text>
+                <Text textColor="red">*</Text>
+              </Button>
+            </>
           ) : (
-            <Button w="100%" variant="ghost" onClick={onClickIconButton}>
+            <Button
+              w={{ base: "24", sm: "28", md: "32" }}
+              h={{ base: "24", sm: "28", md: "32" }}
+              variant="outline"
+              flexDir="column"
+              onClick={onClickIconButton}
+            >
               <Icon as={BsImage} boxSize="8" />
+              <Stack flexDir="row" alignItems="end" fontSize="sm">
+                <Text>アイコン選択</Text>
+                <Text textColor="red">*</Text>
+              </Stack>
             </Button>
           )}
           {/* 画像アップロード用のhidden属性を付与したinput */}
-          {/* 下のButtonをクリックするとinputもクリックされる */}
+          {/* アイコン選択ボタンをクリックするとinputもクリックされる */}
           <input
             hidden
             ref={iconInputRef}
@@ -292,16 +321,6 @@ const Post = (): JSX.Element => {
             accept="image/*"
             onChange={handleIcon}
           />
-          {/* 上のinputの代わりのアイコン変更用ボタン */}
-          <Button
-            variant="ghost"
-            fontSize="sm"
-            w="100%"
-            h="100%"
-            onClick={onClickIconButton}
-          >
-            アイコン選択
-          </Button>
           {/* アイコン選択時のエラー */}
           {error && (
             <Text fontSize="sm" color="red" m="0">
