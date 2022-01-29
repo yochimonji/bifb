@@ -109,6 +109,7 @@ const UserEdit = (): JSX.Element => {
     if (!currentUser) return;
 
     // ファイルを選択し直した時に既存のファイルをStorageから削除
+    // Firebase Storageに保存してあるファイルのURLは googleusercontent.com で始まる
     if (!/googleusercontent.com/.exec(userIconUrl) && userIconUrl !== "") {
       const oldIconRef = ref(storage, userIconUrl);
       await deleteObject(oldIconRef);
@@ -135,7 +136,7 @@ const UserEdit = (): JSX.Element => {
   };
 
   return (
-    <VStack spacing="4">
+    <VStack spacing="4" mb="8">
       <Stack
         w="100%"
         spacing="0"
@@ -147,7 +148,7 @@ const UserEdit = (): JSX.Element => {
           minW="120px"
           padding="5px 10px 0px 0px"
           mb="4"
-          alignSelf="flex-start"
+          alignSelf={{ base: "center", md: "flex-start" }}
         >
           <Avatar src={userIconUrl} size="xl" />
           <Button
@@ -169,7 +170,7 @@ const UserEdit = (): JSX.Element => {
           />
         </VStack>
         <Stack
-          w={{ base: "100%", sm: "90%" }}
+          w={{ base: "100%", md: "90%" }}
           spacing="4"
           minW="200px"
           minH="150px"
