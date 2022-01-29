@@ -5,7 +5,7 @@ import { AiOutlineTwitter } from "react-icons/ai";
 const TwitterIcon = (props: StackProps): JSX.Element => (
   <HStack {...props}>
     <Icon as={AiOutlineTwitter} color="blue.400" h="8" w="8" />
-    <Text>Twitter</Text>
+    <Text>Twitter URL</Text>
   </HStack>
 );
 

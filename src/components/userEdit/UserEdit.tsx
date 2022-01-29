@@ -143,7 +143,7 @@ const UserEdit = (): JSX.Element => {
         direction={{ base: "column", md: "row" }}
       >
         <VStack
-          w="10%"
+          w="20%"
           minW="120px"
           padding="5px 10px 0px 0px"
           mb="4"
@@ -169,7 +169,7 @@ const UserEdit = (): JSX.Element => {
           />
         </VStack>
         <Stack
-          w={{ base: "100%", md: "90%" }}
+          w={{ base: "100%", md: "80%" }}
           spacing="4"
           minW="200px"
           minH="150px"
@@ -206,13 +206,13 @@ const UserEdit = (): JSX.Element => {
       {/* GitHubリンク入力欄 */}
       <Stack flexDir={{ base: "column", md: "row" }} w="100%">
         <GithubIcon
-          w={{ base: "100%", md: "10%" }}
+          w={{ base: "100%", md: "20%" }}
           minW="120px"
           justify={{ base: "flex-start", md: "center" }}
         />
         <Input
           type="url"
-          w={{ base: "100%", md: "90%" }}
+          w={{ base: "100%", md: "80%" }}
           value={githubUrl}
           onChange={(e) => setGithubUrl(e.target.value)}
         />
@@ -220,13 +220,13 @@ const UserEdit = (): JSX.Element => {
       {/* Twitterリンク入力欄 */}
       <Stack flexDir={{ base: "column", md: "row" }} w="100%">
         <TwitterIcon
-          w={{ base: "100%", md: "10%" }}
+          w={{ base: "100%", md: "20%" }}
           minW="120px"
           justify={{ base: "flex-start", md: "center" }}
         />
         <Input
           type="url"
-          w={{ base: "100%", md: "90%" }}
+          w={{ base: "100%", md: "80%" }}
           value={twitterUrl}
           onChange={(e) => setTwitterUrl(e.target.value)}
         />

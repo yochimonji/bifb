@@ -5,7 +5,7 @@ import { AiFillGithub } from "react-icons/ai";
 const GithubIcon = (props: StackProps): JSX.Element => (
   <HStack {...props}>
     <Icon as={AiFillGithub} h="8" w="8" />
-    <Text>GitHub</Text>
+    <Text>Github URL</Text>
   </HStack>
 );
 
