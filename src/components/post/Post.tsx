@@ -8,6 +8,7 @@ import {
   FormControl,
   FormLabel,
   FormHelperText,
+  FormErrorMessage,
   Text,
   Icon,
 } from "@chakra-ui/react";
@@ -336,7 +337,7 @@ const Post = (): JSX.Element => {
         </Stack>
         {/* 作品タイトルと概要 */}
         <Stack w={{ base: "60%", sm: "70%", md: "80%" }} h="auto" pt="4">
-          <FormControl isRequired w="100%" h="60%">
+          <FormControl isRequired isInvalid={validTitle} w="100%" h="60%">
             <FormLabel>作品タイトル</FormLabel>
             <Input
               fontSize="xl"
@@ -345,12 +346,12 @@ const Post = (): JSX.Element => {
               onChange={handleTitle}
             />
             {validTitle && (
-              <FormHelperText color="red">
+              <FormErrorMessage>
                 作品タイトルを入力してください。
-              </FormHelperText>
+              </FormErrorMessage>
             )}
           </FormControl>
-          <FormControl isRequired w="100%" h="40%">
+          <FormControl isRequired isInvalid={validAbstract} w="100%" h="40%">
             <FormLabel fontSize={{ base: "sm", sm: "md" }}>
               この作品を一言で表すと？
             </FormLabel>
@@ -360,9 +361,7 @@ const Post = (): JSX.Element => {
               onChange={handleAbstract}
             />
             {validAbstract && (
-              <FormHelperText color="red">
-                作品概要を入力してください。
-              </FormHelperText>
+              <FormErrorMessage>作品概要を入力してください。</FormErrorMessage>
             )}
           </FormControl>
         </Stack>
@@ -406,13 +405,13 @@ const Post = (): JSX.Element => {
           ml={{ base: "0", sm: "2", md: "4", lg: "6" }}
           pb={{ base: "0", md: "2" }}
         />
-        <FormControl w={{ base: "100%", md: "80%" }}>
+        <FormControl isInvalid={validTags} w={{ base: "100%", md: "80%" }}>
           <Input variant="flushed" value={tags} onChange={handleTags} />
           {validTags ? (
-            <FormHelperText color="red">
+            <FormErrorMessage>
               タグはスペースで区切って5つまで入力してください（例：Webアプリ
               JavaScript）
-            </FormHelperText>
+            </FormErrorMessage>
           ) : (
             <FormHelperText>
               タグはスペースで区切って5つまで入力してください（例：Webアプリ
