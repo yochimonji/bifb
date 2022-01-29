@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable no-restricted-globals */
 import React, { useState, useEffect } from "react";
 import { HStack, VStack, Box, Select } from "@chakra-ui/react";
 import { QuerySnapshot, DocumentData } from "firebase/firestore";
@@ -7,6 +10,7 @@ import { DisplayProducts, DisplayTagList, DisplayProductProps } from "../index";
 const Home = (): JSX.Element => {
   const [sortType, setSortType] = useState("TREND");
   const [productData, setProductData] = useState<DisplayProductProps[]>([]);
+  const [tagList, setTagList] = useState<string[]>([]);
 
   // sortTypeの選択の変更を認識する関数
   const onChangeSortType: React.ChangeEventHandler<HTMLSelectElement> = (
@@ -14,6 +18,16 @@ const Home = (): JSX.Element => {
   ) => {
     setSortType(event.target.value);
   };
+
+  useEffect(() => {
+    if (history.state) {
+      const tmpTagArray = Object.values(history.state);
+      const tagObject = tmpTagArray[1];
+      if (typeof tagObject === "object" && tagObject != null) {
+        setTagList(Object.values(tagObject));
+      }
+    }
+  }, []);
 
   // 作品データの取得
   useEffect(() => {
@@ -38,24 +52,42 @@ const Home = (): JSX.Element => {
             const p = product.data();
             const u = userInfo.data();
             if (p.userUid === u.userUid) {
-              newProductData.push({
-                productId: product.id,
-                productIconUrl: p.productIconUrl as string,
-                userIconUrl: u.userIcon as string,
-                userName: u.name as string,
-                productTitle: p.productTitle as string,
-                productAbstract: p.productAbstract as string,
-                postDate: p.postDate as string,
-                editDate: p.editDate as string,
-                sumLike: p.sumLike as number,
-              });
+              if (tagList.length === 0) {
+                newProductData.push({
+                  productId: product.id,
+                  productIconUrl: p.productIconUrl as string,
+                  userIconUrl: u.userIcon as string,
+                  userName: u.name as string,
+                  productTitle: p.productTitle as string,
+                  productAbstract: p.productAbstract as string,
+                  postDate: p.postDate as string,
+                  editDate: p.editDate as string,
+                  sumLike: p.sumLike as number,
+                });
+              } else {
+                tagList.forEach((tag) => {
+                  if (product.data().tags.includes(tag)) {
+                    newProductData.push({
+                      productId: product.id,
+                      productIconUrl: p.productIconUrl as string,
+                      userIconUrl: u.userIcon as string,
+                      userName: u.name as string,
+                      productTitle: p.productTitle as string,
+                      productAbstract: p.productAbstract as string,
+                      postDate: p.postDate as string,
+                      editDate: p.editDate as string,
+                      sumLike: p.sumLike as number,
+                    });
+                  }
+                });
+              }
             }
           });
         });
         setProductData(newProductData);
       }
     })();
-  }, [sortType]);
+  }, [sortType, tagList]);
 
   return (
     <VStack spacing={10} align="stretch" pt="4" pb="12">
@@ -64,7 +96,7 @@ const Home = (): JSX.Element => {
         <Box w="10%" padding="37px 20px 35px 0px" minW="90px">
           検索条件:
         </Box>
-        <DisplayTagList />
+        <DisplayTagList tagList={tagList} />
         <Box w="20%" padding="30px 0px">
           <Select name="sortType" onChange={onChangeSortType}>
             <option value="TREND">トレンド</option>
