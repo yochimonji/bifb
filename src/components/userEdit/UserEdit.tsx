@@ -8,7 +8,6 @@ import {
   Text,
   Box,
   Button,
-  useToast,
 } from "@chakra-ui/react";
 import {
   getStorage,
@@ -37,7 +36,6 @@ const UserEdit = (): JSX.Element => {
 
   const { currentUser, setIsReload } = useContext(AuthContext);
   const userIconRef = useRef<HTMLInputElement>(null);
-  const toast = useToast();
   const history = useHistory();
 
   // ユーザー情報の取得
@@ -60,27 +58,19 @@ const UserEdit = (): JSX.Element => {
 
   const handleSave = async () => {
     if (!currentUser) return;
-
-    if (!userName) {
-      toast({
-        title: "ユーザー名を入力してください。",
-        status: "error",
-      });
-    } else {
-      await postUserInfo(
-        userName,
-        userIconUrl,
-        userComment,
-        githubUrl,
-        twitterUrl,
-        otherUrl,
-        giveLike,
-        giveFeedback,
-        currentUser.uid
-      );
-      setIsReload(true);
-      history.push("/user", { userUid: currentUser.uid });
-    }
+    await postUserInfo(
+      userName,
+      userIconUrl,
+      userComment,
+      githubUrl,
+      twitterUrl,
+      otherUrl,
+      giveLike,
+      giveFeedback,
+      currentUser.uid
+    );
+    setIsReload(true);
+    history.push("/user", { userUid: currentUser.uid });
   };
 
   /**
