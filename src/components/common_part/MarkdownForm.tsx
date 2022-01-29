@@ -88,7 +88,7 @@ const MarkdownForm = (props: MarkdownFormProps): JSX.Element => {
             </Tab>
           </TabList>
           {props.pageType === "post" && (
-            <Button variant="outline" w="max-content">
+            <Button variant="outline" w="max-content" hidden>
               <Icon
                 as={AiFillGithub}
                 h="10"
