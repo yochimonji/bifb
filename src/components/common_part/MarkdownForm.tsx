@@ -117,7 +117,7 @@ const MarkdownForm = (props: MarkdownFormProps): JSX.Element => {
         {/* 下のinputの代わりの画像変更用ボタン */}
         <Button
           leftIcon={<BsImage />}
-          variant="ghost"
+          variant="outline"
           onClick={onClickAddButton}
         >
           {/* 上のButtonをクリックするとinputもクリックされる */}
