@@ -35,7 +35,7 @@ const UserEdit = (): JSX.Element => {
   const [giveLike, setGiveLike] = useState<string[]>([]);
   const [giveFeedback, setGiveFeedback] = useState<string[]>([]);
 
-  const { currentUser } = useContext(AuthContext);
+  const { currentUser, setIsReload } = useContext(AuthContext);
   const userIconRef = useRef<HTMLInputElement>(null);
   const toast = useToast();
   const history = useHistory();
@@ -78,6 +78,7 @@ const UserEdit = (): JSX.Element => {
         giveFeedback,
         currentUser.uid
       );
+      setIsReload(true);
       history.push("/user", { userUid: currentUser.uid });
     }
   };
@@ -130,6 +131,7 @@ const UserEdit = (): JSX.Element => {
       giveFeedback,
       currentUser.uid
     );
+    setIsReload(true);
   };
 
   return (

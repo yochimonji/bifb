@@ -19,7 +19,8 @@ import { fetchUserInfo } from "../../firebase/firestore";
  * @returns ヘッダーのユーザーアイコンのコンポーネント
  */
 const HeaderMenuUser = (): JSX.Element => {
-  const { googleLogin, logout, currentUser } = useContext(AuthContext);
+  const { googleLogin, logout, currentUser, isReload, setIsReload } =
+    useContext(AuthContext);
   const [userName, setUserName] = useState("");
   const [userIcon, setUserIcon] = useState("");
 
@@ -43,7 +44,8 @@ const HeaderMenuUser = (): JSX.Element => {
         }
       });
     }
-  }, [currentUser]);
+    if (isReload) setIsReload(false);
+  }, [currentUser, isReload, setIsReload]);
 
   return (
     <Menu placement="bottom-start">
