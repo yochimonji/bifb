@@ -17,6 +17,7 @@ import {
   getDownloadURL,
 } from "firebase/storage";
 
+import { useHistory } from "react-router-dom";
 import { fetchUserInfo, postUserInfo } from "../../firebase/firestore";
 import app from "../../base";
 import { AuthContext } from "../../auth/AuthProvider";
@@ -35,10 +36,9 @@ const UserEdit = (): JSX.Element => {
   const [giveFeedback, setGiveFeedback] = useState<string[]>([]);
 
   const { currentUser } = useContext(AuthContext);
-
   const userIconRef = useRef<HTMLInputElement>(null);
-
   const toast = useToast();
+  const history = useHistory();
 
   // ユーザー情報の取得
   useEffect(() => {
@@ -78,10 +78,7 @@ const UserEdit = (): JSX.Element => {
         giveFeedback,
         currentUser.uid
       );
-      toast({
-        title: "保存しました!",
-        status: "success",
-      });
+      history.push("/user", { userUid: currentUser.uid });
     }
   };
 
