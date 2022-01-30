@@ -8,6 +8,7 @@ import {
   FormControl,
   FormLabel,
   FormHelperText,
+  FormErrorMessage,
   Text,
   Icon,
 } from "@chakra-ui/react";
@@ -274,17 +275,46 @@ const Post = (): JSX.Element => {
   return (
     <Stack spacing={{ base: "4", md: "2" }} pt="8">
       <HStack align="center">
-        <Stack w={{ base: "40%", sm: "30%", md: "20%" }}>
+        <Stack
+          w={{ base: "40%", sm: "30%", md: "20%" }}
+          justify="center"
+          alignItems="center"
+        >
           {/* 画像はstateの変数から読み込む */}
           {iconUrl ? (
-            <Image w="100%" fit="cover" src={iconUrl} />
+            <>
+              <Image w="100%" fit="cover" src={iconUrl} />
+              {/* inputの代わりのアイコン変更用ボタン */}
+              <Button
+                variant="outline"
+                flexDir="row"
+                w="100%"
+                h="100%"
+                py="2"
+                fontSize="sm"
+                onClick={onClickIconButton}
+              >
+                <Text>アイコン選択</Text>
+                <Text textColor="red">*</Text>
+              </Button>
+            </>
           ) : (
-            <Button w="100%" variant="ghost" onClick={onClickIconButton}>
+            <Button
+              w={{ base: "24", sm: "28", md: "32" }}
+              h={{ base: "24", sm: "28", md: "32" }}
+              variant="outline"
+              flexDir="column"
+              onClick={onClickIconButton}
+            >
               <Icon as={BsImage} boxSize="8" />
+              <Stack flexDir="row" alignItems="end" fontSize="sm">
+                <Text>アイコン選択</Text>
+                <Text textColor="red">*</Text>
+              </Stack>
             </Button>
           )}
           {/* 画像アップロード用のhidden属性を付与したinput */}
-          {/* 下のButtonをクリックするとinputもクリックされる */}
+          {/* アイコン選択ボタンをクリックするとinputもクリックされる */}
           <input
             hidden
             ref={iconInputRef}
@@ -292,16 +322,6 @@ const Post = (): JSX.Element => {
             accept="image/*"
             onChange={handleIcon}
           />
-          {/* 上のinputの代わりのアイコン変更用ボタン */}
-          <Button
-            variant="ghost"
-            fontSize="sm"
-            w="100%"
-            h="100%"
-            onClick={onClickIconButton}
-          >
-            アイコン選択
-          </Button>
           {/* アイコン選択時のエラー */}
           {error && (
             <Text fontSize="sm" color="red" m="0">
@@ -317,7 +337,7 @@ const Post = (): JSX.Element => {
         </Stack>
         {/* 作品タイトルと概要 */}
         <Stack w={{ base: "60%", sm: "70%", md: "80%" }} h="auto" pt="4">
-          <FormControl w="100%" h="60%">
+          <FormControl isRequired isInvalid={validTitle} w="100%" h="60%">
             <FormLabel>作品タイトル</FormLabel>
             <Input
               fontSize="xl"
@@ -326,12 +346,12 @@ const Post = (): JSX.Element => {
               onChange={handleTitle}
             />
             {validTitle && (
-              <FormHelperText color="red">
+              <FormErrorMessage>
                 作品タイトルを入力してください。
-              </FormHelperText>
+              </FormErrorMessage>
             )}
           </FormControl>
-          <FormControl w="100%" h="40%">
+          <FormControl isRequired isInvalid={validAbstract} w="100%" h="40%">
             <FormLabel fontSize={{ base: "sm", sm: "md" }}>
               この作品を一言で表すと？
             </FormLabel>
@@ -341,9 +361,7 @@ const Post = (): JSX.Element => {
               onChange={handleAbstract}
             />
             {validAbstract && (
-              <FormHelperText color="red">
-                作品概要を入力してください。
-              </FormHelperText>
+              <FormErrorMessage>作品概要を入力してください。</FormErrorMessage>
             )}
           </FormControl>
         </Stack>
@@ -351,8 +369,8 @@ const Post = (): JSX.Element => {
       {/* GitHubリンク入力欄 */}
       <Stack flexDir={{ base: "column", md: "row" }} pl="2">
         <GithubIcon
-          w={{ base: "100%", md: "20%" }}
-          justify={{ base: "flex-start", md: "center" }}
+          w={{ base: "100%", md: "18%" }}
+          ml={{ base: "0", sm: "2", md: "4", lg: "6" }}
         />
         <FormControl w={{ base: "100%", md: "80%" }}>
           <Input
@@ -367,8 +385,8 @@ const Post = (): JSX.Element => {
       {/* 作品リンク入力欄 */}
       <Stack flexDir={{ base: "column", md: "row" }} pl="2">
         <ProductIcon
-          w={{ base: "100%", md: "20%" }}
-          justify={{ base: "flex-start", md: "center" }}
+          w={{ base: "100%", md: "18%" }}
+          ml={{ base: "0", sm: "2", md: "4", lg: "6" }}
         />
         <FormControl w={{ base: "100%", md: "80%" }}>
           <Input
@@ -383,17 +401,17 @@ const Post = (): JSX.Element => {
       {/* タグ入力欄 */}
       <Stack flexDir={{ base: "column", md: "row" }} pl="2">
         <TagIcon
-          w={{ base: "100%", md: "20%" }}
-          justify={{ base: "flex-start", md: "center" }}
+          w={{ base: "100%", md: "18%" }}
+          ml={{ base: "0", sm: "2", md: "4", lg: "6" }}
           pb={{ base: "0", md: "2" }}
         />
-        <FormControl w={{ base: "100%", md: "80%" }}>
+        <FormControl isInvalid={validTags} w={{ base: "100%", md: "80%" }}>
           <Input variant="flushed" value={tags} onChange={handleTags} />
           {validTags ? (
-            <FormHelperText color="red">
+            <FormErrorMessage>
               タグはスペースで区切って5つまで入力してください（例：Webアプリ
               JavaScript）
-            </FormHelperText>
+            </FormErrorMessage>
           ) : (
             <FormHelperText>
               タグはスペースで区切って5つまで入力してください（例：Webアプリ

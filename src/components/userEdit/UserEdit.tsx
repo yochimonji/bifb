@@ -5,12 +5,11 @@ import {
   Avatar,
   Input,
   Textarea,
-  Text,
-  Box,
   Button,
-  HStack,
   FormControl,
   FormHelperText,
+  FormLabel,
+  FormErrorMessage,
 } from "@chakra-ui/react";
 import {
   getStorage,
@@ -195,28 +194,26 @@ const UserEdit = (): JSX.Element => {
           minH="150px"
           alignSelf="flex-start"
         >
-          <Box>
-            <HStack mb="2" pl="4">
-              <Text>ユーザー名</Text>
-              <Text textColor="red">*</Text>
-            </HStack>
-            <FormControl w="100%" minH="50px">
-              <Input
-                fontSize="xl"
-                value={userName}
-                onChange={(e) => setUserName(e.target.value)}
-              />
-              {validUserName && (
-                <FormHelperText color="red" pl="4">
-                  ユーザー名を入力してください。
-                </FormHelperText>
-              )}
-            </FormControl>
-          </Box>
-          <Box>
-            <Text mb="2" pl="4">
-              自己紹介
-            </Text>
+          <FormControl
+            isRequired
+            isInvalid={validUserName}
+            w="100%"
+            minH="50px"
+          >
+            <FormLabel>ユーザー名</FormLabel>
+            <Input
+              fontSize="xl"
+              value={userName}
+              onChange={(e) => setUserName(e.target.value)}
+            />
+            {validUserName && (
+              <FormErrorMessage>
+                ユーザー名を入力してください。
+              </FormErrorMessage>
+            )}
+          </FormControl>
+          <FormControl>
+            <FormLabel>自己紹介</FormLabel>
             <Textarea
               w="100%"
               minH="50px"
@@ -226,7 +223,7 @@ const UserEdit = (): JSX.Element => {
               value={userComment}
               onChange={(e) => setUserComment(e.target.value)}
             />
-          </Box>
+          </FormControl>
         </Stack>
       </Stack>
       {/* GitHubリンク入力欄 */}
@@ -259,7 +256,6 @@ const UserEdit = (): JSX.Element => {
         <FormControl w={{ base: "100%", md: "80%" }}>
           <Input
             type="url"
-            w={{ base: "100%", md: "80%" }}
             value={twitterUrl}
             onChange={(e) => setTwitterUrl(e.target.value)}
           />

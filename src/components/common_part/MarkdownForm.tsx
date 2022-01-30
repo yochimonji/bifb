@@ -88,7 +88,7 @@ const MarkdownForm = (props: MarkdownFormProps): JSX.Element => {
             </Tab>
           </TabList>
           {props.pageType === "post" && (
-            <Button variant="outline" w="max-content">
+            <Button variant="outline" w="max-content" hidden>
               <Icon
                 as={AiFillGithub}
                 h="10"
@@ -117,7 +117,7 @@ const MarkdownForm = (props: MarkdownFormProps): JSX.Element => {
         {/* 下のinputの代わりの画像変更用ボタン */}
         <Button
           leftIcon={<BsImage />}
-          variant="ghost"
+          variant="outline"
           onClick={onClickAddButton}
         >
           {/* 上のButtonをクリックするとinputもクリックされる */}
