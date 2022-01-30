@@ -19,7 +19,7 @@ const Search = (): JSX.Element => {
   const [tagsList, setTagsList] = useState<string[]>();
   const tagsAll = [""];
   let tagsNow = [""];
-  let inputText = "";
+  const [newInputText, setNewInputText] = useState<string>("");
 
   // 最初1回のみ、すべてのタグの取得
   useEffect(() => {
@@ -59,16 +59,16 @@ const Search = (): JSX.Element => {
   };
 
   // input欄の入力値の検出
-  const handleInputText: React.ChangeEventHandler<HTMLInputElement> = (
-    event
-  ) => {
-    inputText = event.target.value;
+  const handleInputText: React.ChangeEventHandler<HTMLInputElement> = (event) => {
+    const inputText = event.target.value;
+    setNewInputText(inputText);
     checkTags(event.target.value);
   };
 
   // 検索ボタンが押されたときの操作
   const handleSearch = () => {
-    history.push("/", { paramInputText: inputText });
+    console.log(newInputText);
+    history.push("/", { paramInputText: newInputText });
   };
 
   // タグボタンが押された時の操作
@@ -77,10 +77,9 @@ const Search = (): JSX.Element => {
   };
 
   // 入力画面でEnterが押されたときに検索とみなす
-  const handleKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (
-    event
-  ): void => {
+  const handleKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (event): void => {
     if (event.keyCode === 13) {
+      console.log("event: ", event);
       handleSearch();
     }
   };
@@ -109,13 +108,7 @@ const Search = (): JSX.Element => {
             />
           </InputRightElement>
         </InputGroup>
-        <SimpleGrid
-          columns={[1, 2, 3]}
-          justifyItems="center"
-          w="100%"
-          spacing="40px"
-          pb="40px"
-        >
+        <SimpleGrid columns={[1, 2, 3]} justifyItems="center" w="100%" spacing="40px" pb="40px">
           {tagsList &&
             tagsList.map((eachTags) => (
               <Button
