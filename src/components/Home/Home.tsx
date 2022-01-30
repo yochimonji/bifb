@@ -20,7 +20,6 @@ const Home = (): JSX.Element => {
 
   useEffect(() => {
     if (history.state) {
-      // 送られてきた条件のタイプの分岐
       const tmpsendDataArray = Object.values(history.state);
       const tagSendDataObject = tmpsendDataArray[1];
 
