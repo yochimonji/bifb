@@ -18,6 +18,8 @@ type ContextType = {
   googleLogin: () => void;
   logout: () => void;
   currentUser: User | null;
+  isReload: boolean;
+  setIsReload: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 // contextの作成
@@ -25,6 +27,8 @@ export const AuthContext = React.createContext<ContextType>({
   googleLogin: () => {},
   logout: () => {},
   currentUser: null,
+  isReload: false,
+  setIsReload: () => {},
 });
 
 type AuthProviderProps = {
@@ -38,6 +42,7 @@ type AuthProviderProps = {
  */
 export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [isReload, setIsReload] = useState(false);
   const auth = getAuth(app);
 
   /**
@@ -112,6 +117,8 @@ export const AuthProvider = (props: AuthProviderProps): JSX.Element => {
         googleLogin,
         logout,
         currentUser,
+        isReload,
+        setIsReload,
       }}
     >
       {props.children}
