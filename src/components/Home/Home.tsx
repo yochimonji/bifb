@@ -11,20 +11,27 @@ const Home = (): JSX.Element => {
   const [sortType, setSortType] = useState("TREND");
   const [productData, setProductData] = useState<DisplayProductProps[]>([]);
   const [tagList, setTagList] = useState<string[]>([]);
+  const [inputSearchText, setInputSearchText] = useState<string[]>([]);
 
   // sortTypeの選択の変更を認識する関数
-  const onChangeSortType: React.ChangeEventHandler<HTMLSelectElement> = (
-    event
-  ) => {
+  const onChangeSortType: React.ChangeEventHandler<HTMLSelectElement> = (event) => {
     setSortType(event.target.value);
   };
 
   useEffect(() => {
     if (history.state) {
-      const tmpTagArray = Object.values(history.state);
-      const tagObject = tmpTagArray[1];
-      if (typeof tagObject === "object" && tagObject != null) {
-        setTagList(Object.values(tagObject));
+      // 送られてきた条件のタイプの分岐
+      const tmpsendDataArray = Object.values(history.state);
+      const tagSendDataObject = tmpsendDataArray[1];
+
+      if (typeof tagSendDataObject === "object" && tagSendDataObject != null) {
+        const sendDataType = Object.keys(tagSendDataObject);
+        if (sendDataType[0] === "parmSearchTags") {
+          setTagList(Object.values(tagSendDataObject));
+        }
+        if (sendDataType[0] === "paramInputText") {
+          setInputSearchText(Object.values(tagSendDataObject));
+        }
       }
     }
   }, []);
@@ -37,10 +44,7 @@ const Home = (): JSX.Element => {
       const userUidSet: Set<string> = new Set();
       const newProductData: DisplayProductProps[] = [];
 
-      const products = (await fetchProducts(
-        sortType,
-        "Desc"
-      )) as QuerySnapshot<DocumentData>;
+      const products = (await fetchProducts(sortType, "Desc")) as QuerySnapshot<DocumentData>;
       products.forEach((product) => {
         userUidSet.add(product.data().userUid);
       });
@@ -52,7 +56,7 @@ const Home = (): JSX.Element => {
             const p = product.data();
             const u = userInfo.data();
             if (p.userUid === u.userUid) {
-              if (tagList.length === 0) {
+              if (tagList.length === 0 && inputSearchText.length === 0) {
                 newProductData.push({
                   productId: product.id,
                   productIconUrl: p.productIconUrl as string,
@@ -64,9 +68,25 @@ const Home = (): JSX.Element => {
                   editDate: p.editDate as string,
                   sumLike: p.sumLike as number,
                 });
-              } else {
+              } else if (tagList.length !== 0 && inputSearchText.length === 0) {
                 tagList.forEach((tag) => {
                   if (product.data().tags.includes(tag)) {
+                    newProductData.push({
+                      productId: product.id,
+                      productIconUrl: p.productIconUrl as string,
+                      userIconUrl: u.userIcon as string,
+                      userName: u.name as string,
+                      productTitle: p.productTitle as string,
+                      productAbstract: p.productAbstract as string,
+                      postDate: p.postDate as string,
+                      editDate: p.editDate as string,
+                      sumLike: p.sumLike as number,
+                    });
+                  }
+                });
+              } else if (tagList.length === 0 && inputSearchText.length !== 0) {
+                inputSearchText.forEach((inputText) => {
+                  if (product.data().productTitle.includes(inputText)) {
                     newProductData.push({
                       productId: product.id,
                       productIconUrl: p.productIconUrl as string,
@@ -87,7 +107,7 @@ const Home = (): JSX.Element => {
         setProductData(newProductData);
       }
     })();
-  }, [sortType, tagList]);
+  }, [sortType, tagList, inputSearchText]);
 
   return (
     <VStack spacing={10} align="stretch" pt="4" pb="12">
