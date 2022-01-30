@@ -67,7 +67,6 @@ const Search = (): JSX.Element => {
 
   // 検索ボタンが押されたときの操作
   const handleSearch = () => {
-    console.log(newInputText);
     history.push("/", { paramInputText: newInputText });
   };
 
@@ -79,7 +78,6 @@ const Search = (): JSX.Element => {
   // 入力画面でEnterが押されたときに検索とみなす
   const handleKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (event): void => {
     if (event.keyCode === 13) {
-      console.log("event: ", event);
       handleSearch();
     }
   };
