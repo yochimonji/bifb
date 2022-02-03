@@ -11,10 +11,6 @@ import {
 } from "@chakra-ui/react";
 import { Link, useHistory, useLocation } from "react-router-dom";
 import moment from "moment";
-// TODO: 警告の除去のため、恐らく使っていないが一応コメントアウトしている
-// import ReactMarkdown from "react-markdown";
-// import remarkGfm from "remark-gfm";
-// import ChackUIRenderer from "chakra-ui-markdown-renderer";
 import {
   QuerySnapshot,
   QueryDocumentSnapshot,
