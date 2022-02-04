@@ -294,9 +294,8 @@ const Product = (): JSX.Element => {
               <TagIcon pt={{ base: "0", md: "2" }} minW="80px" />
               <Wrap>
                 {tags.map((tag, i) => (
-                  <WrapItem>
+                  <WrapItem key={i.toString()}>
                     <Tag
-                      key={i.toString()}
                       rounded="full"
                       py="2"
                       px="4"
