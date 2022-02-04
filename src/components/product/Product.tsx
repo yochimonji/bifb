@@ -287,21 +287,25 @@ const Product = (): JSX.Element => {
         </Stack>
         {/* タグ表示 */}
         <Stack flexDir={{ base: "column", md: "row" }} pl="2">
-          <TagIcon pt={{ base: "0", md: "2" }} minW="80px" />
-          <HStack flexWrap="wrap">
-            {tags.map((tag, i) => (
-              <Tag
-                key={i.toString()}
-                rounded="full"
-                p="2"
-                pl="4"
-                pr="4"
-                fontSize={{ base: "xs", sm: "sm", md: "md" }}
-              >
-                {tag}
-              </Tag>
-            ))}
-          </HStack>
+          {tags[0] !== "" && (
+            <>
+              <TagIcon pt={{ base: "0", md: "2" }} minW="80px" />
+              <HStack flexWrap="wrap">
+                {tags.map((tag, i) => (
+                  <Tag
+                    key={i.toString()}
+                    rounded="full"
+                    p="2"
+                    pl="4"
+                    pr="4"
+                    fontSize={{ base: "xs", sm: "sm", md: "md" }}
+                  >
+                    {tag}
+                  </Tag>
+                ))}
+              </HStack>
+            </>
+          )}
         </Stack>
         <Divider pt="4" />
         {/* リンク、いいね、本文を表示 */}
