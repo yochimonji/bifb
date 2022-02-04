@@ -8,6 +8,8 @@ import {
   Avatar,
   Tag,
   Divider,
+  Wrap,
+  WrapItem,
 } from "@chakra-ui/react";
 import { Link, useHistory, useLocation } from "react-router-dom";
 import moment from "moment";
@@ -290,20 +292,21 @@ const Product = (): JSX.Element => {
           {tags[0] !== "" && (
             <>
               <TagIcon pt={{ base: "0", md: "2" }} minW="80px" />
-              <HStack flexWrap="wrap">
+              <Wrap>
                 {tags.map((tag, i) => (
-                  <Tag
-                    key={i.toString()}
-                    rounded="full"
-                    p="2"
-                    pl="4"
-                    pr="4"
-                    fontSize={{ base: "xs", sm: "sm", md: "md" }}
-                  >
-                    {tag}
-                  </Tag>
+                  <WrapItem>
+                    <Tag
+                      key={i.toString()}
+                      rounded="full"
+                      py="2"
+                      px="4"
+                      fontSize={{ base: "xs", sm: "sm", md: "md" }}
+                    >
+                      {tag}
+                    </Tag>
+                  </WrapItem>
                 ))}
-              </HStack>
+              </Wrap>
             </>
           )}
         </Stack>
