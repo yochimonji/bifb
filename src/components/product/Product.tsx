@@ -320,13 +320,6 @@ const Product = (): JSX.Element => {
           handleClickLikeButton={handleClickLikeButton}
         />
         <MarkdownPreview text={mainText} isFeedback />
-        <LinkLike
-          githubUrl={githubUrl}
-          productUrl={productUrl}
-          sumLike={sumLike}
-          isLike={isLike}
-          handleClickLikeButton={handleClickLikeButton}
-        />
         <Divider pt="4" />
         <Heading size="md">フィードバック</Heading>
         {/* フィードバックの表示 */}
