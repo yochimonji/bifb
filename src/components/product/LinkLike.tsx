@@ -1,5 +1,15 @@
 import React from "react";
-import { HStack, Link, Button, Icon } from "@chakra-ui/react";
+import {
+  HStack,
+  Link,
+  Button,
+  Icon,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverHeader,
+  PopoverArrow,
+} from "@chakra-ui/react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { GithubIcon, ProductIcon } from "..";
 
@@ -15,13 +25,39 @@ const LinkLike = (props: LinkLikeProps): JSX.Element => (
   <HStack justify="space-between">
     {/* Githubと作品のリンクを表示 */}
     <HStack>
-      <Link href={props.githubUrl} isExternal>
-        <GithubIcon />
-      </Link>
+      {props.githubUrl && (
+        <Popover trigger="hover">
+          <PopoverTrigger>
+            <Link href={props.githubUrl} isExternal>
+              <GithubIcon />
+            </Link>
+          </PopoverTrigger>
+          <PopoverContent>
+            <PopoverArrow />
+            <PopoverHeader>
+              <Link href={props.githubUrl} isExternal fontSize="sm">
+                {props.githubUrl}
+              </Link>
+            </PopoverHeader>
+          </PopoverContent>
+        </Popover>
+      )}
       {props.productUrl && (
-        <Link href={props.productUrl} isExternal>
-          <ProductIcon />
-        </Link>
+        <Popover trigger="hover">
+          <PopoverTrigger>
+            <Link href={props.productUrl} isExternal>
+              <ProductIcon />
+            </Link>
+          </PopoverTrigger>
+          <PopoverContent>
+            <PopoverArrow />
+            <PopoverHeader>
+              <Link href={props.productUrl} isExternal fontSize="sm">
+                {props.productUrl}
+              </Link>
+            </PopoverHeader>
+          </PopoverContent>
+        </Popover>
       )}
     </HStack>
     {/* いいねボタン表示 */}
