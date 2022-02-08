@@ -72,7 +72,7 @@ const Search = (): JSX.Element => {
 
   // タグボタンが押された時の操作
   const handleClickTagButton = (tag: string) => {
-    history.push("/", { parmSearchTags: tag });
+    history.push("/", { paramSearchTags: tag });
   };
 
   // 入力画面でEnterが押されたときに検索とみなす

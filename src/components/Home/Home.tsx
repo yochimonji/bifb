@@ -25,7 +25,7 @@ const Home = (): JSX.Element => {
 
       if (typeof tagSendDataObject === "object" && tagSendDataObject != null) {
         const sendDataType = Object.keys(tagSendDataObject);
-        if (sendDataType[0] === "parmSearchTags") {
+        if (sendDataType[0] === "paramSearchTags") {
           setTagList(Object.values(tagSendDataObject));
         }
         if (sendDataType[0] === "paramInputText") {
