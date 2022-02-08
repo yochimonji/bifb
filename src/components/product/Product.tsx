@@ -8,13 +8,11 @@ import {
   Avatar,
   Tag,
   Divider,
+  Wrap,
+  WrapItem,
 } from "@chakra-ui/react";
 import { Link, useHistory, useLocation } from "react-router-dom";
 import moment from "moment";
-// TODO: 警告の除去のため、恐らく使っていないが一応コメントアウトしている
-// import ReactMarkdown from "react-markdown";
-// import remarkGfm from "remark-gfm";
-// import ChackUIRenderer from "chakra-ui-markdown-renderer";
 import {
   QuerySnapshot,
   QueryDocumentSnapshot,
@@ -291,21 +289,25 @@ const Product = (): JSX.Element => {
         </Stack>
         {/* タグ表示 */}
         <Stack flexDir={{ base: "column", md: "row" }} pl="2">
-          <TagIcon pt={{ base: "0", md: "2" }} minW="80px" />
-          <HStack flexWrap="wrap">
-            {tags.map((tag, i) => (
-              <Tag
-                key={i.toString()}
-                rounded="full"
-                p="2"
-                pl="4"
-                pr="4"
-                fontSize={{ base: "xs", sm: "sm", md: "md" }}
-              >
-                {tag}
-              </Tag>
-            ))}
-          </HStack>
+          {tags[0] !== "" && (
+            <>
+              <TagIcon pt={{ base: "0", md: "2" }} minW="80px" />
+              <Wrap>
+                {tags.map((tag, i) => (
+                  <WrapItem key={i.toString()}>
+                    <Tag
+                      rounded="full"
+                      py="2"
+                      px="4"
+                      fontSize={{ base: "xs", sm: "sm", md: "md" }}
+                    >
+                      {tag}
+                    </Tag>
+                  </WrapItem>
+                ))}
+              </Wrap>
+            </>
+          )}
         </Stack>
         <Divider pt="4" />
         {/* リンク、いいね、本文を表示 */}
@@ -317,13 +319,6 @@ const Product = (): JSX.Element => {
           handleClickLikeButton={handleClickLikeButton}
         />
         <MarkdownPreview text={mainText} isFeedback />
-        <LinkLike
-          githubUrl={githubUrl}
-          productUrl={productUrl}
-          sumLike={sumLike}
-          isLike={isLike}
-          handleClickLikeButton={handleClickLikeButton}
-        />
         <Divider pt="4" />
         <Heading size="md">フィードバック</Heading>
         {/* フィードバックの表示 */}
