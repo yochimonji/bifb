@@ -22,16 +22,13 @@ const Home = (): JSX.Element => {
   };
 
   useEffect(() => {
-    if (location.state) {
-      const sendStatusKeyArray = Object.keys(location.state);
-      if (sendStatusKeyArray[0] === "paramSearchTags") {
-        setSearchStatus("paramSearchTags");
-        setTagList((location.state as { paramSearchTags: string }).paramSearchTags);
-      }
-      if (sendStatusKeyArray[0] === "paramInputText") {
-        setSearchStatus("paramInputText");
-        setInputSearchText((location.state as { paramInputText: string }).paramInputText);
-      }
+    if (location.state.paramSearchTags) {
+      setSearchStatus("paramSearchTags");
+      setTagList(location.state.paramSearchTags);
+    }
+    if (location.state.paramInputText) {
+      setSearchStatus("paramInputText");
+      setInputSearchText(location.state.paramInputText);
     }
   }, [location]);
 
