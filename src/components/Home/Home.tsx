@@ -24,6 +24,7 @@ const Home = (): JSX.Element => {
   };
 
   useEffect(() => {
+    if (!location.state) return;
     if (location.state.paramSearchTags) {
       setSearchStatus("paramSearchTags");
       setTagList(location.state.paramSearchTags);
