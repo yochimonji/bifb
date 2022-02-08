@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable no-restricted-globals */
 import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { HStack, VStack, Box, Select } from "@chakra-ui/react";
 import { QuerySnapshot, DocumentData } from "firebase/firestore";
 import { fetchProducts, fetchUserInfos } from "../../firebase/firestore";
@@ -10,7 +11,10 @@ import { DisplayProducts, DisplayTagList, DisplayProductProps } from "../index";
 const Home = (): JSX.Element => {
   const [sortType, setSortType] = useState("TREND");
   const [productData, setProductData] = useState<DisplayProductProps[]>([]);
-  const [tagList, setTagList] = useState<string[]>([]);
+  const [tagList, setTagList] = useState<string>();
+  const [inputSearchText, setInputSearchText] = useState<string>();
+  const [searchStatus, setSearchStatus] = useState<string>("");
+  const location = useLocation();
 
   // sortTypeの選択の変更を認識する関数
   const onChangeSortType: React.ChangeEventHandler<HTMLSelectElement> = (
@@ -20,14 +24,15 @@ const Home = (): JSX.Element => {
   };
 
   useEffect(() => {
-    if (history.state) {
-      const tmpTagArray = Object.values(history.state);
-      const tagObject = tmpTagArray[1];
-      if (typeof tagObject === "object" && tagObject != null) {
-        setTagList(Object.values(tagObject));
-      }
+    if (location.state.paramSearchTags) {
+      setSearchStatus("paramSearchTags");
+      setTagList(location.state.paramSearchTags);
     }
-  }, []);
+    if (location.state.paramInputText) {
+      setSearchStatus("paramInputText");
+      setInputSearchText(location.state.paramInputText);
+    }
+  }, [location]);
 
   // 作品データの取得
   useEffect(() => {
@@ -53,7 +58,7 @@ const Home = (): JSX.Element => {
             const p = product.data();
             const u = userInfo.data();
             if (p.userUid === u.userUid) {
-              if (tagList.length === 0) {
+              if (searchStatus === "") {
                 newProductData.push({
                   productId: product.id,
                   productIconUrl: p.productIconUrl as string,
@@ -65,22 +70,34 @@ const Home = (): JSX.Element => {
                   editDate: p.editDate as string,
                   sumLike: p.sumLike as number,
                 });
-              } else {
-                tagList.forEach((tag) => {
-                  if (product.data().tags.includes(tag)) {
-                    newProductData.push({
-                      productId: product.id,
-                      productIconUrl: p.productIconUrl as string,
-                      userIconUrl: u.userIcon as string,
-                      userName: u.name as string,
-                      productTitle: p.productTitle as string,
-                      productAbstract: p.productAbstract as string,
-                      postDate: p.postDate as string,
-                      editDate: p.editDate as string,
-                      sumLike: p.sumLike as number,
-                    });
-                  }
-                });
+              } else if (searchStatus === "paramSearchTags") {
+                if (product.data().tags.includes(tagList)) {
+                  newProductData.push({
+                    productId: product.id,
+                    productIconUrl: p.productIconUrl as string,
+                    userIconUrl: u.userIcon as string,
+                    userName: u.name as string,
+                    productTitle: p.productTitle as string,
+                    productAbstract: p.productAbstract as string,
+                    postDate: p.postDate as string,
+                    editDate: p.editDate as string,
+                    sumLike: p.sumLike as number,
+                  });
+                }
+              } else if (searchStatus === "paramInputText") {
+                if (product.data().productTitle.includes(inputSearchText)) {
+                  newProductData.push({
+                    productId: product.id,
+                    productIconUrl: p.productIconUrl as string,
+                    userIconUrl: u.userIcon as string,
+                    userName: u.name as string,
+                    productTitle: p.productTitle as string,
+                    productAbstract: p.productAbstract as string,
+                    postDate: p.postDate as string,
+                    editDate: p.editDate as string,
+                    sumLike: p.sumLike as number,
+                  });
+                }
               }
             }
           });
@@ -94,7 +111,7 @@ const Home = (): JSX.Element => {
     return () => {
       isMounted = false;
     };
-  }, [sortType, tagList]);
+  }, [sortType, tagList, inputSearchText, searchStatus]);
 
   return (
     <VStack spacing={10} align="stretch" pt="4" pb="12">
