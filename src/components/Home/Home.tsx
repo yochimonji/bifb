@@ -20,8 +20,8 @@ const Home = (): JSX.Element => {
 
   useEffect(() => {
     if (history.state) {
-      const tmpsendDataArray = Object.values(history.state);
-      const tagSendDataObject = tmpsendDataArray[1];
+      const tmpSendDataArray = Object.values(history.state);
+      const tagSendDataObject = tmpSendDataArray[1];
 
       if (typeof tagSendDataObject === "object" && tagSendDataObject != null) {
         const sendDataType = Object.keys(tagSendDataObject);
