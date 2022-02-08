@@ -31,6 +31,7 @@ const Home = (): JSX.Element => {
 
   // 作品データの取得
   useEffect(() => {
+    let isMounted = true;
     // 即時関数を使って非同期でプロダクトデータを読み込む
     // eslint-disable-next-line no-void
     void (async () => {
@@ -84,9 +85,14 @@ const Home = (): JSX.Element => {
             }
           });
         });
-        setProductData(newProductData);
+        if (isMounted) {
+          setProductData(newProductData);
+        }
       }
     })();
+    return () => {
+      isMounted = false;
+    };
   }, [sortType, tagList]);
 
   return (
