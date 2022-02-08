@@ -31,7 +31,7 @@ const Home = (): JSX.Element => {
 
   // 作品データの取得
   useEffect(() => {
-    let isMounted = true;
+    let isMounted = true; // mount状態を監視する変数
     // 即時関数を使って非同期でプロダクトデータを読み込む
     // eslint-disable-next-line no-void
     void (async () => {
@@ -90,6 +90,7 @@ const Home = (): JSX.Element => {
         }
       }
     })();
+    // newProductDataをRequest中に画面遷移されてメモリリークが発生するのを防ぐ
     return () => {
       isMounted = false;
     };
