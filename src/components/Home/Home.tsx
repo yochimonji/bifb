@@ -106,10 +106,16 @@ const Home = (): JSX.Element => {
     <VStack spacing={10} align="stretch" pt="4" pb="12">
       {/* 上段(検索条件・トレンド等の選択) */}
       <HStack w="100%" spacing="0px" alignItems="center" flexWrap="wrap">
-        <Box w="10%" padding="37px 20px 35px 0px" minW="90px">
-          検索条件:
-        </Box>
-        <DisplayTagList tagList={tagList} setTagList={setTagList} setSearchStatus={setSearchStatus} />
+        {tagList ? (
+          <>
+            <Box w="10%" padding="37px 20px 35px 0px" minW="90px">
+              検索条件:
+            </Box>
+            <DisplayTagList tagList={tagList} setTagList={setTagList} setSearchStatus={setSearchStatus} />
+          </>
+        ) : (
+          <Box w="80%" padding="37px 20px 35px 0px" minW="90px" />
+        )}
         <Box w="20%" padding="30px 0px">
           <Select name="sortType" onChange={onChangeSortType}>
             <option value="TREND">トレンド</option>
