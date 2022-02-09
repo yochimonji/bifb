@@ -7,7 +7,7 @@ type Props = {
   setSearchStatus: Dispatch<SetStateAction<string>>;
 };
 
-const DisplayTags = (props: Props): JSX.Element => (
+const SearchCondition = (props: Props): JSX.Element => (
   <HStack w="70%" textAlign="center" spacing={4} minW="450px">
     <Tag
       key={props.searchCondition}
@@ -29,4 +29,4 @@ const DisplayTags = (props: Props): JSX.Element => (
   </HStack>
 );
 
-export default DisplayTags;
+export default SearchCondition;
