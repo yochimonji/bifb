@@ -128,8 +128,8 @@ const Product = (): JSX.Element => {
         if (productData) {
           const postDateISO = new Date(productData.postDate).toISOString();
           const editDateISO = new Date(productData.editDate).toISOString();
-          const formatedPostDate = moment(postDateISO).format("YYYY年MM月DD日");
-          const formatedEditDate = moment(editDateISO).format("YYYY年MM月DD日");
+          const formatedPostDate = moment(new Date(postDateISO).toISOString()).format("YYYY年MM月DD日");
+          const formatedEditDate = moment(new Date(editDateISO).toISOString()).format("YYYY年MM月DD日");
           setTitle(productData.productTitle);
           setAbstract(productData.productAbstract);
           setIconUrl(productData.productIconUrl);
@@ -158,7 +158,7 @@ const Product = (): JSX.Element => {
                   newFeedback.userName = userInfo.name as string;
                   setFeedbacks((prev) =>
                     [...prev, newFeedback].sort((a, b) => {
-                      if (moment(a.postDate).format("YYYYMMDDHHmmss") < moment(b.postDate).format("YYYYMMDDHHmmss")) {
+                      if (moment(new Date(a.postDate).toISOString()) < moment(new Date(b.postDate).toISOString())) {
                         return -1;
                       }
                       return 1;
@@ -284,8 +284,7 @@ const Product = (): JSX.Element => {
                 <HStack spacing="4">
                   <Text fontSize={{ base: "xs", md: "sm" }}>{feedback.userName}</Text>
                   <Text fontSize={{ base: "xs", md: "sm" }}>
-                    {moment(feedback.postDate).format("YYYY年MM月DD日")}
-                    {/* {console.log(feedback.postDate)} */}
+                    {moment(new Date(feedback.postDate).toISOString()).format("YYYY年MM月DD日")}
                   </Text>
                 </HStack>
                 <MarkdownPreview text={feedback.feedbackText} isFeedback />
