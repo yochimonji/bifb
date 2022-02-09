@@ -1,31 +1,10 @@
 import React, { useState, useEffect, useContext } from "react";
-import {
-  Stack,
-  HStack,
-  Image,
-  Text,
-  Heading,
-  Avatar,
-  Tag,
-  Divider,
-  Wrap,
-  WrapItem,
-} from "@chakra-ui/react";
+import { Stack, HStack, Image, Text, Heading, Avatar, Tag, Divider, Wrap, WrapItem } from "@chakra-ui/react";
 import { Link, useHistory, useLocation } from "react-router-dom";
 import moment from "moment";
-import {
-  QuerySnapshot,
-  QueryDocumentSnapshot,
-  DocumentData,
-} from "firebase/firestore";
+import { QuerySnapshot, QueryDocumentSnapshot, DocumentData } from "firebase/firestore";
 
-import {
-  TagIcon,
-  LinkLike,
-  MarkdownForm,
-  EditDeleteButton,
-  MarkdownPreview,
-} from "../index";
+import { TagIcon, LinkLike, MarkdownForm, EditDeleteButton, MarkdownPreview } from "../index";
 import {
   fetchProduct,
   fetchUserInfo,
@@ -80,38 +59,31 @@ const Product = (): JSX.Element => {
   /**
    * いいねボタンをクリックした際の動作を行う関数
    */
-  const handleClickLikeButton: React.MouseEventHandler<HTMLButtonElement> =
-    () => {
-      setIsLike((prev) => {
-        let condition = "UP";
-        if (prev) {
-          condition = "DOWN";
-        } else {
-          condition = "UP";
-        }
-        if (currentUser) {
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const tmp = countLikeProduct(
-            productId,
-            condition,
-            currentUser?.uid
-          ).then((newSumLike) => {
-            if (typeof newSumLike === "number") {
-              setSumLike(newSumLike);
-            }
-          });
-        }
-        return !prev;
-      });
-    };
+  const handleClickLikeButton: React.MouseEventHandler<HTMLButtonElement> = () => {
+    setIsLike((prev) => {
+      let condition = "UP";
+      if (prev) {
+        condition = "DOWN";
+      } else {
+        condition = "UP";
+      }
+      if (currentUser) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const tmp = countLikeProduct(productId, condition, currentUser?.uid).then((newSumLike) => {
+          if (typeof newSumLike === "number") {
+            setSumLike(newSumLike);
+          }
+        });
+      }
+      return !prev;
+    });
+  };
 
   /**
    * マークダウンの入力の変更に合わせてfeedbackTextを変更
    * @param event マークダウンの入力イベント
    */
-  const handleFeedbackText: React.ChangeEventHandler<HTMLTextAreaElement> = (
-    event
-  ) => {
+  const handleFeedbackText: React.ChangeEventHandler<HTMLTextAreaElement> = (event) => {
     setFeedbackText(event.target.value);
   };
 
@@ -122,11 +94,7 @@ const Product = (): JSX.Element => {
     // const canPost = validate();
     // if (currentUser != null && canPost) {
     if (currentUser !== null && feedbackText) {
-      const feedbackId = await postFeedbacks(
-        currentUser.uid,
-        feedbackText,
-        productId
-      );
+      const feedbackId = await postFeedbacks(currentUser.uid, feedbackText, productId);
       if (feedbackId) {
         setFeedbackText("");
         history.go(0);
@@ -183,26 +151,21 @@ const Product = (): JSX.Element => {
             (feedbackDoc: QueryDocumentSnapshot<DocumentData>) => {
               const feedbackData = feedbackDoc.data() as FeedbackDataType;
               // eslint-disable-next-line @typescript-eslint/no-unused-vars
-              const tmpUserInfo = fetchUserInfo(feedbackData.userUid).then(
-                (userInfo) => {
-                  if (userInfo) {
-                    const newFeedback = feedbackData as FeedbackType;
-                    newFeedback.userIcon = userInfo.userIcon as string;
-                    newFeedback.userName = userInfo.name as string;
-                    setFeedbacks((prev) =>
-                      [...prev, newFeedback].sort((a, b) => {
-                        if (
-                          moment(a.postDate).format("YYYYMMDDHHmmss") <
-                          moment(b.postDate).format("YYYYMMDDHHmmss")
-                        ) {
-                          return -1;
-                        }
-                        return 1;
-                      })
-                    );
-                  }
+              const tmpUserInfo = fetchUserInfo(feedbackData.userUid).then((userInfo) => {
+                if (userInfo) {
+                  const newFeedback = feedbackData as FeedbackType;
+                  newFeedback.userIcon = userInfo.userIcon as string;
+                  newFeedback.userName = userInfo.name as string;
+                  setFeedbacks((prev) =>
+                    [...prev, newFeedback].sort((a, b) => {
+                      if (moment(a.postDate).format("YYYYMMDDHHmmss") < moment(b.postDate).format("YYYYMMDDHHmmss")) {
+                        return -1;
+                      }
+                      return 1;
+                    })
+                  );
                 }
-              );
+              });
             }
           );
         }
@@ -242,10 +205,7 @@ const Product = (): JSX.Element => {
     <>
       <Stack spacing={{ base: "4", md: "2" }} pt={{ base: "4", sm: "8" }}>
         {currentUser?.uid === userUid && (
-          <EditDeleteButton
-            handleClickDelete={handleClickDelete}
-            handleClickEdit={handleClickEdit}
-          />
+          <EditDeleteButton handleClickDelete={handleClickDelete} handleClickEdit={handleClickEdit} />
         )}
         <HStack spacing={{ base: "2", sm: "4", md: "6" }} align="flex-start">
           <Stack w={{ base: "30%", sm: "25%", md: "20%" }}>
@@ -257,17 +217,12 @@ const Product = (): JSX.Element => {
             w={{ base: "70%", sm: "75%", md: "80%" }}
             spacing={{ base: "4", sm: "8", md: "12" }}
           >
-            <Heading fontSize={{ base: "lg", sm: "xl", md: "2xl" }}>
-              {title}
-            </Heading>
+            <Heading fontSize={{ base: "lg", sm: "xl", md: "2xl" }}>{title}</Heading>
             <Text fontSize={{ base: "sm", md: "md" }}>{abstract}</Text>
           </Stack>
         </HStack>
         {/* ユーザー名・公開日表示 */}
-        <Stack
-          flexDir={{ base: "column", sm: "row" }}
-          justify={{ base: "flex-start", sm: "center" }}
-        >
+        <Stack flexDir={{ base: "column", sm: "row" }} justify={{ base: "flex-start", sm: "center" }}>
           <HStack
             as={Link}
             w="20%"
@@ -278,11 +233,7 @@ const Product = (): JSX.Element => {
             <Avatar name={userName} src={userIcon} size="sm" />
             <Text>{userName}</Text>
           </HStack>
-          <Text
-            w="80%"
-            pl={{ base: "0", sm: "6" }}
-            fontSize={{ base: "xs", md: "sm" }}
-          >
+          <Text w="80%" pl={{ base: "0", sm: "6" }} fontSize={{ base: "xs", md: "sm" }}>
             投稿日{postDate}
             {postDate !== editDate && ` 編集日${editDate}`}
           </Text>
@@ -295,12 +246,7 @@ const Product = (): JSX.Element => {
               <Wrap>
                 {tags.map((tag, i) => (
                   <WrapItem key={i.toString()}>
-                    <Tag
-                      rounded="full"
-                      py="2"
-                      px="4"
-                      fontSize={{ base: "xs", sm: "sm", md: "md" }}
-                    >
+                    <Tag rounded="full" py="2" px="4" fontSize={{ base: "xs", sm: "sm", md: "md" }}>
                       {tag}
                     </Tag>
                   </WrapItem>
@@ -336,9 +282,7 @@ const Product = (): JSX.Element => {
               />
               <Stack>
                 <HStack spacing="4">
-                  <Text fontSize={{ base: "xs", md: "sm" }}>
-                    {feedback.userName}
-                  </Text>
+                  <Text fontSize={{ base: "xs", md: "sm" }}>{feedback.userName}</Text>
                   <Text fontSize={{ base: "xs", md: "sm" }}>
                     {moment(feedback.postDate).format("YYYY年MM月DD日")}
                     {/* {console.log(feedback.postDate)} */}
