@@ -13,7 +13,6 @@ const DisplayTags = (props: Props): JSX.Element => (
       <TagLabel>{props.tagList}</TagLabel>
       <TagCloseButton
         onClick={() => {
-          console.log("Close Button");
           props.setTagList(undefined);
           props.setSearchStatus("");
         }}
