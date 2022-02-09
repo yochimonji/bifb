@@ -109,7 +109,7 @@ const Home = (): JSX.Element => {
         <Box w="10%" padding="37px 20px 35px 0px" minW="90px">
           検索条件:
         </Box>
-        <DisplayTagList tagList={tagList} />
+        <DisplayTagList tagList={tagList} setTagList={setTagList} setSearchStatus={setSearchStatus} />
         <Box w="20%" padding="30px 0px">
           <Select name="sortType" onChange={onChangeSortType}>
             <option value="TREND">トレンド</option>
