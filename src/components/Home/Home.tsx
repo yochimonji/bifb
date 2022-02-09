@@ -11,8 +11,6 @@ import { DisplayProducts, DisplayTagList, DisplayProductProps } from "../index";
 const Home = (): JSX.Element => {
   const [sortType, setSortType] = useState("TREND");
   const [productData, setProductData] = useState<DisplayProductProps[]>([]);
-  const [tagList, setTagList] = useState<string>();
-  const [inputSearchText, setInputSearchText] = useState<string>();
   const [searchCondition, setSearchCondition] = useState<string | undefined>();
   const [searchStatus, setSearchStatus] = useState<string>("");
   const location = useLocation();
@@ -26,12 +24,10 @@ const Home = (): JSX.Element => {
     if (!location.state) return;
     if (location.state.paramSearchTags) {
       setSearchStatus("paramSearchTags");
-      setTagList(location.state.paramSearchTags);
       setSearchCondition(location.state.paramSearchTags);
     }
     if (location.state.paramInputText) {
       setSearchStatus("paramInputText");
-      setInputSearchText(location.state.paramInputText);
       setSearchCondition(location.state.paramInputText);
     }
   }, [location]);
@@ -69,7 +65,7 @@ const Home = (): JSX.Element => {
                   sumLike: p.sumLike as number,
                 });
               } else if (searchStatus === "paramSearchTags") {
-                if (product.data().tags.includes(tagList)) {
+                if (product.data().tags.includes(searchCondition)) {
                   newProductData.push({
                     productId: product.id,
                     productIconUrl: p.productIconUrl as string,
@@ -83,7 +79,7 @@ const Home = (): JSX.Element => {
                   });
                 }
               } else if (searchStatus === "paramInputText") {
-                if (product.data().productTitle.includes(inputSearchText)) {
+                if (product.data().productTitle.includes(searchCondition)) {
                   newProductData.push({
                     productId: product.id,
                     productIconUrl: p.productIconUrl as string,
@@ -103,7 +99,7 @@ const Home = (): JSX.Element => {
         setProductData(newProductData);
       }
     })();
-  }, [sortType, tagList, inputSearchText, searchStatus]);
+  }, [sortType, searchCondition, searchStatus]);
 
   return (
     <VStack spacing={10} align="stretch" pt="4" pb="12">
