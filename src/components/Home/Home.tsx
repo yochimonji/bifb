@@ -6,7 +6,7 @@ import { useLocation } from "react-router-dom";
 import { HStack, VStack, Box, Select } from "@chakra-ui/react";
 import { QuerySnapshot, DocumentData } from "firebase/firestore";
 import { fetchProducts, fetchUserInfos } from "../../firebase/firestore";
-import { DisplayProducts, DisplayTagList, DisplayProductProps } from "../index";
+import { DisplayProducts, SearchCondition, DisplayProductProps } from "../index";
 
 const Home = (): JSX.Element => {
   const [sortType, setSortType] = useState("TREND");
@@ -112,7 +112,7 @@ const Home = (): JSX.Element => {
             <Box w="10%" padding="37px 20px 35px 0px" minW="90px">
               検索条件:
             </Box>
-            <DisplayTagList
+            <SearchCondition
               searchCondition={searchCondition}
               setSearchCondition={setSearchCondition}
               setSearchStatus={setSearchStatus}
