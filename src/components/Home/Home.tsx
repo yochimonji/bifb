@@ -13,6 +13,7 @@ const Home = (): JSX.Element => {
   const [productData, setProductData] = useState<DisplayProductProps[]>([]);
   const [tagList, setTagList] = useState<string>();
   const [inputSearchText, setInputSearchText] = useState<string>();
+  const [searchCondition, setSearchCondition] = useState<string | undefined>();
   const [searchStatus, setSearchStatus] = useState<string>("");
   const location = useLocation();
 
@@ -26,10 +27,12 @@ const Home = (): JSX.Element => {
     if (location.state.paramSearchTags) {
       setSearchStatus("paramSearchTags");
       setTagList(location.state.paramSearchTags);
+      setSearchCondition(location.state.paramSearchTags);
     }
     if (location.state.paramInputText) {
       setSearchStatus("paramInputText");
       setInputSearchText(location.state.paramInputText);
+      setSearchCondition(location.state.paramInputText);
     }
   }, [location]);
 
@@ -106,15 +109,19 @@ const Home = (): JSX.Element => {
     <VStack spacing={10} align="stretch" pt="4" pb="12">
       {/* 上段(検索条件・トレンド等の選択) */}
       <HStack w="100%" spacing="0px" alignItems="center" flexWrap="wrap">
-        {tagList ? (
+        {searchStatus === "" ? (
+          <Box w="80%" padding="37px 20px 35px 0px" minW="90px" />
+        ) : (
           <>
             <Box w="10%" padding="37px 20px 35px 0px" minW="90px">
               検索条件:
             </Box>
-            <DisplayTagList tagList={tagList} setTagList={setTagList} setSearchStatus={setSearchStatus} />
+            <DisplayTagList
+              searchCondition={searchCondition}
+              setSearchCondition={setSearchCondition}
+              setSearchStatus={setSearchStatus}
+            />
           </>
-        ) : (
-          <Box w="80%" padding="37px 20px 35px 0px" minW="90px" />
         )}
         <Box w="20%" padding="30px 0px">
           <Select name="sortType" onChange={onChangeSortType}>
