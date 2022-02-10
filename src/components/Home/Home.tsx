@@ -17,7 +17,9 @@ const Home = (): JSX.Element => {
   const location = useLocation();
 
   // sortTypeの選択の変更を認識する関数
-  const onChangeSortType: React.ChangeEventHandler<HTMLSelectElement> = (event) => {
+  const onChangeSortType: React.ChangeEventHandler<HTMLSelectElement> = (
+    event
+  ) => {
     setSortType(event.target.value);
   };
 
@@ -35,13 +37,17 @@ const Home = (): JSX.Element => {
 
   // 作品データの取得
   useEffect(() => {
+    let isMounted = true; // mount状態を監視する変数
     // 即時関数を使って非同期でプロダクトデータを読み込む
     // eslint-disable-next-line no-void
     void (async () => {
       const userUidSet: Set<string> = new Set();
       const newProductData: DisplayProductProps[] = [];
 
-      const products = (await fetchProducts(sortType, "Desc")) as QuerySnapshot<DocumentData>;
+      const products = (await fetchProducts(
+        sortType,
+        "Desc"
+      )) as QuerySnapshot<DocumentData>;
       products.forEach((product) => {
         userUidSet.add(product.data().userUid);
       });
@@ -97,9 +103,15 @@ const Home = (): JSX.Element => {
             }
           });
         });
-        setProductData(newProductData);
+        if (isMounted) {
+          setProductData(newProductData);
+        }
       }
     })();
+    // newProductDataをRequest中に画面遷移されてメモリリークが発生するのを防ぐ
+    return () => {
+      isMounted = false;
+    };
   }, [sortType, tagList, inputSearchText, searchStatus]);
 
   return (
