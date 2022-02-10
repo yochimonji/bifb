@@ -25,7 +25,6 @@ const Home = (): JSX.Element => {
   useEffect(() => {
     const perfEntries = performance.getEntriesByType("navigation");
     perfEntries.forEach((pe) => {
-      console.log(pe.type);
       if (pe.type === "reload") {
         history.push("/");
       }
