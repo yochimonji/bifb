@@ -21,16 +21,16 @@ const Home = (): JSX.Element => {
   };
 
   useEffect(() => {
-    if (!location.state) return;
-    if (location.state.paramSearchTags) {
+    if (!location.state) {
+      setSearchStatus("");
+    } else if (location.state.paramSearchTags) {
       setSearchStatus("paramSearchTags");
       setSearchCondition(location.state.paramSearchTags);
-    }
-    if (location.state.paramInputText) {
+    } else if (location.state.paramInputText) {
       setSearchStatus("paramInputText");
       setSearchCondition(location.state.paramInputText);
     }
-  }, [location]);
+  }, [location.state]);
 
   // 作品データの取得
   useEffect(() => {
@@ -114,8 +114,8 @@ const Home = (): JSX.Element => {
             </Box>
             <SearchCondition
               searchCondition={searchCondition}
-              setSearchCondition={setSearchCondition}
-              setSearchStatus={setSearchStatus}
+              // setSearchCondition={setSearchCondition}
+              // setSearchStatus={setSearchStatus}
             />
           </>
         )}
