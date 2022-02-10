@@ -25,7 +25,7 @@ const Home = (): JSX.Element => {
   useEffect(() => {
     const perfEntries = performance.getEntriesByType("navigation");
     perfEntries.forEach((pe) => {
-      if (pe.type === "reload") {
+      if ((pe as unknown as { type: string }).type === "reload") {
         history.push("/");
       }
     });
@@ -45,7 +45,7 @@ const Home = (): JSX.Element => {
 
   // 作品データの取得
   useEffect(() => {
-    let isMounted = true; // mount状態を監視する変数
+    const isMounted = true; // mount状態を監視する変数
     // 即時関数を使って非同期でプロダクトデータを読み込む
     // eslint-disable-next-line no-void
     void (async () => {
