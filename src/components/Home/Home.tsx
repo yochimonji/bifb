@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable no-restricted-globals */
 import React, { useState, useEffect } from "react";
-import { useHistory, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { HStack, VStack, Box, Select } from "@chakra-ui/react";
 import { QuerySnapshot, DocumentData } from "firebase/firestore";
 import { fetchProducts, fetchUserInfos } from "../../firebase/firestore";
@@ -14,22 +14,11 @@ const Home = (): JSX.Element => {
   const [searchCondition, setSearchCondition] = useState<string | undefined>();
   const [searchStatus, setSearchStatus] = useState<string>("");
   const location = useLocation();
-  const history = useHistory();
 
   // sortTypeの選択の変更を認識する関数
   const onChangeSortType: React.ChangeEventHandler<HTMLSelectElement> = (event) => {
     setSortType(event.target.value);
   };
-
-  // リロードが走ったときに、location.state の値が残っている場合の対処
-  useEffect(() => {
-    const perfEntries = performance.getEntriesByType("navigation");
-    perfEntries.forEach((pe) => {
-      if ((pe as unknown as { type: string }).type === "reload") {
-        history.push("/");
-      }
-    });
-  }, [history]);
 
   useEffect(() => {
     if (!location.state) {
