@@ -24,7 +24,7 @@ type LinkLikeProps = {
 const LinkLike = (props: LinkLikeProps): JSX.Element => (
   <HStack justify="space-between">
     {/* Githubと作品のリンクを表示 */}
-    <HStack>
+    <HStack spacing="0">
       {props.githubUrl && (
         <Popover trigger="hover">
           <PopoverTrigger>
@@ -45,7 +45,7 @@ const LinkLike = (props: LinkLikeProps): JSX.Element => (
       {props.productUrl && (
         <Popover trigger="hover">
           <PopoverTrigger>
-            <Link href={props.productUrl} isExternal>
+            <Link href={props.productUrl} isExternal pl="4">
               <ProductIcon />
             </Link>
           </PopoverTrigger>

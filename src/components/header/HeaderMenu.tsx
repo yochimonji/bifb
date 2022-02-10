@@ -15,17 +15,17 @@ const HeaderMenu = (): JSX.Element => {
   const { currentUser } = useContext(AuthContext);
 
   return (
-    <HStack>
-      <Link as={ReactLink} to="search" p="0">
+    <HStack spacing="0">
+      <Link as={ReactLink} to="search" p="1">
         <Icon as={MdSearch} w="8" h="8" color="gray.100" />
       </Link>
       {/* ログイン時のみお知らせボタンと作品投稿ボタンを表示 */}
       {currentUser && (
         <>
-          {/* <Button colorScheme="none" p="0">
+          {/* <Button colorScheme="none" p="1">
             <Icon as={MdNotifications} w="8" h="8" color="gray.100" />
           </Button> */}
-          <Link as={ReactLink} to="/post" p="0">
+          <Link as={ReactLink} to="/post" p="1">
             <Icon as={MdNoteAdd} w="8" h="8" color="gray.100" />
           </Link>
         </>
