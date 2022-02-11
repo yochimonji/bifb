@@ -90,6 +90,7 @@ export const postProduct = async (
     postDate: new Date().toLocaleString(),
     editDate: new Date().toLocaleString(),
     sumLike: 0,
+    feedbackNum: 0,
     userUid,
     productId,
   });
