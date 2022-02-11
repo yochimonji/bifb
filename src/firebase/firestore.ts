@@ -510,3 +510,18 @@ export const editProduct = async (
   });
   return productId;
 };
+
+/**
+ * フィードバックが投稿されたときに内部的な FeedbackNum のカウントを増やす
+ * @param productId 作品ID
+ * @returns 最新のフィードバック数
+ */
+export const countFeedback = async (productId: string): Promise<unknown> => {
+  let newFeedbackNumber: unknown;
+
+  await getDoc(doc(db, "product", productId)).then((data) => {
+    newFeedbackNumber = Number(data.get("feedbackNum")) + 1;
+  });
+
+  return newFeedbackNumber;
+};
