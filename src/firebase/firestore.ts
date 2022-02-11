@@ -522,6 +522,8 @@ export const IncreaseFeedbackNum = async (productId: string): Promise<unknown> =
   await getDoc(doc(db, "product", productId)).then((data) => {
     newFeedbackNumber = Number(data.get("feedbackNum")) + 1;
   });
-
+  await updateDoc(doc(db, "product", productId), {
+    feedbackNum: newFeedbackNumber,
+  });
   return newFeedbackNumber;
 };
