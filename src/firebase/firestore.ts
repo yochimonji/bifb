@@ -260,13 +260,11 @@ export const fetchProducts = async (conditions: string): Promise<DocumentData | 
     q = query(collection(db, "product"), orderBy("sumLike", "desc"));
   } else if (conditions === "LikeSmall") {
     q = query(collection(db, "product"), orderBy("sumLike"));
-  }
-  // else if (conditions === "FeedbackLarge") {
-  //   console.log("FeedbackLarge");
-  // } else if (conditions === "FeedbackSmall") {
-  //   console.log("FeedbackSmall");
-  // }
-  else q = query(collection(db, "product"), orderBy("sumLike", "desc"));
+  } else if (conditions === "FeedbackLarge") {
+    q = query(collection(db, "product"), orderBy("feedbackNum", "desc"));
+  } else if (conditions === "FeedbackSmall") {
+    q = query(collection(db, "product"), orderBy("feedbackNum"));
+  } else q = query(collection(db, "product"), orderBy("sumLike", "desc"));
 
   const querySnapshot = await getDocs(q);
   return querySnapshot;
