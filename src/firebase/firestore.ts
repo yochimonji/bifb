@@ -251,7 +251,6 @@ export const fetchFeedback = async (productId: string): Promise<DocumentData | u
  */
 export const fetchProducts = async (conditions: string): Promise<DocumentData | undefined> => {
   let q;
-  // MEMO: sortType っていう変数なんで必要？？
   if (conditions === "TREND" || conditions === "") {
     q = query(collection(db, "product"), orderBy("sumLike", "desc"));
   } else if (conditions === "NEW") {
