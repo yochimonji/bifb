@@ -103,11 +103,7 @@ export const postProduct = async (
  * @param productId フィードバックが投稿された作品のID
  * @returns 新規に作成したフィードバックのID
  */
-export const postFeedbacks = async (
-  userUid: string,
-  feedbackText: string,
-  productId: string
-): Promise<string> => {
+export const postFeedbacks = async (userUid: string, feedbackText: string, productId: string): Promise<string> => {
   // feedbackコレクションに登録
   const newFeedback = await addDoc(collection(db, "feedback"), {
     userUid,
@@ -182,9 +178,7 @@ export const postUserInfo = async (
  * @param userUid ユーザーID
  * @returns ユーザーIDと一致するuserInfo collection内、ドキュメントのデータのオブジェクト
  */
-export const fetchUserInfo = async (
-  userUid: string
-): Promise<DocumentData | null> => {
+export const fetchUserInfo = async (userUid: string): Promise<DocumentData | null> => {
   const q = query(collection(db, "userInfo"), where("userUid", "==", userUid));
   const loadUserData = await getDocs(q);
   if (loadUserData.empty) return null;
@@ -196,14 +190,9 @@ export const fetchUserInfo = async (
  * @param userUidList userUidの配列
  * @returns userUidListと一致する全てのユーザー情報のオブジェクト
  */
-export const fetchUserInfos = async (
-  userUidList: string[]
-): Promise<QuerySnapshot<DocumentData> | null> => {
+export const fetchUserInfos = async (userUidList: string[]): Promise<QuerySnapshot<DocumentData> | null> => {
   if (userUidList.length === 0) return null;
-  const q = query(
-    collection(db, "userInfo"),
-    where("userUid", "in", userUidList)
-  );
+  const q = query(collection(db, "userInfo"), where("userUid", "in", userUidList));
   const loadUserDatas = await getDocs(q);
   return loadUserDatas;
 };
@@ -216,9 +205,7 @@ export const fetchUserInfos = async (
  * @param productId 作品ID
  * @returns 作品IDと一致するproduct collection内、ドキュメントのデータのオブジェクト
  */
-export const fetchProduct = async (
-  productId: string
-): Promise<DocumentData | undefined> => {
+export const fetchProduct = async (productId: string): Promise<DocumentData | undefined> => {
   const searchProduct = doc(db, "product", productId);
   const loadProductInfo = await getDoc(searchProduct);
 
@@ -248,14 +235,8 @@ export const fetchProduct = async (
  * @param productId 作品のID
  * @returns オブジェクトの配列
  */
-export const fetchFeedback = async (
-  productId: string
-): Promise<DocumentData | undefined> => {
-  const q = query(
-    collection(db, "feedback"),
-    where("productId", "==", productId),
-    orderBy("postDate")
-  );
+export const fetchFeedback = async (productId: string): Promise<DocumentData | undefined> => {
+  const q = query(collection(db, "feedback"), where("productId", "==", productId), orderBy("postDate"));
   const querySnapshot = await getDocs(q);
   return querySnapshot;
 };
@@ -264,30 +245,27 @@ export const fetchFeedback = async (
  * トレンド・新着・いいね数によって、作品をソートする
  * トレンドをどう表現するかについても要検討
  *
- * @param conditions Trend｜New｜LikeLarge｜LikeSmall
- * @param sortType  Asce｜Desc
+ * @param conditions Trend｜New｜LikeLarge｜LikeSmall | FeedbackLarge | FeedbackSmall
  * @returns
  */
-export const fetchProducts = async (
-  conditions: string,
-  sortType: string
-): Promise<DocumentData | undefined> => {
+export const fetchProducts = async (conditions: string): Promise<DocumentData | undefined> => {
   let q;
+  // MEMO: sortType っていう変数なんで必要？？
   if (conditions === "TREND" || conditions === "") {
-    if (sortType === "Desc") {
-      q = query(collection(db, "product"), orderBy("sumLike", "desc"));
-    } else q = query(collection(db, "product"), orderBy("sumLike"));
+    q = query(collection(db, "product"), orderBy("sumLike", "desc"));
   } else if (conditions === "NEW") {
-    if (sortType === "Desc") {
-      q = query(collection(db, "product"), orderBy("postDate", "desc"));
-    } else q = query(collection(db, "product"), orderBy("postDate"));
+    q = query(collection(db, "product"), orderBy("postDate", "desc"));
   } else if (conditions === "LikeLarge") {
-    if (sortType === "Desc") {
-      q = query(collection(db, "product"), orderBy("sumLike", "desc"));
-    } else q = query(collection(db, "product"), orderBy("sumLike"));
+    q = query(collection(db, "product"), orderBy("sumLike", "desc"));
   } else if (conditions === "LikeSmall") {
     q = query(collection(db, "product"), orderBy("sumLike"));
-  } else q = query(collection(db, "product"), orderBy("sumLike", "desc"));
+  }
+  // else if (conditions === "FeedbackLarge") {
+  //   console.log("FeedbackLarge");
+  // } else if (conditions === "FeedbackSmall") {
+  //   console.log("FeedbackSmall");
+  // }
+  else q = query(collection(db, "product"), orderBy("sumLike", "desc"));
 
   const querySnapshot = await getDocs(q);
   return querySnapshot;
@@ -365,25 +343,15 @@ export const fetchProductsUser = async (
   let productQuery;
 
   if (tabType === "posted") {
-    productQuery = query(
-      collection(db, "product"),
-      where("userUid", "==", userUid)
-    );
+    productQuery = query(collection(db, "product"), where("userUid", "==", userUid));
   } else {
     const userInfoSnap = await getDoc(doc(db, "userInfo", userUid));
     const userInfos = userInfoSnap.data();
     if (!userInfos) return null;
 
     if (tabType === "like")
-      productQuery = query(
-        collection(db, "product"),
-        where("productId", "in", userInfos.giveLike)
-      );
-    else
-      productQuery = query(
-        collection(db, "product"),
-        where("productId", "in", userInfos.giveFeedback)
-      );
+      productQuery = query(collection(db, "product"), where("productId", "in", userInfos.giveLike));
+    else productQuery = query(collection(db, "product"), where("productId", "in", userInfos.giveFeedback));
   }
   const productSnapshot = await getDocs(productQuery);
   return productSnapshot;
@@ -426,11 +394,7 @@ export const fetchAllTags = async (): Promise<QuerySnapshot<DocumentData>> => {
  * @param userUid ログイン中のユーザーID
  * @returns 最新のいいね数
  */
-export const countLikeProduct = async (
-  productId: string,
-  conditions: string,
-  userUid: string
-): Promise<unknown> => {
+export const countLikeProduct = async (productId: string, conditions: string, userUid: string): Promise<unknown> => {
   let newSumLike: unknown;
   const q = query(collection(db, "userInfo"), where("userUid", "==", userUid));
   const userInfo = await getDocs(q);
@@ -463,11 +427,7 @@ export const countLikeProduct = async (
  * @param conditions UP|DOWN
  * @returns 最新のいいね数
  */
-export const countLikeFeedback = async (
-  feedbackId: string,
-  conditions: string,
-  userUid: string
-): Promise<unknown> => {
+export const countLikeFeedback = async (feedbackId: string, conditions: string, userUid: string): Promise<unknown> => {
   let newSumLike: unknown;
   const q = query(collection(db, "userInfo"), where("userUid", "==", userUid));
   const userInfo = await getDocs(q);

@@ -40,7 +40,7 @@ const Home = (): JSX.Element => {
       const userUidSet: Set<string> = new Set();
       const newProductData: DisplayProductProps[] = [];
 
-      const products = (await fetchProducts(sortType, "Desc")) as QuerySnapshot<DocumentData>;
+      const products = (await fetchProducts(sortType)) as QuerySnapshot<DocumentData>;
       products.forEach((product) => {
         userUidSet.add(product.data().userUid);
       });
