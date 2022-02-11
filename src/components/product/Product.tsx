@@ -12,6 +12,7 @@ import {
   postFeedbacks,
   countLikeProduct,
   deleteProduct,
+  IncreaseFeedbackNum,
 } from "../../firebase/firestore";
 import { AuthContext } from "../../auth/AuthProvider";
 
@@ -96,6 +97,8 @@ const Product = (): JSX.Element => {
     if (currentUser !== null && feedbackText) {
       const feedbackId = await postFeedbacks(currentUser.uid, feedbackText, productId);
       if (feedbackId) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const tmpIncreaseFeedbackNum = await IncreaseFeedbackNum(productId);
         setFeedbackText("");
         history.go(0);
       } else {
