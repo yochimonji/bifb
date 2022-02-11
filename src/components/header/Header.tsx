@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Container, HStack, Link } from "@chakra-ui/react";
-
+import { Link as ReactLink } from "react-router-dom";
 import { HeaderMenu } from "..";
 
 /**
@@ -12,7 +12,8 @@ const Header = (): JSX.Element => (
     <Container maxW="container.lg" h="100%">
       <HStack justify="space-between" h="100%">
         <Link
-          href="/"
+          as={ReactLink}
+          to="/"
           fontSize="4xl"
           fontWeight="bold"
           color="gray.100"
