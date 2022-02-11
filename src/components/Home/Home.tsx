@@ -124,6 +124,9 @@ const Home = (): JSX.Element => {
             <option value="NEW">新着</option>
             <option value="LikeLarge">いいね数(多い順)</option>
             <option value="LikeSmall">いいね数(少ない順)</option>
+            <option value="LikeSmall">いいね数(少ない順)</option>
+            <option value="LikeSmall">フィードバック数(多い順)</option>
+            <option value="LikeSmall">フィードバック数(少ない順)</option>
           </Select>
         </Box>
       </HStack>
