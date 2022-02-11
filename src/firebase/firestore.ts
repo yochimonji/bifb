@@ -516,7 +516,7 @@ export const editProduct = async (
  * @param productId 作品ID
  * @returns 最新のフィードバック数
  */
-export const countFeedback = async (productId: string): Promise<unknown> => {
+export const IncreaseFeedbackNum = async (productId: string): Promise<unknown> => {
   let newFeedbackNumber: unknown;
 
   await getDoc(doc(db, "product", productId)).then((data) => {
