@@ -64,7 +64,7 @@ const Search = (): JSX.Element => {
 
   // タグボタンが押された時の操作
   const handleClickTagButton = (tag: string) => {
-    history.push("/", { paramSearchTags: tag });
+    history.push("/", { paramSearchTag: tag });
   };
 
   // 入力画面でEnterが押されたときに検索とみなす
@@ -100,19 +100,19 @@ const Search = (): JSX.Element => {
         </InputGroup>
         <SimpleGrid columns={[1, 2, 3]} justifyItems="center" w="100%" spacing="40px" pb="40px">
           {tagList &&
-            tagList.map((eachTags) => (
+            tagList.map((OneOfTagList) => (
               <Button
-                key={eachTags}
+                key={OneOfTagList}
                 id="button"
                 minWidth="200px"
                 width="240px"
                 height="80px"
                 colorScheme="blackAlpha"
                 variant="outline"
-                value={eachTags}
-                onClick={() => handleClickTagButton(eachTags)}
+                value={OneOfTagList}
+                onClick={() => handleClickTagButton(OneOfTagList)}
               >
-                {eachTags}
+                {OneOfTagList}
               </Button>
             ))}
         </SimpleGrid>
