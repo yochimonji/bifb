@@ -120,11 +120,13 @@ const Product = (): JSX.Element => {
 
   // productId読み込み後の各stateの初期化
   useEffect(() => {
+    let isMounted = true;
+
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     (async () => {
       // productId取得
       const paramProductId = (location.state as { productId: string }).productId;
-      setProductId(paramProductId);
+      if (isMounted) setProductId(paramProductId);
 
       // 作品データをFirestoreから取得
       const productData = await fetchProduct(paramProductId);
@@ -133,28 +135,36 @@ const Product = (): JSX.Element => {
       const editDateISO = new Date(productData.editDate).toISOString();
       const formatedPostDate = moment(new Date(postDateISO).toISOString()).format("YYYY年MM月DD日");
       const formatedEditDate = moment(new Date(editDateISO).toISOString()).format("YYYY年MM月DD日");
-      setTitle(productData.productTitle);
-      setAbstract(productData.productAbstract);
-      setIconUrl(productData.productIconUrl);
-      setGithubUrl(productData.githubUrl);
-      setProductUrl(productData.productUrl);
-      setTags(productData.tags);
-      setMainText(productData.mainText);
-      setPostDate(formatedPostDate);
-      setEditDate(formatedEditDate);
-      setSumLike(productData.sumLike);
-      setUserUid(productData.userUid);
+      if (isMounted) {
+        setTitle(productData.productTitle);
+        setAbstract(productData.productAbstract);
+        setIconUrl(productData.productIconUrl);
+        setGithubUrl(productData.githubUrl);
+        setProductUrl(productData.productUrl);
+        setTags(productData.tags);
+        setMainText(productData.mainText);
+        setPostDate(formatedPostDate);
+        setEditDate(formatedEditDate);
+        setSumLike(productData.sumLike);
+        setUserUid(productData.userUid);
+      }
 
       // 作品のユーザー情報（投稿者）のデータをFirestoreから取得
       const productUserInfo = await fetchUserInfo(productData.userUid);
       if (!productUserInfo) return;
-      setUserIcon(productUserInfo.userIcon);
-      setUserName(productUserInfo.name);
+      if (isMounted) {
+        setUserIcon(productUserInfo.userIcon);
+        setUserName(productUserInfo.name);
+      }
 
       // ログイン中のユーザーが作品をいいねしているかを判定
       if (currentUser) {
         const currentUserInfo = await fetchUserInfo(currentUser.uid);
-        if (currentUserInfo && (currentUserInfo as { giveLike: string[] }).giveLike.includes(paramProductId)) {
+        if (
+          currentUserInfo &&
+          (currentUserInfo as { giveLike: string[] }).giveLike.includes(paramProductId) &&
+          isMounted
+        ) {
           setIsLike(true);
         }
       }
@@ -167,7 +177,7 @@ const Product = (): JSX.Element => {
         async (feedbackDoc: QueryDocumentSnapshot<DocumentData>) => {
           const feedbackData = feedbackDoc.data() as FeedbackDataType;
           const userInfo = await fetchUserInfo(feedbackData.userUid);
-          if (userInfo) {
+          if (userInfo && isMounted) {
             const newFeedback = feedbackData as FeedbackType;
             newFeedback.userIcon = userInfo.userIcon as string;
             newFeedback.userName = userInfo.name as string;
@@ -183,6 +193,10 @@ const Product = (): JSX.Element => {
         }
       );
     })();
+
+    return () => {
+      isMounted = false;
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.state]);
 
