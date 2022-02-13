@@ -40,7 +40,7 @@ const Product = (): JSX.Element => {
   const [iconUrl, setIconUrl] = useState("");
   const [githubUrl, setGithubUrl] = useState("");
   const [productUrl, setProductUrl] = useState("");
-  const [tags, setTags] = useState([]);
+  const [tagList, setTagList] = useState([]);
   const [mainText, setMainText] = useState("");
   const [postDate, setPostDate] = useState("");
   const [editDate, setEditDate] = useState("");
@@ -141,7 +141,7 @@ const Product = (): JSX.Element => {
         setIconUrl(productData.productIconUrl);
         setGithubUrl(productData.githubUrl);
         setProductUrl(productData.productUrl);
-        setTags(productData.tags);
+        setTagList(productData.tags);
         setMainText(productData.mainText);
         setPostDate(formatedPostDate);
         setEditDate(formatedEditDate);
@@ -239,11 +239,11 @@ const Product = (): JSX.Element => {
         </Stack>
         {/* タグ表示 */}
         <Stack flexDir={{ base: "column", md: "row" }} pl="2">
-          {tags[0] !== "" && (
+          {tagList[0] !== "" && (
             <>
               <TagIcon pt={{ base: "0", md: "2" }} minW="80px" />
               <Wrap>
-                {tags.map((tag, i) => (
+                {tagList.map((tag, i) => (
                   <WrapItem key={i.toString()}>
                     <Tag rounded="full" py="2" px="4" fontSize={{ base: "xs", sm: "sm", md: "md" }}>
                       {tag}
