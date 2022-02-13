@@ -9,7 +9,7 @@ import { fetchProducts, fetchUserInfos } from "../../firebase/firestore";
 import { DisplayProducts, SearchCondition, DisplayProductProps } from "../index";
 
 const Home = (): JSX.Element => {
-  const [sortType, setSortType] = useState("TREND");
+  const [sortType, setSortType] = useState("NEW");
   const [productData, setProductData] = useState<DisplayProductProps[]>([]);
   const [searchCondition, setSearchCondition] = useState<string | undefined>();
   const [searchStatus, setSearchStatus] = useState<string>("");
@@ -40,7 +40,7 @@ const Home = (): JSX.Element => {
       const userUidSet: Set<string> = new Set();
       const newProductData: DisplayProductProps[] = [];
 
-      const products = (await fetchProducts(sortType, "Desc")) as QuerySnapshot<DocumentData>;
+      const products = (await fetchProducts(sortType)) as QuerySnapshot<DocumentData>;
       products.forEach((product) => {
         userUidSet.add(product.data().userUid);
       });
@@ -121,10 +121,11 @@ const Home = (): JSX.Element => {
         )}
         <Box w="20%" padding="30px 0px">
           <Select name="sortType" onChange={onChangeSortType}>
-            <option value="TREND">トレンド</option>
             <option value="NEW">新着</option>
             <option value="LikeLarge">いいね数(多い順)</option>
             <option value="LikeSmall">いいね数(少ない順)</option>
+            <option value="FeedbackLarge">フィードバック数(多い順)</option>
+            <option value="FeedbackSmall">フィードバック数(少ない順)</option>
           </Select>
         </Box>
       </HStack>
