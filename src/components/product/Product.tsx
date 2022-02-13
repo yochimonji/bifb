@@ -51,7 +51,7 @@ const Product = (): JSX.Element => {
   const [isLike, setIsLike] = useState(false);
   const [productId, setProductId] = useState("");
   const [feedbackText, setFeedbackText] = useState("");
-  const [feedbacks, setFeedbacks] = useState<FeedbackType[]>([]);
+  const [feedbackList, setFeedbackList] = useState<FeedbackType[]>([]);
 
   const { currentUser } = useContext(AuthContext);
   const history = useHistory();
@@ -181,7 +181,7 @@ const Product = (): JSX.Element => {
             const newFeedback = feedbackData as FeedbackType;
             newFeedback.userIcon = userInfo.userIcon as string;
             newFeedback.userName = userInfo.name as string;
-            setFeedbacks((prev) =>
+            setFeedbackList((prev) =>
               [...prev, newFeedback].sort((a, b) => {
                 if (moment(new Date(a.postDate).toISOString()) < moment(new Date(b.postDate).toISOString())) {
                   return -1;
@@ -269,7 +269,7 @@ const Product = (): JSX.Element => {
         {/* フィードバックの表示 */}
         {/* eslint-disable-next-line array-callback-return */}
         <Stack spacing="6">
-          {feedbacks.map((feedback, i) => (
+          {feedbackList.map((feedback, i) => (
             <HStack key={i.toString()} align="flex-start" spacing="4">
               <Avatar
                 as={Link}
