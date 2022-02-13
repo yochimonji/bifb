@@ -151,6 +151,14 @@ const Product = (): JSX.Element => {
       setUserIcon(productUserInfo.userIcon);
       setUserName(productUserInfo.name);
 
+      // ログイン中のユーザーが作品をいいねしているかを判定
+      if (currentUser) {
+        const currentUserInfo = await fetchUserInfo(currentUser.uid);
+        if (currentUserInfo && (currentUserInfo as { giveLike: string[] }).giveLike.includes(paramProductId)) {
+          setIsLike(true);
+        }
+      }
+
       // 作品のフィードバックデータをFirestoreから取得
       const feedbackSnapshot = await fetchFeedback(paramProductId);
       if (!feedbackSnapshot) return;
@@ -175,34 +183,8 @@ const Product = (): JSX.Element => {
         }
       );
     })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.state]);
-
-  // userUid読み込み後のユーザー情報に関するstateの初期化
-  // useEffect(() => {
-  //   // 初回読み込み時にuserUidがなくエラーになるためifが必要
-  //   if (userUid && productId) {
-  //     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  //     const tmpUserInfo = fetchUserInfo(userUid).then((userInfo) => {
-  //       if (userInfo) {
-  //         setUserIcon(userInfo.userIcon);
-  //         setUserName(userInfo.name);
-  //       }
-  //     });
-  //   }
-  // }, [productId, userUid]);
-
-  // ログイン中のユーザーが作品にいいねしているかを判断
-  useEffect(() => {
-    if (currentUser && productId) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const tmpUserInfo = fetchUserInfo(currentUser.uid).then((userInfo) => {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        if (userInfo && [...userInfo.giveLike].includes(productId)) {
-          setIsLike(true);
-        }
-      });
-    }
-  }, [currentUser, productId]);
 
   return (
     <>
