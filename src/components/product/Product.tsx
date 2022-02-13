@@ -145,6 +145,12 @@ const Product = (): JSX.Element => {
       setSumLike(productData.sumLike);
       setUserUid(productData.userUid);
 
+      // 作品のユーザー情報（投稿者）のデータをFirestoreから取得
+      const productUserInfo = await fetchUserInfo(productData.userUid);
+      if (!productUserInfo) return;
+      setUserIcon(productUserInfo.userIcon);
+      setUserName(productUserInfo.name);
+
       // 作品のフィードバックデータをFirestoreから取得
       const feedbackSnapshot = await fetchFeedback(paramProductId);
       if (!feedbackSnapshot) return;
@@ -172,18 +178,18 @@ const Product = (): JSX.Element => {
   }, [location.state]);
 
   // userUid読み込み後のユーザー情報に関するstateの初期化
-  useEffect(() => {
-    // 初回読み込み時にuserUidがなくエラーになるためifが必要
-    if (userUid && productId) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const tmpUserInfo = fetchUserInfo(userUid).then((userInfo) => {
-        if (userInfo) {
-          setUserIcon(userInfo.userIcon);
-          setUserName(userInfo.name);
-        }
-      });
-    }
-  }, [productId, userUid]);
+  // useEffect(() => {
+  //   // 初回読み込み時にuserUidがなくエラーになるためifが必要
+  //   if (userUid && productId) {
+  //     // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  //     const tmpUserInfo = fetchUserInfo(userUid).then((userInfo) => {
+  //       if (userInfo) {
+  //         setUserIcon(userInfo.userIcon);
+  //         setUserName(userInfo.name);
+  //       }
+  //     });
+  //   }
+  // }, [productId, userUid]);
 
   // ログイン中のユーザーが作品にいいねしているかを判断
   useEffect(() => {
