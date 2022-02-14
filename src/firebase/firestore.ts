@@ -26,10 +26,8 @@ const db = getFirestore();
  * @param tags タグの一覧
  */
 export const postTags = (tags: string[], conditions: string): void => {
-  async function setData(name: string, sum: number) {
-    await setDoc(doc(db, "tags", name), {
-      sum,
-    });
+  async function setData(name: string, num: number) {
+    await setDoc(doc(db, "tags", name), { num });
   }
 
   async function getData(name: string) {
@@ -37,16 +35,16 @@ export const postTags = (tags: string[], conditions: string): void => {
     const tagname = tagData.id;
     if (tagData.exists()) {
       if (conditions === "EXIST") {
-        const temtemA = setData(tagname, Number(tagData.get("sum")));
+        const temtemA = setData(tagname, Number(tagData.get("num")));
       } else if (conditions === "NEW") {
-        const temtemA = setData(tagname, Number(tagData.get("sum")) + 1);
+        const temtemA = setData(tagname, Number(tagData.get("num")) + 1);
       }
     } else {
       const tmptmptmp = setData(tagname, 1);
     }
   }
 
-  if (!(tags.length === 1) && tags[0] === "") {
+  if (tags.length >= 1 && tags[0] !== "") {
     for (let i = 0; i < tags.length; i += 1) {
       const tmp = getData(tags[i]);
     }
