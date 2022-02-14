@@ -9,8 +9,8 @@ const Search = (): JSX.Element => {
   const history = useHistory();
   const [inputTagList, inputSetTagList] = useState<string[]>();
   const [tagList, setTagList] = useState<string[]>();
-  const AllTagList = [""];
-  let NewTagList = [""];
+  const allTagList = [""];
+  let newTagList = [""];
   const [newInputText, setNewInputText] = useState<string>("");
 
   // ページ読み込み時、1回のみすべてのタグを取得
@@ -18,36 +18,36 @@ const Search = (): JSX.Element => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const tmpFetchTags = fetchAllTags().then((data) => {
       data.docs.forEach((eachData: QueryDocumentSnapshot<DocumentData>) => {
-        AllTagList.push(eachData.id);
-        NewTagList.push(eachData.id);
+        allTagList.push(eachData.id);
+        newTagList.push(eachData.id);
       });
 
-      if (AllTagList[0] === "") {
-        AllTagList.shift();
-        NewTagList.shift();
+      if (allTagList[0] === "") {
+        allTagList.shift();
+        newTagList.shift();
       }
 
-      inputSetTagList(AllTagList);
-      setTagList(AllTagList);
+      inputSetTagList(allTagList);
+      setTagList(allTagList);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const checkTags = (input: string) => {
-    NewTagList = [""];
+    newTagList = [""];
     if (inputTagList) {
       inputTagList.forEach((tag: string) => {
         const searchText = new RegExp(input, "i");
         const test = tag.search(searchText);
         if (test !== -1) {
-          NewTagList.push(tag);
+          newTagList.push(tag);
         }
       });
-      if (NewTagList[0] === "") {
-        NewTagList.shift();
+      if (newTagList[0] === "") {
+        newTagList.shift();
       }
     }
-    setTagList(NewTagList);
+    setTagList(newTagList);
   };
 
   // input欄の入力値の検出
