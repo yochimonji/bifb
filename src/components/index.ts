@@ -1,6 +1,6 @@
 export { default as Home } from "./Home/Home";
 export { default as Product } from "./product/Product";
-export { default as LinkLike } from "./product/LinkLike";
+export { default as LinkFavorite } from "./product/LinkFavorite";
 export { default as EditDeleteButton } from "./product/EditDeleteButton";
 export { default as Search } from "./Search";
 export { default as Post } from "./post/Post";
@@ -18,7 +18,7 @@ export { default as MarkdownInput } from "./common_part/MarkdownInput";
 export { default as MarkdownPreview } from "./common_part/MarkdownPreview";
 export { default as DisplayProduct } from "./common_part/DisplayProduct";
 export { default as DisplayProducts } from "./common_part/DisplayProducts";
-export { default as Like } from "./common_part/Like";
+export { default as Favorite } from "./common_part/Favorite";
 export { default as SearchCondition } from "./Home/SearchCondition";
 export { default as postImage } from "./common_part/postImage";
 export type { default as DisplayProductProps } from "./common_part/DisplayProductProps";

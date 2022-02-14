@@ -62,7 +62,7 @@ const Home = (): JSX.Element => {
                   productAbstract: p.productAbstract as string,
                   postDate: p.postDate as string,
                   editDate: p.editDate as string,
-                  sumLike: p.sumLike as number,
+                  favoriteNum: p.favoriteNum as number,
                 });
               } else if (searchStatus === "paramSearchTags") {
                 if (product.data().tags.includes(searchCondition)) {
@@ -75,7 +75,7 @@ const Home = (): JSX.Element => {
                     productAbstract: p.productAbstract as string,
                     postDate: p.postDate as string,
                     editDate: p.editDate as string,
-                    sumLike: p.sumLike as number,
+                    favoriteNum: p.favoriteNum as number,
                   });
                 }
               } else if (searchStatus === "paramInputText") {
@@ -89,7 +89,7 @@ const Home = (): JSX.Element => {
                     productAbstract: p.productAbstract as string,
                     postDate: p.postDate as string,
                     editDate: p.editDate as string,
-                    sumLike: p.sumLike as number,
+                    favoriteNum: p.favoriteNum as number,
                   });
                 }
               }
@@ -122,8 +122,8 @@ const Home = (): JSX.Element => {
         <Box w="20%" padding="30px 0px">
           <Select name="sortType" onChange={onChangeSortType}>
             <option value="NEW">新着</option>
-            <option value="LikeLarge">いいね数(多い順)</option>
-            <option value="LikeSmall">いいね数(少ない順)</option>
+            <option value="FavoriteLarge">いいね数(多い順)</option>
+            <option value="FavoriteSmall">いいね数(少ない順)</option>
             <option value="FeedbackLarge">フィードバック数(多い順)</option>
             <option value="FeedbackSmall">フィードバック数(少ない順)</option>
           </Select>

@@ -28,7 +28,7 @@ const UserEdit = (): JSX.Element => {
   const [githubUrl, setGithubUrl] = useState("");
   const [twitterUrl, setTwitterUrl] = useState("");
   const [otherUrl, setOtherUrl] = useState("");
-  const [giveLike, setGiveLike] = useState<string[]>([]);
+  const [favoriteList, setFavoriteList] = useState<string[]>([]);
   const [feedbackList, setFeedbackList] = useState<string[]>([]);
   const [validUserName, setValidUserName] = useState(false);
   const [validGithubUrl, setValidGithubUrl] = useState(false);
@@ -51,7 +51,7 @@ const UserEdit = (): JSX.Element => {
       setGithubUrl(userInfo.githubUrl);
       setTwitterUrl(userInfo.twitterUrl);
       setOtherUrl(userInfo.otherUrl);
-      setGiveLike(userInfo.giveLike);
+      setFavoriteList(userInfo.favoriteList);
       setFeedbackList(userInfo.feedbackList);
     })();
   }, [currentUser]);
@@ -88,7 +88,7 @@ const UserEdit = (): JSX.Element => {
         githubUrl,
         twitterUrl,
         otherUrl,
-        giveLike,
+        favoriteList,
         feedbackList,
         currentUser.uid
       );
@@ -139,7 +139,7 @@ const UserEdit = (): JSX.Element => {
       githubUrl,
       twitterUrl,
       otherUrl,
-      giveLike,
+      favoriteList,
       feedbackList,
       currentUser.uid
     );

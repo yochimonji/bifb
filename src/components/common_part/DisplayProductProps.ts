@@ -7,7 +7,7 @@ type DisplayProductProps = {
   productAbstract: string;
   postDate: string;
   editDate: string;
-  sumLike: number;
+  favoriteNum: number;
 };
 
 export default DisplayProductProps;

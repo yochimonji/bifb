@@ -1,16 +1,8 @@
 import React from "react";
-import {
-  Avatar,
-  Button,
-  HStack,
-  VStack,
-  Box,
-  Image,
-  Text,
-} from "@chakra-ui/react";
+import { Avatar, Button, HStack, VStack, Box, Image, Text } from "@chakra-ui/react";
 import { BrowserRouter, useHistory } from "react-router-dom";
 import moment from "moment";
-import { Like, DisplayProductProps } from "../index";
+import { Favorite, DisplayProductProps } from "../index";
 
 const DisplayProduct = (props: DisplayProductProps): JSX.Element => {
   const formatDate = (date: string) => {
@@ -53,13 +45,7 @@ const DisplayProduct = (props: DisplayProductProps): JSX.Element => {
       >
         <HStack w="100%" spacing={0} alignItems="flex-start">
           <VStack w="36%" h="230px" spacing={0} pt="3" justify="center">
-            <Image
-              w="100%"
-              h="161px"
-              src={props.productIconUrl}
-              boxsize="100px"
-              padding="20px 10px"
-            />
+            <Image w="100%" h="161px" src={props.productIconUrl} boxsize="100px" padding="20px 10px" />
             <HStack h="69px" spacing={0}>
               <Avatar w="8" h="8" src={props.userIconUrl} />
               <Text
@@ -69,9 +55,7 @@ const DisplayProduct = (props: DisplayProductProps): JSX.Element => {
                 overflow="hidden"
                 textOverflow="ellipsis"
               >
-                {props.userName.length >= 12
-                  ? `${props.userName.slice(0, 12)}...`
-                  : props.userName}
+                {props.userName.length >= 12 ? `${props.userName.slice(0, 12)}...` : props.userName}
               </Text>
             </HStack>
           </VStack>
@@ -103,21 +87,14 @@ const DisplayProduct = (props: DisplayProductProps): JSX.Element => {
             </Text>
             <HStack w="100%" h="46px" spacing="0px">
               <VStack w="80%" h="46px" spacing="0px">
-                <Text
-                  w="100%"
-                  h="23px"
-                  fontSize="xs"
-                  textAlign="left"
-                  padding="7px 5px 5px 0px"
-                  whiteSpace="pre-wrap"
-                >
+                <Text w="100%" h="23px" fontSize="xs" textAlign="left" padding="7px 5px 5px 0px" whiteSpace="pre-wrap">
                   {props.postDate === props.editDate
                     ? `投稿日：${formatDate(props.postDate)}`
                     : `更新日：${formatDate(props.editDate)}`}
                 </Text>
               </VStack>
               <Box w="20%" h="46px" pt="2px" pr="4px">
-                <Like sumLike={props.sumLike} />
+                <Favorite favoriteNum={props.favoriteNum} />
               </Box>
             </HStack>
           </VStack>

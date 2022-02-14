@@ -4,20 +4,20 @@ import { Link, useHistory, useLocation } from "react-router-dom";
 import moment from "moment";
 import { QuerySnapshot, QueryDocumentSnapshot, DocumentData } from "firebase/firestore";
 
-import { TagIcon, LinkLike, MarkdownForm, EditDeleteButton, MarkdownPreview } from "../index";
+import { TagIcon, LinkFavorite, MarkdownForm, EditDeleteButton, MarkdownPreview } from "../index";
 import {
   fetchProduct,
   fetchUserInfo,
   fetchFeedback,
   postFeedbacks,
-  countLikeProduct,
+  countFavoriteProduct,
   deleteProduct,
   IncreaseFeedbackNum,
 } from "../../firebase/firestore";
 import { AuthContext } from "../../auth/AuthProvider";
 
 type FeedbackDataType = {
-  sumLike: number;
+  favoriteNum: number;
   feedbackText: string;
   userUid: string;
   postDate: string;
@@ -25,7 +25,7 @@ type FeedbackDataType = {
 };
 
 type FeedbackType = {
-  sumLike: number;
+  favoriteNum: number;
   feedbackText: string;
   userUid: string;
   postDate: string;
@@ -44,11 +44,11 @@ const Product = (): JSX.Element => {
   const [mainText, setMainText] = useState("");
   const [postDate, setPostDate] = useState("");
   const [editDate, setEditDate] = useState("");
-  const [sumLike, setSumLike] = useState(0);
+  const [favoriteNum, setFavoriteNum] = useState(0);
   const [userUid, setUserUid] = useState("");
   const [userIcon, setUserIcon] = useState("");
   const [userName, setUserName] = useState("");
-  const [isLike, setIsLike] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
   const [productId, setProductId] = useState("");
   const [feedbackText, setFeedbackText] = useState("");
   const [feedbackList, setFeedbackList] = useState<FeedbackType[]>([]);
@@ -60,8 +60,8 @@ const Product = (): JSX.Element => {
   /**
    * いいねボタンをクリックした際の動作を行う関数
    */
-  const handleClickLikeButton: React.MouseEventHandler<HTMLButtonElement> = () => {
-    setIsLike((prev) => {
+  const handleClickFavoriteButton: React.MouseEventHandler<HTMLButtonElement> = () => {
+    setIsFavorite((prev) => {
       let condition = "UP";
       if (prev) {
         condition = "DOWN";
@@ -70,9 +70,9 @@ const Product = (): JSX.Element => {
       }
       if (currentUser) {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const tmp = countLikeProduct(productId, condition, currentUser?.uid).then((newSumLike) => {
-          if (typeof newSumLike === "number") {
-            setSumLike(newSumLike);
+        const tmp = countFavoriteProduct(productId, condition, currentUser?.uid).then((newFavoriteNum) => {
+          if (typeof newFavoriteNum === "number") {
+            setFavoriteNum(newFavoriteNum);
           }
         });
       }
@@ -145,7 +145,7 @@ const Product = (): JSX.Element => {
         setMainText(productData.mainText);
         setPostDate(formatedPostDate);
         setEditDate(formatedEditDate);
-        setSumLike(productData.sumLike);
+        setFavoriteNum(productData.favoriteNum);
         setUserUid(productData.userUid);
       }
 
@@ -162,10 +162,10 @@ const Product = (): JSX.Element => {
         const currentUserInfo = await fetchUserInfo(currentUser.uid);
         if (
           currentUserInfo &&
-          (currentUserInfo as { giveLike: string[] }).giveLike.includes(paramProductId) &&
+          (currentUserInfo as { favoriteList: string[] }).favoriteList.includes(paramProductId) &&
           isMounted
         ) {
-          setIsLike(true);
+          setIsFavorite(true);
         }
       }
 
@@ -256,12 +256,12 @@ const Product = (): JSX.Element => {
         </Stack>
         <Divider pt="4" />
         {/* リンク、いいね、本文を表示 */}
-        <LinkLike
+        <LinkFavorite
           githubUrl={githubUrl}
           productUrl={productUrl}
-          sumLike={sumLike}
-          isLike={isLike}
-          handleClickLikeButton={handleClickLikeButton}
+          favoriteNum={favoriteNum}
+          isFavorite={isFavorite}
+          handleClickFavoriteButton={handleClickFavoriteButton}
         />
         <MarkdownPreview text={mainText} isFeedback />
         <Divider pt="4" />

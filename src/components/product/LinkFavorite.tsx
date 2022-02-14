@@ -13,15 +13,15 @@ import {
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { GithubIcon, ProductIcon } from "..";
 
-type LinkLikeProps = {
+type LinkFavoriteProps = {
   githubUrl: string;
   productUrl: string;
-  sumLike: number;
-  isLike: boolean;
-  handleClickLikeButton: React.MouseEventHandler<HTMLButtonElement>;
+  favoriteNum: number;
+  isFavorite: boolean;
+  handleClickFavoriteButton: React.MouseEventHandler<HTMLButtonElement>;
 };
 
-const LinkLike = (props: LinkLikeProps): JSX.Element => (
+const LinkFavorite = (props: LinkFavoriteProps): JSX.Element => (
   <HStack justify="space-between">
     {/* Githubと作品のリンクを表示 */}
     <HStack spacing="0">
@@ -61,26 +61,26 @@ const LinkLike = (props: LinkLikeProps): JSX.Element => (
       )}
     </HStack>
     {/* いいねボタン表示 */}
-    {props.isLike ? (
+    {props.isFavorite ? (
       <Button
         leftIcon={<Icon as={AiFillHeart} w="6" h="6" color="#EEB6B7" />}
         variant="outline"
         rounded="full"
-        onClick={props.handleClickLikeButton}
+        onClick={props.handleClickFavoriteButton}
       >
-        {props.sumLike}
+        {props.favoriteNum}
       </Button>
     ) : (
       <Button
         leftIcon={<Icon as={AiOutlineHeart} w="6" h="6" />}
         variant="outline"
         rounded="full"
-        onClick={props.handleClickLikeButton}
+        onClick={props.handleClickFavoriteButton}
       >
-        {props.sumLike}
+        {props.favoriteNum}
       </Button>
     )}
   </HStack>
 );
 
-export default LinkLike;
+export default LinkFavorite;
