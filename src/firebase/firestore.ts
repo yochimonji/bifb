@@ -118,7 +118,7 @@ export const postFeedbacks = async (userUid: string, feedbackText: string, produ
   const q = query(collection(db, "userInfo"), where("userUid", "==", userUid));
   const userInfo = await getDocs(q);
   await updateDoc(userInfo.docs[0].ref, {
-    giveFeedback: arrayUnion(productId),
+    feedbackList: arrayUnion(productId),
   });
   return newFeedback.id;
 };
@@ -132,7 +132,7 @@ export const postFeedbacks = async (userUid: string, feedbackText: string, produ
  * @param twitterUrl TwitterURL
  * @param otherUrl その他のURL
  * @param giveLike いいねをしている作品IDの一覧
- * @param giveFeedback フェードバックをしている作品のIDを一覧
+ * @param feedbackList フェードバックをしている作品のIDを一覧
  * @param userUid ユーザーID
  * @returns
  */
@@ -144,7 +144,7 @@ export const postUserInfo = async (
   twitterUrl: string,
   otherUrl: string,
   giveLike: string[],
-  giveFeedback: string[],
+  feedbackList: string[],
   userUid: string
 ): Promise<void> => {
   const tmp = await setDoc(doc(db, "userInfo", userUid), {
@@ -155,7 +155,7 @@ export const postUserInfo = async (
     twitterUrl,
     otherUrl,
     giveLike,
-    giveFeedback,
+    feedbackList,
     userUid,
   });
 };
@@ -349,7 +349,7 @@ export const fetchProductsUser = async (
 
     if (tabType === "like")
       productQuery = query(collection(db, "product"), where("productId", "in", userInfos.giveLike));
-    else productQuery = query(collection(db, "product"), where("productId", "in", userInfos.giveFeedback));
+    else productQuery = query(collection(db, "product"), where("productId", "in", userInfos.feedbackList));
   }
   const productSnapshot = await getDocs(productQuery);
   return productSnapshot;
@@ -435,14 +435,14 @@ export const countLikeFeedback = async (feedbackId: string, conditions: string, 
       newSumLike = Number(data.get("sumLike")) + 1;
     });
     await updateDoc(userInfo.docs[0].ref, {
-      giveFeedback: arrayUnion(feedbackId),
+      feedbackList: arrayUnion(feedbackId),
     });
   } else if (conditions === "DOWN") {
     await getDoc(doc(db, "feedback", feedbackId)).then((data) => {
       newSumLike = Number(data.get("sumLike")) - 1;
     });
     await updateDoc(userInfo.docs[0].ref, {
-      giveFeedback: arrayRemove(feedbackId),
+      feedbackList: arrayRemove(feedbackId),
     });
   }
 
