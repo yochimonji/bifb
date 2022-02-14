@@ -16,7 +16,7 @@ const Search = (): JSX.Element => {
   // ページ読み込み時、1回のみすべてのタグを取得
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const tmpFetchTags = fetchAllTags().then((data) => {
+    const tmpFetchTagList = fetchAllTags().then((data) => {
       data.docs.forEach((eachData: QueryDocumentSnapshot<DocumentData>) => {
         allTagList.push(eachData.id);
         newTagList.push(eachData.id);
