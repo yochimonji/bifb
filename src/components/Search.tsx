@@ -33,7 +33,7 @@ const Search = (): JSX.Element => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const checkTags = (input: string) => {
+  const checkTagList = (input: string) => {
     newTagList = [""];
     if (inputTagList) {
       inputTagList.forEach((tag: string) => {
@@ -54,7 +54,7 @@ const Search = (): JSX.Element => {
   const handleInputText: React.ChangeEventHandler<HTMLInputElement> = (event) => {
     const inputText = event.target.value;
     setNewInputText(inputText);
-    checkTags(event.target.value);
+    checkTagList(event.target.value);
   };
 
   // 検索ボタンが押されたときの操作
