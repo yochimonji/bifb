@@ -23,9 +23,9 @@ const Home = (): JSX.Element => {
   useEffect(() => {
     if (!location.state) {
       setSearchStatus("");
-    } else if (location.state.paramSearchTags) {
-      setSearchStatus("paramSearchTags");
-      setSearchCondition(location.state.paramSearchTags);
+    } else if (location.state.paramSearchTag) {
+      setSearchStatus("paramSearchTag");
+      setSearchCondition(location.state.paramSearchTag);
     } else if (location.state.paramInputText) {
       setSearchStatus("paramInputText");
       setSearchCondition(location.state.paramInputText);
@@ -64,7 +64,7 @@ const Home = (): JSX.Element => {
                   editDate: p.editDate as string,
                   sumLike: p.sumLike as number,
                 });
-              } else if (searchStatus === "paramSearchTags") {
+              } else if (searchStatus === "paramSearchTag") {
                 if (product.data().tags.includes(searchCondition)) {
                   newProductData.push({
                     productId: product.id,
