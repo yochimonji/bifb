@@ -12,6 +12,7 @@ import {
   postFeedbacks,
   countLikeProduct,
   deleteProduct,
+  IncreaseFeedbackNum,
 } from "../../firebase/firestore";
 import { AuthContext } from "../../auth/AuthProvider";
 
@@ -39,7 +40,7 @@ const Product = (): JSX.Element => {
   const [iconUrl, setIconUrl] = useState("");
   const [githubUrl, setGithubUrl] = useState("");
   const [productUrl, setProductUrl] = useState("");
-  const [tags, setTags] = useState([]);
+  const [tagList, setTagList] = useState([]);
   const [mainText, setMainText] = useState("");
   const [postDate, setPostDate] = useState("");
   const [editDate, setEditDate] = useState("");
@@ -50,7 +51,7 @@ const Product = (): JSX.Element => {
   const [isLike, setIsLike] = useState(false);
   const [productId, setProductId] = useState("");
   const [feedbackText, setFeedbackText] = useState("");
-  const [feedbacks, setFeedbacks] = useState<FeedbackType[]>([]);
+  const [feedbackList, setFeedbackList] = useState<FeedbackType[]>([]);
 
   const { currentUser } = useContext(AuthContext);
   const history = useHistory();
@@ -96,6 +97,8 @@ const Product = (): JSX.Element => {
     if (currentUser !== null && feedbackText) {
       const feedbackId = await postFeedbacks(currentUser.uid, feedbackText, productId);
       if (feedbackId) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const tmpIncreaseFeedbackNum = await IncreaseFeedbackNum(productId);
         setFeedbackText("");
         history.go(0);
       } else {
@@ -115,91 +118,87 @@ const Product = (): JSX.Element => {
     history.push("/");
   };
 
-  // 初回読み込み時にlocationからproductIdのstateを取得する
-  useEffect(() => {
-    setProductId((location.state as { productId: string }).productId);
-  }, [location.state]);
-
   // productId読み込み後の各stateの初期化
   useEffect(() => {
-    if (productId) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const tmpProductData = fetchProduct(productId).then((productData) => {
-        if (productData) {
-          const postDateISO = new Date(productData.postDate).toISOString();
-          const editDateISO = new Date(productData.editDate).toISOString();
-          const formatedPostDate = moment(new Date(postDateISO).toISOString()).format("YYYY年MM月DD日");
-          const formatedEditDate = moment(new Date(editDateISO).toISOString()).format("YYYY年MM月DD日");
-          setTitle(productData.productTitle);
-          setAbstract(productData.productAbstract);
-          setIconUrl(productData.productIconUrl);
-          setGithubUrl(productData.githubUrl);
-          setProductUrl(productData.productUrl);
-          setTags(productData.tags);
-          setMainText(productData.mainText);
-          setPostDate(formatedPostDate);
-          setEditDate(formatedEditDate);
-          setSumLike(productData.sumLike);
-          setUserUid(productData.userUid);
-        }
-      });
+    let isMounted = true;
 
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const tmpFeedback = fetchFeedback(productId).then((feedbackSnapshot) => {
-        if (feedbackSnapshot) {
-          (feedbackSnapshot as QuerySnapshot<DocumentData>).forEach(
-            (feedbackDoc: QueryDocumentSnapshot<DocumentData>) => {
-              const feedbackData = feedbackDoc.data() as FeedbackDataType;
-              // eslint-disable-next-line @typescript-eslint/no-unused-vars
-              const tmpUserInfo = fetchUserInfo(feedbackData.userUid).then((userInfo) => {
-                if (userInfo) {
-                  const newFeedback = feedbackData as FeedbackType;
-                  newFeedback.userIcon = userInfo.userIcon as string;
-                  newFeedback.userName = userInfo.name as string;
-                  setFeedbacks((prev) =>
-                    [...prev, newFeedback].sort((a, b) => {
-                      if (moment(new Date(a.postDate).toISOString()) < moment(new Date(b.postDate).toISOString())) {
-                        return -1;
-                      }
-                      return 1;
-                    })
-                  );
-                }
-              });
-            }
-          );
-        }
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [productId]);
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    (async () => {
+      // productId取得
+      const paramProductId = (location.state as { productId: string }).productId;
+      if (isMounted) setProductId(paramProductId);
 
-  // userUid読み込み後のユーザー情報に関するstateの初期化
-  useEffect(() => {
-    // 初回読み込み時にuserUidがなくエラーになるためifが必要
-    if (userUid && productId) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const tmpUserInfo = fetchUserInfo(userUid).then((userInfo) => {
-        if (userInfo) {
-          setUserIcon(userInfo.userIcon);
-          setUserName(userInfo.name);
-        }
-      });
-    }
-  }, [productId, userUid]);
+      // 作品データをFirestoreから取得
+      const productData = await fetchProduct(paramProductId);
+      if (!productData) return;
+      const postDateISO = new Date(productData.postDate).toISOString();
+      const editDateISO = new Date(productData.editDate).toISOString();
+      const formatedPostDate = moment(new Date(postDateISO).toISOString()).format("YYYY年MM月DD日");
+      const formatedEditDate = moment(new Date(editDateISO).toISOString()).format("YYYY年MM月DD日");
+      if (isMounted) {
+        setTitle(productData.productTitle);
+        setAbstract(productData.productAbstract);
+        setIconUrl(productData.productIconUrl);
+        setGithubUrl(productData.githubUrl);
+        setProductUrl(productData.productUrl);
+        setTagList(productData.tags);
+        setMainText(productData.mainText);
+        setPostDate(formatedPostDate);
+        setEditDate(formatedEditDate);
+        setSumLike(productData.sumLike);
+        setUserUid(productData.userUid);
+      }
 
-  // ログイン中のユーザーが作品にいいねしているかを判断
-  useEffect(() => {
-    if (currentUser && productId) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const tmpUserInfo = fetchUserInfo(currentUser.uid).then((userInfo) => {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        if (userInfo && [...userInfo.giveLike].includes(productId)) {
+      // 作品のユーザー情報（投稿者）のデータをFirestoreから取得
+      const productUserInfo = await fetchUserInfo(productData.userUid);
+      if (!productUserInfo) return;
+      if (isMounted) {
+        setUserIcon(productUserInfo.userIcon);
+        setUserName(productUserInfo.name);
+      }
+
+      // ログイン中のユーザーが作品をいいねしているかを判定
+      if (currentUser) {
+        const currentUserInfo = await fetchUserInfo(currentUser.uid);
+        if (
+          currentUserInfo &&
+          (currentUserInfo as { giveLike: string[] }).giveLike.includes(paramProductId) &&
+          isMounted
+        ) {
           setIsLike(true);
         }
-      });
-    }
-  }, [currentUser, productId]);
+      }
+
+      // 作品のフィードバックデータをFirestoreから取得
+      const feedbackSnapshot = await fetchFeedback(paramProductId);
+      if (!feedbackSnapshot) return;
+      (feedbackSnapshot as QuerySnapshot<DocumentData>).forEach(
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
+        async (feedbackDoc: QueryDocumentSnapshot<DocumentData>) => {
+          const feedbackData = feedbackDoc.data() as FeedbackDataType;
+          const userInfo = await fetchUserInfo(feedbackData.userUid);
+          if (userInfo && isMounted) {
+            const newFeedback = feedbackData as FeedbackType;
+            newFeedback.userIcon = userInfo.userIcon as string;
+            newFeedback.userName = userInfo.name as string;
+            setFeedbackList((prev) =>
+              [...prev, newFeedback].sort((a, b) => {
+                if (moment(new Date(a.postDate).toISOString()) < moment(new Date(b.postDate).toISOString())) {
+                  return -1;
+                }
+                return 1;
+              })
+            );
+          }
+        }
+      );
+    })();
+
+    return () => {
+      isMounted = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.state]);
 
   return (
     <>
@@ -240,11 +239,11 @@ const Product = (): JSX.Element => {
         </Stack>
         {/* タグ表示 */}
         <Stack flexDir={{ base: "column", md: "row" }} pl="2">
-          {tags[0] !== "" && (
+          {tagList[0] !== "" && (
             <>
               <TagIcon pt={{ base: "0", md: "2" }} minW="80px" />
               <Wrap>
-                {tags.map((tag, i) => (
+                {tagList.map((tag, i) => (
                   <WrapItem key={i.toString()}>
                     <Tag rounded="full" py="2" px="4" fontSize={{ base: "xs", sm: "sm", md: "md" }}>
                       {tag}
@@ -270,7 +269,7 @@ const Product = (): JSX.Element => {
         {/* フィードバックの表示 */}
         {/* eslint-disable-next-line array-callback-return */}
         <Stack spacing="6">
-          {feedbacks.map((feedback, i) => (
+          {feedbackList.map((feedback, i) => (
             <HStack key={i.toString()} align="flex-start" spacing="4">
               <Avatar
                 as={Link}
