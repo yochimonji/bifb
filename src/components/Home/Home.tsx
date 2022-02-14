@@ -65,7 +65,7 @@ const Home = (): JSX.Element => {
                   favoriteNum: p.favoriteNum as number,
                 });
               } else if (searchStatus === "paramSearchTag") {
-                if (product.data().tags.includes(searchCondition)) {
+                if (product.data().tagList.includes(searchCondition)) {
                   newProductData.push({
                     productId: product.id,
                     productIconUrl: p.productIconUrl as string,

@@ -23,15 +23,15 @@ const db = getFirestore();
 
 /**
  * タグの配列に対して、配列内にあるtag collectionに存在していないタグをtag collectionに追加
- * @param tags タグの一覧
+ * @param tagList タグの一覧
  */
-export const postTags = (tags: string[], conditions: string): void => {
+export const postTagList = (tagList: string[], conditions: string): void => {
   async function setData(name: string, num: number) {
-    await setDoc(doc(db, "tags", name), { num });
+    await setDoc(doc(db, "tag", name), { num });
   }
 
   async function getData(name: string) {
-    const tagData = await getDoc(doc(db, "tags", name));
+    const tagData = await getDoc(doc(db, "tag", name));
     const tagname = tagData.id;
     if (tagData.exists()) {
       if (conditions === "EXIST") {
@@ -44,9 +44,9 @@ export const postTags = (tags: string[], conditions: string): void => {
     }
   }
 
-  if (tags.length >= 1 && tags[0] !== "") {
-    for (let i = 0; i < tags.length; i += 1) {
-      const tmp = getData(tags[i]);
+  if (tagList.length >= 1 && tagList[0] !== "") {
+    for (let i = 0; i < tagList.length; i += 1) {
+      const tmp = getData(tagList[i]);
     }
   }
 };
@@ -58,7 +58,7 @@ export const postTags = (tags: string[], conditions: string): void => {
  * @param productIconUrl 作品アイコンのURL
  * @param githubUrl GithubURL
  * @param productUrl 作品のURL
- * @param tags タグ
+ * @param tagList タグ
  * @param mainText 作品説明、本文
  * @param userUid ユーザーID
  * @returns 新規に作成した作品ID
@@ -69,12 +69,12 @@ export const postProduct = async (
   productIconUrl: string,
   githubUrl: string,
   productUrl: string,
-  tags: string[],
+  tagList: string[],
   mainText: string,
   userUid: string
 ): Promise<string> => {
   // 現時点で存在しないタグをタグコレクションに追加
-  const tmp = postTags(tags, "NEW");
+  const tmp = postTagList(tagList, "NEW");
   // 作品情報の送信
   const productId = uuidv4();
   const newProduct = await setDoc(doc(db, "product", productId), {
@@ -83,7 +83,7 @@ export const postProduct = async (
     productIconUrl,
     githubUrl,
     productUrl,
-    tags,
+    tagList,
     mainText,
     postDate: new Date().toLocaleString(),
     editDate: new Date().toLocaleString(),
@@ -358,9 +358,9 @@ export const fetchProductsUser = async (
  * @param inputText 入力された文字列
  * @returns 入力された文字列を含むタグ名の配列
  */
-export const fetchTags = async (inputText: string): Promise<unknown> => {
+export const fetchTagList = async (inputText: string): Promise<unknown> => {
   const returnTagList: unknown[] = [];
-  const q = query(collection(db, "tags"));
+  const q = query(collection(db, "tag"));
   const tmp = await getDocs(q).then((tagList) => {
     tagList.forEach((tag) => {
       const tagId = tag.id;
@@ -379,9 +379,9 @@ export const fetchTags = async (inputText: string): Promise<unknown> => {
  * すべてのタグのリストを取得
  * @returns 全タグのリスト
  */
-export const fetchAllTags = async (): Promise<QuerySnapshot<DocumentData>> => {
-  const tagsList = await getDocs(collection(db, "tags"));
-  return tagsList;
+export const fetchAllTagList = async (): Promise<QuerySnapshot<DocumentData>> => {
+  const tagList = await getDocs(collection(db, "tag"));
+  return tagList;
 };
 /**
  * 作品にいいねが押された時にいいねカウントを変化させる
@@ -474,7 +474,7 @@ export const deleteProduct = async (productId: string): Promise<void> => {
  * @param productIconUrl 作品のアイコンのURL
  * @param githubUrl GithubのURL
  * @param productUrl 作品のURL
- * @param tags タグ一覧
+ * @param tagList タグ一覧
  * @param mainText 本文
  * @param userUid ユーザーID
  * @returns 作品ID
@@ -486,12 +486,12 @@ export const editProduct = async (
   productIconUrl: string,
   githubUrl: string,
   productUrl: string,
-  tags: string[],
+  tagList: string[],
   mainText: string,
   userUid: string
 ): Promise<string> => {
   // 現時点で存在しないタグをタグコレクションに追加
-  const tmp = postTags(tags, "EXIST");
+  const tmp = postTagList(tagList, "EXIST");
   // 作品のpostDateの取得
   let time: unknown;
   let favoriteNum = 0;
@@ -506,7 +506,7 @@ export const editProduct = async (
     productIconUrl,
     githubUrl,
     productUrl,
-    tags,
+    tagList,
     mainText,
     postDate: time,
     editDate: new Date().toLocaleString(),

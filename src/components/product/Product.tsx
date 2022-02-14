@@ -141,7 +141,7 @@ const Product = (): JSX.Element => {
         setIconUrl(productData.productIconUrl);
         setGithubUrl(productData.githubUrl);
         setProductUrl(productData.productUrl);
-        setTagList(productData.tags);
+        setTagList(productData.tagList);
         setMainText(productData.mainText);
         setPostDate(formatedPostDate);
         setEditDate(formatedEditDate);

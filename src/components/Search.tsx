@@ -3,7 +3,7 @@ import { Input, InputGroup, InputRightElement, VStack, IconButton, SimpleGrid, B
 import { BrowserRouter, useHistory } from "react-router-dom";
 import { MdSearch } from "react-icons/md";
 import { QueryDocumentSnapshot, DocumentData } from "firebase/firestore";
-import { fetchAllTags } from "../firebase/firestore";
+import { fetchAllTagList } from "../firebase/firestore";
 
 const Search = (): JSX.Element => {
   const history = useHistory();
@@ -16,7 +16,7 @@ const Search = (): JSX.Element => {
   // ページ読み込み時、1回のみすべてのタグを取得
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const tmpFetchTagList = fetchAllTags().then((data) => {
+    const tmpFetchTagList = fetchAllTagList().then((data) => {
       data.docs.forEach((eachData: QueryDocumentSnapshot<DocumentData>) => {
         allTagList.push(eachData.id);
         newTagList.push(eachData.id);
