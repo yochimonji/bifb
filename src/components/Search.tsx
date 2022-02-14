@@ -100,19 +100,19 @@ const Search = (): JSX.Element => {
         </InputGroup>
         <SimpleGrid columns={[1, 2, 3]} justifyItems="center" w="100%" spacing="40px" pb="40px">
           {tagList &&
-            tagList.map((OneOfTagList) => (
+            tagList.map((tag) => (
               <Button
-                key={OneOfTagList}
+                key={tag}
                 id="button"
                 minWidth="200px"
                 width="240px"
                 height="80px"
                 colorScheme="blackAlpha"
                 variant="outline"
-                value={OneOfTagList}
-                onClick={() => handleClickTagButton(OneOfTagList)}
+                value={tag}
+                onClick={() => handleClickTagButton(tag)}
               >
-                {OneOfTagList}
+                {tag}
               </Button>
             ))}
         </SimpleGrid>
