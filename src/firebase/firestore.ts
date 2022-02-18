@@ -23,32 +23,30 @@ const db = getFirestore();
 
 /**
  * タグの配列に対して、配列内にあるtag collectionに存在していないタグをtag collectionに追加
- * @param tags タグの一覧
+ * @param tagList タグの一覧
  */
-export const postTags = (tags: string[], conditions: string): void => {
-  async function setData(name: string, sum: number) {
-    await setDoc(doc(db, "tags", name), {
-      sum,
-    });
+export const postTagList = (tagList: string[], conditions: string): void => {
+  async function setData(name: string, num: number) {
+    await setDoc(doc(db, "tag", name), { num });
   }
 
   async function getData(name: string) {
-    const tagData = await getDoc(doc(db, "tags", name));
+    const tagData = await getDoc(doc(db, "tag", name));
     const tagname = tagData.id;
     if (tagData.exists()) {
       if (conditions === "EXIST") {
-        const temtemA = setData(tagname, Number(tagData.get("sum")));
+        const temtemA = setData(tagname, Number(tagData.get("num")));
       } else if (conditions === "NEW") {
-        const temtemA = setData(tagname, Number(tagData.get("sum")) + 1);
+        const temtemA = setData(tagname, Number(tagData.get("num")) + 1);
       }
     } else {
       const tmptmptmp = setData(tagname, 1);
     }
   }
 
-  if (!(tags.length === 1) && tags[0] === "") {
-    for (let i = 0; i < tags.length; i += 1) {
-      const tmp = getData(tags[i]);
+  if (tagList.length >= 1 && tagList[0] !== "") {
+    for (let i = 0; i < tagList.length; i += 1) {
+      const tmp = getData(tagList[i]);
     }
   }
 };
@@ -60,7 +58,7 @@ export const postTags = (tags: string[], conditions: string): void => {
  * @param productIconUrl 作品アイコンのURL
  * @param githubUrl GithubURL
  * @param productUrl 作品のURL
- * @param tags タグ
+ * @param tagList タグ
  * @param mainText 作品説明、本文
  * @param userUid ユーザーID
  * @returns 新規に作成した作品ID
@@ -71,12 +69,12 @@ export const postProduct = async (
   productIconUrl: string,
   githubUrl: string,
   productUrl: string,
-  tags: string[],
+  tagList: string[],
   mainText: string,
   userUid: string
 ): Promise<string> => {
   // 現時点で存在しないタグをタグコレクションに追加
-  const tmp = postTags(tags, "NEW");
+  const tmp = postTagList(tagList, "NEW");
   // 作品情報の送信
   const productId = uuidv4();
   const newProduct = await setDoc(doc(db, "product", productId), {
@@ -85,11 +83,11 @@ export const postProduct = async (
     productIconUrl,
     githubUrl,
     productUrl,
-    tags,
+    tagList,
     mainText,
     postDate: new Date().toLocaleString(),
     editDate: new Date().toLocaleString(),
-    sumLike: 0,
+    favoriteNum: 0,
     feedbackNum: 0,
     userUid,
     productId,
@@ -111,14 +109,14 @@ export const postFeedbacks = async (userUid: string, feedbackText: string, produ
     feedbackText,
     productId,
     postDate: new Date().toLocaleString(),
-    sumLike: 0,
+    favoriteNum: 0,
   });
 
   // userInfoコレクションに登録
   const q = query(collection(db, "userInfo"), where("userUid", "==", userUid));
   const userInfo = await getDocs(q);
   await updateDoc(userInfo.docs[0].ref, {
-    giveFeedback: arrayUnion(productId),
+    feedbackList: arrayUnion(productId),
   });
   return newFeedback.id;
 };
@@ -131,8 +129,8 @@ export const postFeedbacks = async (userUid: string, feedbackText: string, produ
  * @param githubUrl GithubURL
  * @param twitterUrl TwitterURL
  * @param otherUrl その他のURL
- * @param giveLike いいねをしている作品IDの一覧
- * @param giveFeedback フェードバックをしている作品のIDを一覧
+ * @param favoriteList いいねをしている作品IDの一覧
+ * @param feedbackList フェードバックをしている作品のIDを一覧
  * @param userUid ユーザーID
  * @returns
  */
@@ -143,8 +141,8 @@ export const postUserInfo = async (
   githubUrl: string,
   twitterUrl: string,
   otherUrl: string,
-  giveLike: string[],
-  giveFeedback: string[],
+  favoriteList: string[],
+  feedbackList: string[],
   userUid: string
 ): Promise<void> => {
   const tmp = await setDoc(doc(db, "userInfo", userUid), {
@@ -154,8 +152,8 @@ export const postUserInfo = async (
     githubUrl,
     twitterUrl,
     otherUrl,
-    giveLike,
-    giveFeedback,
+    favoriteList,
+    feedbackList,
     userUid,
   });
 };
@@ -246,24 +244,24 @@ export const fetchFeedback = async (productId: string): Promise<DocumentData | u
  * トレンド・新着・いいね数によって、作品をソートする
  * トレンドをどう表現するかについても要検討
  *
- * @param conditions Trend｜New｜LikeLarge｜LikeSmall | FeedbackLarge | FeedbackSmall
+ * @param conditions Trend｜New｜FavoriteLarge｜FavoriteSmall | FeedbackLarge | FeedbackSmall
  * @returns
  */
 export const fetchProducts = async (conditions: string): Promise<DocumentData | undefined> => {
   let q;
   if (conditions === "TREND" || conditions === "") {
-    q = query(collection(db, "product"), orderBy("sumLike", "desc"));
+    q = query(collection(db, "product"), orderBy("favoriteNum", "desc"));
   } else if (conditions === "NEW") {
     q = query(collection(db, "product"), orderBy("postDate", "desc"));
-  } else if (conditions === "LikeLarge") {
-    q = query(collection(db, "product"), orderBy("sumLike", "desc"));
-  } else if (conditions === "LikeSmall") {
-    q = query(collection(db, "product"), orderBy("sumLike"));
+  } else if (conditions === "FavoriteLarge") {
+    q = query(collection(db, "product"), orderBy("favoriteNum", "desc"));
+  } else if (conditions === "FavoriteSmall") {
+    q = query(collection(db, "product"), orderBy("favoriteNum"));
   } else if (conditions === "FeedbackLarge") {
     q = query(collection(db, "product"), orderBy("feedbackNum", "desc"));
   } else if (conditions === "FeedbackSmall") {
     q = query(collection(db, "product"), orderBy("feedbackNum"));
-  } else q = query(collection(db, "product"), orderBy("sumLike", "desc"));
+  } else q = query(collection(db, "product"), orderBy("favoriteNum", "desc"));
 
   const querySnapshot = await getDocs(q);
   return querySnapshot;
@@ -307,16 +305,16 @@ export const fetchProducts = async (conditions: string): Promise<DocumentData | 
 //     return returnProductInfo;
 //   }
 //   if (searchType === "LIKE") {
-//     let givedLikeProductId: DocumentData | undefined;
+//     let givedFavoriteProductId: DocumentData | undefined;
 //     const tmp = await getDoc(doc(db, "userInfo", userUid)).then(
 //       (eachUserInfo: DocumentSnapshot<DocumentData>) => {
-//         givedLikeProductId = eachUserInfo.data();
+//         givedFavoriteProductId = eachUserInfo.data();
 //       }
 //     );
 
-//     if (givedLikeProductId) {
-//       for (let i = 0; i < givedLikeProductId.length; i += 1) {
-//         const temp = fetchProduct(givedLikeProductId[i]).then((data) => {
+//     if (givedFavoriteProductId) {
+//       for (let i = 0; i < givedFavoriteProductId.length; i += 1) {
+//         const temp = fetchProduct(givedFavoriteProductId[i]).then((data) => {
 //           returnProductInfo.push(data);
 //         });
 //         return returnProductInfo;
@@ -336,7 +334,7 @@ export const fetchProducts = async (conditions: string): Promise<DocumentData | 
  */
 export const fetchProductsUser = async (
   userUid: string,
-  tabType: "posted" | "like" | "feedback"
+  tabType: "posted" | "favorite" | "feedback"
 ): Promise<QuerySnapshot<DocumentData> | null> => {
   let productQuery;
 
@@ -347,9 +345,9 @@ export const fetchProductsUser = async (
     const userInfos = userInfoSnap.data();
     if (!userInfos) return null;
 
-    if (tabType === "like")
-      productQuery = query(collection(db, "product"), where("productId", "in", userInfos.giveLike));
-    else productQuery = query(collection(db, "product"), where("productId", "in", userInfos.giveFeedback));
+    if (tabType === "favorite")
+      productQuery = query(collection(db, "product"), where("productId", "in", userInfos.favoriteList));
+    else productQuery = query(collection(db, "product"), where("productId", "in", userInfos.feedbackList));
   }
   const productSnapshot = await getDocs(productQuery);
   return productSnapshot;
@@ -360,9 +358,9 @@ export const fetchProductsUser = async (
  * @param inputText 入力された文字列
  * @returns 入力された文字列を含むタグ名の配列
  */
-export const fetchTags = async (inputText: string): Promise<unknown> => {
+export const fetchTagList = async (inputText: string): Promise<unknown> => {
   const returnTagList: unknown[] = [];
-  const q = query(collection(db, "tags"));
+  const q = query(collection(db, "tag"));
   const tmp = await getDocs(q).then((tagList) => {
     tagList.forEach((tag) => {
       const tagId = tag.id;
@@ -381,9 +379,9 @@ export const fetchTags = async (inputText: string): Promise<unknown> => {
  * すべてのタグのリストを取得
  * @returns 全タグのリスト
  */
-export const fetchAllTags = async (): Promise<QuerySnapshot<DocumentData>> => {
-  const tagsList = await getDocs(collection(db, "tags"));
-  return tagsList;
+export const fetchAllTagList = async (): Promise<QuerySnapshot<DocumentData>> => {
+  const tagList = await getDocs(collection(db, "tag"));
+  return tagList;
 };
 /**
  * 作品にいいねが押された時にいいねカウントを変化させる
@@ -392,31 +390,35 @@ export const fetchAllTags = async (): Promise<QuerySnapshot<DocumentData>> => {
  * @param userUid ログイン中のユーザーID
  * @returns 最新のいいね数
  */
-export const countLikeProduct = async (productId: string, conditions: string, userUid: string): Promise<unknown> => {
-  let newSumLike: unknown;
+export const countFavoriteProduct = async (
+  productId: string,
+  conditions: string,
+  userUid: string
+): Promise<unknown> => {
+  let newFavoriteNum: unknown;
   const q = query(collection(db, "userInfo"), where("userUid", "==", userUid));
   const userInfo = await getDocs(q);
 
   if (conditions === "UP") {
     await getDoc(doc(db, "product", productId)).then((data) => {
-      newSumLike = Number(data.get("sumLike")) + 1;
+      newFavoriteNum = Number(data.get("favoriteNum")) + 1;
     });
     await updateDoc(userInfo.docs[0].ref, {
-      giveLike: arrayUnion(productId),
+      favoriteList: arrayUnion(productId),
     });
   } else if (conditions === "DOWN") {
     await getDoc(doc(db, "product", productId)).then((data) => {
-      newSumLike = Number(data.get("sumLike")) - 1;
+      newFavoriteNum = Number(data.get("favoriteNum")) - 1;
     });
     await updateDoc(userInfo.docs[0].ref, {
-      giveLike: arrayRemove(productId),
+      favoriteList: arrayRemove(productId),
     });
   }
 
   await updateDoc(doc(db, "product", productId), {
-    sumLike: newSumLike,
+    favoriteNum: newFavoriteNum,
   });
-  return newSumLike;
+  return newFavoriteNum;
 };
 
 /**
@@ -425,31 +427,35 @@ export const countLikeProduct = async (productId: string, conditions: string, us
  * @param conditions UP|DOWN
  * @returns 最新のいいね数
  */
-export const countLikeFeedback = async (feedbackId: string, conditions: string, userUid: string): Promise<unknown> => {
-  let newSumLike: unknown;
+export const countFavoriteFeedback = async (
+  feedbackId: string,
+  conditions: string,
+  userUid: string
+): Promise<unknown> => {
+  let newFavoriteNum: unknown;
   const q = query(collection(db, "userInfo"), where("userUid", "==", userUid));
   const userInfo = await getDocs(q);
 
   if (conditions === "UP") {
     await getDoc(doc(db, "feedback", feedbackId)).then((data) => {
-      newSumLike = Number(data.get("sumLike")) + 1;
+      newFavoriteNum = Number(data.get("favoriteNum")) + 1;
     });
     await updateDoc(userInfo.docs[0].ref, {
-      giveFeedback: arrayUnion(feedbackId),
+      feedbackList: arrayUnion(feedbackId),
     });
   } else if (conditions === "DOWN") {
     await getDoc(doc(db, "feedback", feedbackId)).then((data) => {
-      newSumLike = Number(data.get("sumLike")) - 1;
+      newFavoriteNum = Number(data.get("favoriteNum")) - 1;
     });
     await updateDoc(userInfo.docs[0].ref, {
-      giveFeedback: arrayRemove(feedbackId),
+      feedbackList: arrayRemove(feedbackId),
     });
   }
 
   await updateDoc(doc(db, "feedback", feedbackId), {
-    sumLike: newSumLike,
+    favoriteNum: newFavoriteNum,
   });
-  return newSumLike;
+  return newFavoriteNum;
 };
 
 /**
@@ -468,7 +474,7 @@ export const deleteProduct = async (productId: string): Promise<void> => {
  * @param productIconUrl 作品のアイコンのURL
  * @param githubUrl GithubのURL
  * @param productUrl 作品のURL
- * @param tags タグ一覧
+ * @param tagList タグ一覧
  * @param mainText 本文
  * @param userUid ユーザーID
  * @returns 作品ID
@@ -480,18 +486,18 @@ export const editProduct = async (
   productIconUrl: string,
   githubUrl: string,
   productUrl: string,
-  tags: string[],
+  tagList: string[],
   mainText: string,
   userUid: string
 ): Promise<string> => {
   // 現時点で存在しないタグをタグコレクションに追加
-  const tmp = postTags(tags, "EXIST");
+  const tmp = postTagList(tagList, "EXIST");
   // 作品のpostDateの取得
   let time: unknown;
-  let sumLike = 0;
+  let favoriteNum = 0;
   const tmp2 = await getDoc(doc(db, "product", productId)).then((data) => {
     time = data.get("postDate");
-    sumLike = data.get("sumLike") as number;
+    favoriteNum = data.get("favoriteNum") as number;
   });
   // 作品情報の取得
   const tmp3 = await setDoc(doc(db, "product", productId), {
@@ -500,11 +506,11 @@ export const editProduct = async (
     productIconUrl,
     githubUrl,
     productUrl,
-    tags,
+    tagList,
     mainText,
     postDate: time,
     editDate: new Date().toLocaleString(),
-    sumLike,
+    favoriteNum,
     userUid,
   });
   return productId;

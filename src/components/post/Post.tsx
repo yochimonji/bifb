@@ -13,21 +13,12 @@ import {
   Icon,
 } from "@chakra-ui/react";
 import { BsImage } from "react-icons/bs";
-import {
-  getStorage,
-  ref,
-  getDownloadURL,
-  deleteObject,
-} from "firebase/storage";
+import { getStorage, ref, getDownloadURL, deleteObject } from "firebase/storage";
 import { useHistory, useLocation } from "react-router-dom";
 
 import app from "../../base";
 import { GithubIcon, ProductIcon, TagIcon, MarkdownForm, postImage } from "..";
-import {
-  editProduct,
-  fetchProduct,
-  postProduct,
-} from "../../firebase/firestore";
+import { editProduct, fetchProduct, postProduct } from "../../firebase/firestore";
 import { AuthContext } from "../../auth/AuthProvider";
 
 const storage = getStorage(app);
@@ -39,13 +30,13 @@ const Post = (): JSX.Element => {
   const [iconName, setIconName] = useState("");
   const [githubUrl, setGithubUrl] = useState("");
   const [productUrl, setProductUrl] = useState("");
-  const [tags, setTags] = useState("");
+  const [tagList, setTagList] = useState("");
   const [mainText, setMainText] = useState("");
   const [error, setError] = useState("");
   const [validTitle, setValidTitle] = useState(false);
   const [validAbstract, setValidAbstract] = useState(false);
   const [validIconUrl, setValidIconUrl] = useState(false);
-  const [validTags, setValidTags] = useState(false);
+  const [validTagList, setValidTagList] = useState(false);
   const [validMainText, setValidMainText] = useState(false);
   const [editProductId, setEditProductId] = useState("");
 
@@ -66,9 +57,7 @@ const Post = (): JSX.Element => {
    * 概要の変更に合わせて概要のstateを変更
    * @param event 入力が変更されたイベント
    */
-  const handleAbstract: React.ChangeEventHandler<HTMLInputElement> = (
-    event
-  ) => {
+  const handleAbstract: React.ChangeEventHandler<HTMLInputElement> = (event) => {
     setAbstract(event.target.value);
   };
 
@@ -76,9 +65,7 @@ const Post = (): JSX.Element => {
    * アップロードされた画像ファイルのプレビューを表示する関数
    * @param event fileをアップロードするイベント
    */
-  const handleIcon: React.ChangeEventHandler<HTMLInputElement> = async (
-    event
-  ) => {
+  const handleIcon: React.ChangeEventHandler<HTMLInputElement> = async (event) => {
     // ファイルが選択されているかチェック
     if (event.target.files == null || event.target.files[0] == null) {
       setError("ファイルが選択されていません");
@@ -114,9 +101,7 @@ const Post = (): JSX.Element => {
    * GitHub URL の変更に合わせてgithubUrlを変更
    * @param event GitHubリンクの入力イベント
    */
-  const handleGithubUrl: React.ChangeEventHandler<HTMLInputElement> = (
-    event
-  ) => {
+  const handleGithubUrl: React.ChangeEventHandler<HTMLInputElement> = (event) => {
     setGithubUrl(event.target.value);
   };
 
@@ -124,27 +109,23 @@ const Post = (): JSX.Element => {
    * GitHub URL の変更に合わせてgithubUrlを変更
    * @param event GitHubリンクの入力イベント
    */
-  const handleProductUrl: React.ChangeEventHandler<HTMLInputElement> = (
-    event
-  ) => {
+  const handleProductUrl: React.ChangeEventHandler<HTMLInputElement> = (event) => {
     setProductUrl(event.target.value);
   };
 
   /**
-   * タグ入力欄の変更に合わせてtagsを変更
-   * @param event tagsの入力イベント
+   * タグ入力欄の変更に合わせてtagListを変更
+   * @param event tagListの入力イベント
    */
-  const handleTags: React.ChangeEventHandler<HTMLInputElement> = (event) => {
-    setTags(event.target.value);
+  const handleTagList: React.ChangeEventHandler<HTMLInputElement> = (event) => {
+    setTagList(event.target.value);
   };
 
   /**
    * マークダウンの入力の変更に合わせてmainTextを変更
    * @param event マークダウンの入力イベント
    */
-  const handleMainText: React.ChangeEventHandler<HTMLTextAreaElement> = (
-    event
-  ) => {
+  const handleMainText: React.ChangeEventHandler<HTMLTextAreaElement> = (event) => {
     setMainText(event.target.value);
   };
 
@@ -183,18 +164,18 @@ const Post = (): JSX.Element => {
     // normalizeで全角を半角に統一
     // 1つ目のreplaceで前後の空白を削除
     // 2つ目のreplaceで空白が2回以上続いたら1つの空白に置換
-    const newTags = tags
+    const newTagList = tagList
       .normalize("NFKC")
       .replace(/(^\s+)|(\s+$)/g, "")
       .replace(/(\s{2,})/g, " ");
     // 処理を行なったタグで更新しておく
-    setTags(newTags);
-    const tagList = newTags.split(" ");
-    if (tagList.length > 5) {
+    setTagList(newTagList);
+    const tagListLength = newTagList.split(" ").length;
+    if (tagListLength > 5) {
       canPost = false;
-      setValidTags(true);
+      setValidTagList(true);
     } else {
-      setValidTags(false);
+      setValidTagList(false);
     }
     return canPost;
   };
@@ -204,13 +185,13 @@ const Post = (): JSX.Element => {
     const canPost = validate();
     // タグはvalidateと同様の処理を行う
     // stateはすぐに更新されないことがあるため
-    const tagList = tags
+    const newTagList = tagList
       .normalize("NFKC")
       .replace(/(^\s+)|(\s+$)/g, "")
       .replace(/(\s{2,})/g, " ")
       .split(" ");
     // 重複要素を削除
-    const nonDuplicatedTagList = [...new Set(tagList)];
+    const nonDuplicatedTagList = [...new Set(newTagList)];
     // ログイン済みでバリデーションOKの場合Firestoreに保存
     if (currentUser != null && canPost) {
       let productId = "";
@@ -248,38 +229,28 @@ const Post = (): JSX.Element => {
   };
 
   useEffect(() => {
-    if (
-      location.state &&
-      (location.state as { productId?: string }).productId
-    ) {
-      const currentProductId = (location.state as { productId: string })
-        .productId;
+    if (location.state && (location.state as { productId?: string }).productId) {
+      const currentProductId = (location.state as { productId: string }).productId;
       setEditProductId(currentProductId);
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const tmpProductData = fetchProduct(currentProductId).then(
-        (productData) => {
-          if (productData) {
-            setTitle(productData.productTitle);
-            setAbstract(productData.productAbstract);
-            setIconUrl(productData.productIconUrl);
-            setGithubUrl(productData.githubUrl);
-            setProductUrl(productData.productUrl);
-            setTags((productData.tags as string[]).join(" "));
-            setMainText(productData.mainText);
-          }
+      const tmpProductData = fetchProduct(currentProductId).then((productData) => {
+        if (productData) {
+          setTitle(productData.productTitle);
+          setAbstract(productData.productAbstract);
+          setIconUrl(productData.productIconUrl);
+          setGithubUrl(productData.githubUrl);
+          setProductUrl(productData.productUrl);
+          setTagList((productData.tagList as string[]).join(" "));
+          setMainText(productData.mainText);
         }
-      );
+      });
     }
   }, [location.state]);
 
   return (
     <Stack spacing={{ base: "4", md: "2" }} pt="8">
       <HStack align="center">
-        <Stack
-          w={{ base: "40%", sm: "30%", md: "20%" }}
-          justify="center"
-          alignItems="center"
-        >
+        <Stack w={{ base: "40%", sm: "30%", md: "20%" }} justify="center" alignItems="center">
           {/* 画像はstateの変数から読み込む */}
           {iconUrl ? (
             <>
@@ -315,13 +286,7 @@ const Post = (): JSX.Element => {
           )}
           {/* 画像アップロード用のhidden属性を付与したinput */}
           {/* アイコン選択ボタンをクリックするとinputもクリックされる */}
-          <input
-            hidden
-            ref={iconInputRef}
-            type="file"
-            accept="image/*"
-            onChange={handleIcon}
-          />
+          <input hidden ref={iconInputRef} type="file" accept="image/*" onChange={handleIcon} />
           {/* アイコン選択時のエラー */}
           {error && (
             <Text fontSize="sm" color="red" m="0">
@@ -339,39 +304,19 @@ const Post = (): JSX.Element => {
         <Stack w={{ base: "60%", sm: "70%", md: "80%" }} h="auto" pt="4">
           <FormControl isRequired isInvalid={validTitle} w="100%" h="60%">
             <FormLabel>作品タイトル</FormLabel>
-            <Input
-              fontSize="xl"
-              variant="flushed"
-              value={title}
-              onChange={handleTitle}
-            />
-            {validTitle && (
-              <FormErrorMessage>
-                作品タイトルを入力してください。
-              </FormErrorMessage>
-            )}
+            <Input fontSize="xl" variant="flushed" value={title} onChange={handleTitle} />
+            {validTitle && <FormErrorMessage>作品タイトルを入力してください。</FormErrorMessage>}
           </FormControl>
           <FormControl isRequired isInvalid={validAbstract} w="100%" h="40%">
-            <FormLabel fontSize={{ base: "sm", sm: "md" }}>
-              この作品を一言で表すと？
-            </FormLabel>
-            <Input
-              variant="flushed"
-              value={abstract}
-              onChange={handleAbstract}
-            />
-            {validAbstract && (
-              <FormErrorMessage>作品概要を入力してください。</FormErrorMessage>
-            )}
+            <FormLabel fontSize={{ base: "sm", sm: "md" }}>この作品を一言で表すと？</FormLabel>
+            <Input variant="flushed" value={abstract} onChange={handleAbstract} />
+            {validAbstract && <FormErrorMessage>作品概要を入力してください。</FormErrorMessage>}
           </FormControl>
         </Stack>
       </HStack>
       {/* GitHubリンク入力欄 */}
       <Stack flexDir={{ base: "column", md: "row" }} pl="2">
-        <GithubIcon
-          w={{ base: "100%", md: "18%" }}
-          ml={{ base: "0", sm: "2", md: "4", lg: "6" }}
-        />
+        <GithubIcon w={{ base: "100%", md: "18%" }} ml={{ base: "0", sm: "2", md: "4", lg: "6" }} />
         <FormControl w={{ base: "100%", md: "80%" }}>
           <Input
             variant="flushed"
@@ -384,10 +329,7 @@ const Post = (): JSX.Element => {
       </Stack>
       {/* 作品リンク入力欄 */}
       <Stack flexDir={{ base: "column", md: "row" }} pl="2">
-        <ProductIcon
-          w={{ base: "100%", md: "18%" }}
-          ml={{ base: "0", sm: "2", md: "4", lg: "6" }}
-        />
+        <ProductIcon w={{ base: "100%", md: "18%" }} ml={{ base: "0", sm: "2", md: "4", lg: "6" }} />
         <FormControl w={{ base: "100%", md: "80%" }}>
           <Input
             variant="flushed"
@@ -405,18 +347,14 @@ const Post = (): JSX.Element => {
           ml={{ base: "0", sm: "2", md: "4", lg: "6" }}
           pb={{ base: "0", md: "2" }}
         />
-        <FormControl isInvalid={validTags} w={{ base: "100%", md: "80%" }}>
-          <Input variant="flushed" value={tags} onChange={handleTags} />
-          {validTags ? (
+        <FormControl isInvalid={validTagList} w={{ base: "100%", md: "80%" }}>
+          <Input variant="flushed" value={tagList} onChange={handleTagList} />
+          {validTagList ? (
             <FormErrorMessage>
-              タグはスペースで区切って5つまで入力してください（例：Webアプリ
-              JavaScript）
+              タグはスペースで区切って5つまで入力してください（例：Webアプリ JavaScript）
             </FormErrorMessage>
           ) : (
-            <FormHelperText>
-              タグはスペースで区切って5つまで入力してください（例：Webアプリ
-              JavaScript）
-            </FormHelperText>
+            <FormHelperText>タグはスペースで区切って5つまで入力してください（例：Webアプリ JavaScript）</FormHelperText>
           )}
         </FormControl>
       </Stack>

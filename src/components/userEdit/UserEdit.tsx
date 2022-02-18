@@ -11,12 +11,7 @@ import {
   FormLabel,
   FormErrorMessage,
 } from "@chakra-ui/react";
-import {
-  getStorage,
-  ref,
-  deleteObject,
-  getDownloadURL,
-} from "firebase/storage";
+import { getStorage, ref, deleteObject, getDownloadURL } from "firebase/storage";
 
 import { useHistory } from "react-router-dom";
 import { fetchUserInfo, postUserInfo } from "../../firebase/firestore";
@@ -33,8 +28,8 @@ const UserEdit = (): JSX.Element => {
   const [githubUrl, setGithubUrl] = useState("");
   const [twitterUrl, setTwitterUrl] = useState("");
   const [otherUrl, setOtherUrl] = useState("");
-  const [giveLike, setGiveLike] = useState<string[]>([]);
-  const [giveFeedback, setGiveFeedback] = useState<string[]>([]);
+  const [favoriteList, setFavoriteList] = useState<string[]>([]);
+  const [feedbackList, setFeedbackList] = useState<string[]>([]);
   const [validUserName, setValidUserName] = useState(false);
   const [validGithubUrl, setValidGithubUrl] = useState(false);
   const [validTwitterUrl, setValidTwitterUrl] = useState(false);
@@ -56,8 +51,8 @@ const UserEdit = (): JSX.Element => {
       setGithubUrl(userInfo.githubUrl);
       setTwitterUrl(userInfo.twitterUrl);
       setOtherUrl(userInfo.otherUrl);
-      setGiveLike(userInfo.giveLike);
-      setGiveFeedback(userInfo.giveFeedback);
+      setFavoriteList(userInfo.favoriteList);
+      setFeedbackList(userInfo.feedbackList);
     })();
   }, [currentUser]);
 
@@ -93,8 +88,8 @@ const UserEdit = (): JSX.Element => {
         githubUrl,
         twitterUrl,
         otherUrl,
-        giveLike,
-        giveFeedback,
+        favoriteList,
+        feedbackList,
         currentUser.uid
       );
       setIsReload(true);
@@ -115,9 +110,7 @@ const UserEdit = (): JSX.Element => {
    * アップロードされた画像ファイルのプレビューを表示する関数
    * @param event fileをアップロードするイベント
    */
-  const handleIcon: React.ChangeEventHandler<HTMLInputElement> = async (
-    event
-  ) => {
+  const handleIcon: React.ChangeEventHandler<HTMLInputElement> = async (event) => {
     // ファイルが選択されているかチェック
     if (event.target.files == null || event.target.files[0] == null) {
       return;
@@ -146,8 +139,8 @@ const UserEdit = (): JSX.Element => {
       githubUrl,
       twitterUrl,
       otherUrl,
-      giveLike,
-      giveFeedback,
+      favoriteList,
+      feedbackList,
       currentUser.uid
     );
     setIsReload(true);
@@ -155,62 +148,21 @@ const UserEdit = (): JSX.Element => {
 
   return (
     <VStack spacing="4" mb="8">
-      <Stack
-        w="100%"
-        spacing="0"
-        mt="8"
-        direction={{ base: "column", md: "row" }}
-      >
-        <VStack
-          w="20%"
-          minW="120px"
-          padding="5px 10px 0px 0px"
-          mb="4"
-          alignSelf={{ base: "center", md: "flex-start" }}
-        >
+      <Stack w="100%" spacing="0" mt="8" direction={{ base: "column", md: "row" }}>
+        <VStack w="20%" minW="120px" padding="5px 10px 0px 0px" mb="4" alignSelf={{ base: "center", md: "flex-start" }}>
           <Avatar src={userIconUrl} size="xl" />
-          <Button
-            colorScheme="black"
-            variant="outline"
-            size="sm"
-            onClick={onClickChangeIcon}
-          >
+          <Button colorScheme="black" variant="outline" size="sm" onClick={onClickChangeIcon}>
             画像変更
           </Button>
           {/* 画像アップロード用のhidden属性を付与したinput */}
           {/* 下のButtonをクリックするとinputもクリックされる */}
-          <input
-            hidden
-            ref={userIconRef}
-            type="file"
-            accept="image/*"
-            onChange={handleIcon}
-          />
+          <input hidden ref={userIconRef} type="file" accept="image/*" onChange={handleIcon} />
         </VStack>
-        <Stack
-          w={{ base: "100%", md: "80%" }}
-          spacing="4"
-          minW="200px"
-          minH="150px"
-          alignSelf="flex-start"
-        >
-          <FormControl
-            isRequired
-            isInvalid={validUserName}
-            w="100%"
-            minH="50px"
-          >
+        <Stack w={{ base: "100%", md: "80%" }} spacing="4" minW="200px" minH="150px" alignSelf="flex-start">
+          <FormControl isRequired isInvalid={validUserName} w="100%" minH="50px">
             <FormLabel>ユーザー名</FormLabel>
-            <Input
-              fontSize="xl"
-              value={userName}
-              onChange={(e) => setUserName(e.target.value)}
-            />
-            {validUserName && (
-              <FormErrorMessage>
-                ユーザー名を入力してください。
-              </FormErrorMessage>
-            )}
+            <Input fontSize="xl" value={userName} onChange={(e) => setUserName(e.target.value)} />
+            {validUserName && <FormErrorMessage>ユーザー名を入力してください。</FormErrorMessage>}
           </FormControl>
           <FormControl>
             <FormLabel>自己紹介</FormLabel>
@@ -228,17 +180,9 @@ const UserEdit = (): JSX.Element => {
       </Stack>
       {/* GitHubリンク入力欄 */}
       <Stack flexDir={{ base: "column", md: "row" }} w="100%">
-        <GithubIcon
-          w={{ base: "100%", md: "20%" }}
-          minW="120px"
-          justify={{ base: "flex-start", md: "center" }}
-        />
+        <GithubIcon w={{ base: "100%", md: "20%" }} minW="120px" justify={{ base: "flex-start", md: "center" }} />
         <FormControl w={{ base: "100%", md: "80%" }}>
-          <Input
-            type="url"
-            value={githubUrl}
-            onChange={(e) => setGithubUrl(e.target.value)}
-          />
+          <Input type="url" value={githubUrl} onChange={(e) => setGithubUrl(e.target.value)} />
           {validGithubUrl && (
             <FormHelperText color="red" pl="4">
               https://github.com/[ユーザー名]
@@ -248,17 +192,9 @@ const UserEdit = (): JSX.Element => {
       </Stack>
       {/* Twitterリンク入力欄 */}
       <Stack flexDir={{ base: "column", md: "row" }} w="100%">
-        <TwitterIcon
-          w={{ base: "100%", md: "20%" }}
-          minW="120px"
-          justify={{ base: "flex-start", md: "center" }}
-        />
+        <TwitterIcon w={{ base: "100%", md: "20%" }} minW="120px" justify={{ base: "flex-start", md: "center" }} />
         <FormControl w={{ base: "100%", md: "80%" }}>
-          <Input
-            type="url"
-            value={twitterUrl}
-            onChange={(e) => setTwitterUrl(e.target.value)}
-          />
+          <Input type="url" value={twitterUrl} onChange={(e) => setTwitterUrl(e.target.value)} />
           {validTwitterUrl && (
             <FormHelperText color="red" pl="4">
               https://twitter.com/[ユーザー名]
@@ -266,15 +202,7 @@ const UserEdit = (): JSX.Element => {
           )}
         </FormControl>
       </Stack>
-      <Button
-        bg="#99CED4"
-        textColor="gray.100"
-        fontSize="xl"
-        w="24"
-        h="12"
-        shadow="md"
-        onClick={handleSave}
-      >
+      <Button bg="#99CED4" textColor="gray.100" fontSize="xl" w="24" h="12" shadow="md" onClick={handleSave}>
         保存
       </Button>
     </VStack>

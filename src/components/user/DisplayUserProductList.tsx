@@ -1,12 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  HStack,
-  TabList,
-  Tabs,
-  Tab,
-  TabPanels,
-  TabPanel,
-} from "@chakra-ui/react";
+import { HStack, TabList, Tabs, Tab, TabPanels, TabPanel } from "@chakra-ui/react";
 
 import { fetchProductsUser, fetchUserInfos } from "../../firebase/firestore";
 import { DisplayProductProps, DisplayProducts } from "../index";
@@ -19,7 +12,7 @@ import { DisplayProductProps, DisplayProducts } from "../index";
  */
 const fetchNewProductData = async (
   userUid: string,
-  tabType: "posted" | "like" | "feedback"
+  tabType: "posted" | "favorite" | "feedback"
 ): Promise<DisplayProductProps[] | null> => {
   const userUidSet: Set<string> = new Set();
   const newProducts: DisplayProductProps[] = [];
@@ -47,7 +40,7 @@ const fetchNewProductData = async (
           productAbstract: p.productAbstract as string,
           postDate: p.postDate as string,
           editDate: p.editDate as string,
-          sumLike: p.sumLike as number,
+          favoriteNum: p.favoriteNum as number,
         });
       }
     });
@@ -59,17 +52,11 @@ type DisplayUserProductListProps = {
   displayedUserUid: string;
 };
 
-export const DisplayUserProductList = (
-  props: DisplayUserProductListProps
-): JSX.Element => {
-  const [productsPosted, setProductsPosted] = useState<DisplayProductProps[]>(
-    []
-  );
-  const [productsLike, setProductsLike] = useState<DisplayProductProps[]>([]);
-  const [productsFeedback, setProductsFeedback] = useState<
-    DisplayProductProps[]
-  >([]);
-  const [isClickLike, setIsClickLike] = useState(false);
+export const DisplayUserProductList = (props: DisplayUserProductListProps): JSX.Element => {
+  const [productsPosted, setProductsPosted] = useState<DisplayProductProps[]>([]);
+  const [productsFavorite, setProductsFavorite] = useState<DisplayProductProps[]>([]);
+  const [productsFeedback, setProductsFeedback] = useState<DisplayProductProps[]>([]);
+  const [isClickFavorite, setIsClickFavorite] = useState(false);
   const [isClickFeedback, setIsClickFeedback] = useState(false);
 
   // 投稿済み作品の情報の取得
@@ -77,33 +64,24 @@ export const DisplayUserProductList = (
     // 即時関数を使って非同期でプロダクトデータを読み込む
     // eslint-disable-next-line no-void
     void (async () => {
-      const newProductsPosted = await fetchNewProductData(
-        props.displayedUserUid,
-        "posted"
-      );
+      const newProductsPosted = await fetchNewProductData(props.displayedUserUid, "posted");
       if (newProductsPosted) setProductsPosted(newProductsPosted);
     })();
   }, [props.displayedUserUid]);
 
   // 初めにクリックした時だけ作品データを読み込む
   // 無駄な通信を抑える
-  const onClickLike = async () => {
-    if (isClickLike) return;
-    setIsClickLike(true);
-    const newProductsLike = await fetchNewProductData(
-      props.displayedUserUid,
-      "like"
-    );
-    if (newProductsLike) setProductsLike(newProductsLike);
+  const onClickFavorite = async () => {
+    if (isClickFavorite) return;
+    setIsClickFavorite(true);
+    const newProductsFavorite = await fetchNewProductData(props.displayedUserUid, "favorite");
+    if (newProductsFavorite) setProductsFavorite(newProductsFavorite);
   };
 
   const onClickFeedback = async () => {
     if (isClickFeedback) return;
     setIsClickFeedback(true);
-    const newProductsFeedback = await fetchNewProductData(
-      props.displayedUserUid,
-      "feedback"
-    );
+    const newProductsFeedback = await fetchNewProductData(props.displayedUserUid, "feedback");
     if (newProductsFeedback) setProductsFeedback(newProductsFeedback);
   };
 
@@ -111,18 +89,14 @@ export const DisplayUserProductList = (
     <HStack w="100%" spacing={10}>
       <Tabs variant="unstyled">
         <TabList>
-          <Tab
-            rounded="full"
-            fontSize={{ base: "sm", md: "md" }}
-            _selected={{ color: "#FCFCFC", bg: "#99CED4" }}
-          >
+          <Tab rounded="full" fontSize={{ base: "sm", md: "md" }} _selected={{ color: "#FCFCFC", bg: "#99CED4" }}>
             投稿済み
           </Tab>
           <Tab
             rounded="full"
             fontSize={{ base: "sm", md: "md" }}
             _selected={{ color: "#FCFCFC", bg: "#99CED4" }}
-            onClick={onClickLike}
+            onClick={onClickFavorite}
           >
             いいね
           </Tab>
@@ -141,7 +115,7 @@ export const DisplayUserProductList = (
             <DisplayProducts {...productsPosted} />
           </TabPanel>
           <TabPanel p="0" pt="4">
-            <DisplayProducts {...productsLike} />
+            <DisplayProducts {...productsFavorite} />
           </TabPanel>
           <TabPanel p="0" pt="4">
             <DisplayProducts {...productsFeedback} />
