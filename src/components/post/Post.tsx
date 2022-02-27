@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useRef, useContext, useEffect } from "react";
 import {
   Input,
@@ -204,10 +205,6 @@ const Post = (): JSX.Element => {
       if (editProductId) {
         const differenceReduceTagList = pastTagListArray.filter((i) => nonDuplicatedTagList.indexOf(i) === -1);
         const differenceIncreaseTagList = nonDuplicatedTagList.filter((i) => pastTagListArray.indexOf(i) === -1);
-        console.log("past", pastTagListArray);
-        console.log("new", nonDuplicatedTagList);
-        console.log("diff-reduce", differenceReduceTagList);
-        console.log("diff-increase", differenceIncreaseTagList);
 
         if (differenceReduceTagList.length !== 0) {
           differenceReduceTagList.forEach((tag) => {

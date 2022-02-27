@@ -36,7 +36,6 @@ export const postTagList = (tagList: string[], conditions: string, diff?: string
     if (tagData.exists()) {
       if (conditions === "EXIST") {
         if (_diff) {
-          console.log(_diff.indexOf(name));
           if (_diff.indexOf(name) !== -1) {
             const tmpupdateTagNum1 = setData(tagname, Number(tagData.get("num")) + 1);
           } else {
