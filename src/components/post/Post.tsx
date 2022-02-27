@@ -14,7 +14,7 @@ import {
   Icon,
 } from "@chakra-ui/react";
 import { BsImage } from "react-icons/bs";
-import { getStorage, ref, getDownloadURL, deleteObject, connectStorageEmulator } from "firebase/storage";
+import { getStorage, ref, getDownloadURL, deleteObject } from "firebase/storage";
 import { useHistory, useLocation } from "react-router-dom";
 
 import app from "../../base";
