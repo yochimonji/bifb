@@ -18,7 +18,7 @@ import { useHistory, useLocation } from "react-router-dom";
 
 import app from "../../base";
 import { GithubIcon, ProductIcon, TagIcon, MarkdownForm, postImage } from "..";
-import { editProduct, fetchProduct, postProduct, reduceTagNum, increaseTagNum } from "../../firebase/firestore";
+import { editProduct, fetchProduct, postProduct, reduceTagNum } from "../../firebase/firestore";
 import { AuthContext } from "../../auth/AuthProvider";
 
 const storage = getStorage(app);
@@ -209,6 +209,12 @@ const Post = (): JSX.Element => {
         console.log("diff-reduce", differenceReduceTagList);
         console.log("diff-increase", differenceIncreaseTagList);
 
+        if (differenceReduceTagList.length !== 0) {
+          differenceReduceTagList.forEach((tag) => {
+            const tmpReduceTagNum = reduceTagNum(tag);
+          });
+        }
+
         productId = await editProduct(
           editProductId,
           title,
@@ -218,18 +224,9 @@ const Post = (): JSX.Element => {
           productUrl,
           nonDuplicatedTagList,
           mainText,
-          currentUser.uid
+          currentUser.uid,
+          differenceIncreaseTagList
         );
-
-        if (differenceReduceTagList.length !== 0) {
-          differenceReduceTagList.forEach((tag) => {
-            const tmpReduceTagNum = reduceTagNum(tag);
-          });
-        } else if (differenceIncreaseTagList.length !== 0) {
-          differenceIncreaseTagList.forEach((tag) => {
-            const tmpIncreaseTagNum = increaseTagNum(tag);
-          });
-        }
       } else {
         productId = await postProduct(
           title,
