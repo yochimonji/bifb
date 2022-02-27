@@ -477,6 +477,7 @@ export const deleteProduct = async (productId: string): Promise<void> => {
  * @param tagList タグ一覧
  * @param mainText 本文
  * @param userUid ユーザーID
+ * @param differenceIncreaseTagList 追加されたタグの差分
  * @returns 作品ID
  */
 export const editProduct = async (
@@ -488,7 +489,8 @@ export const editProduct = async (
   productUrl: string,
   tagList: string[],
   mainText: string,
-  userUid: string
+  userUid: string,
+  differenceIncreaseTagList: string[]
 ): Promise<string> => {
   // 現時点で存在しないタグをタグコレクションに追加
   const tmp = postTagList(tagList, "EXIST");
@@ -545,29 +547,9 @@ export const reduceTagNum = async (tag: string): Promise<unknown> => {
     newTagNum = Number(data.get("num")) - 1;
   });
 
-  console.log(newTagNum);
-
   await updateDoc(doc(db, "tag", tag), {
     num: newTagNum,
   });
-
-  return tag;
-};
-
-/**
- * 作品の修正時に削除されたタグの合計値を増やす
- * @param tag タグの名前
- * @returns 変更したタグの名前
- */
-export const increaseTagNum = async (tag: string): Promise<unknown> => {
-  let newTagNum;
-
-  await getDoc(doc(db, "tag", tag)).then((data) => {
-    newTagNum = Number(data.get("num")) + 1;
-  });
-  console.log(newTagNum);
-
-  await setDoc(doc(db, "tag", tag), { newTagNum });
 
   return tag;
 };
