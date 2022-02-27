@@ -536,24 +536,38 @@ export const IncreaseFeedbackNum = async (productId: string): Promise<unknown> =
 /**
  * 作品の修正時に削除されたタグの合計値を減らす
  * @param tag タグの名前
- * @param type increase | reduce
  * @returns 変更したタグの名前
  */
-export const editTagNum = async (tag: string, type: string): Promise<unknown> => {
+export const reduceTagNum = async (tag: string): Promise<unknown> => {
   let newTagNum;
 
-  if (type === "increase") {
-    await getDoc(doc(db, "tag", tag)).then((data) => {
-      newTagNum = Number(data.get("num")) + 1;
-    });
-  } else {
-    await getDoc(doc(db, "tag", tag)).then((data) => {
-      newTagNum = Number(data.get("num")) - 1;
-    });
-  }
+  await getDoc(doc(db, "tag", tag)).then((data) => {
+    newTagNum = Number(data.get("num")) - 1;
+  });
+
+  console.log(newTagNum);
+
   await updateDoc(doc(db, "tag", tag), {
     num: newTagNum,
   });
+
+  return tag;
+};
+
+/**
+ * 作品の修正時に削除されたタグの合計値を増やす
+ * @param tag タグの名前
+ * @returns 変更したタグの名前
+ */
+export const increaseTagNum = async (tag: string): Promise<unknown> => {
+  let newTagNum;
+
+  await getDoc(doc(db, "tag", tag)).then((data) => {
+    newTagNum = Number(data.get("num")) + 1;
+  });
+  console.log(newTagNum);
+
+  await setDoc(doc(db, "tag", tag), { newTagNum });
 
   return tag;
 };

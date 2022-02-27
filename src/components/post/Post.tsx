@@ -18,7 +18,7 @@ import { useHistory, useLocation } from "react-router-dom";
 
 import app from "../../base";
 import { GithubIcon, ProductIcon, TagIcon, MarkdownForm, postImage } from "..";
-import { editProduct, fetchProduct, postProduct } from "../../firebase/firestore";
+import { editProduct, fetchProduct, postProduct, reduceTagNum, increaseTagNum } from "../../firebase/firestore";
 import { AuthContext } from "../../auth/AuthProvider";
 
 const storage = getStorage(app);
@@ -202,10 +202,13 @@ const Post = (): JSX.Element => {
     if (currentUser != null && canPost) {
       let productId = "";
       if (editProductId) {
-        const differenceTagList = pastTagListArray.filter((i) => nonDuplicatedTagList.indexOf(i) === -1);
+        const differenceReduceTagList = pastTagListArray.filter((i) => nonDuplicatedTagList.indexOf(i) === -1);
+        const differenceIncreaseTagList = nonDuplicatedTagList.filter((i) => pastTagListArray.indexOf(i) === -1);
         console.log("past", pastTagListArray);
         console.log("new", nonDuplicatedTagList);
-        console.log("diff", differenceTagList);
+        console.log("diff-reduce", differenceReduceTagList);
+        console.log("diff-increase", differenceIncreaseTagList);
+
         productId = await editProduct(
           editProductId,
           title,
@@ -217,6 +220,16 @@ const Post = (): JSX.Element => {
           mainText,
           currentUser.uid
         );
+
+        if (differenceReduceTagList.length !== 0) {
+          differenceReduceTagList.forEach((tag) => {
+            const tmpReduceTagNum = reduceTagNum(tag);
+          });
+        } else if (differenceIncreaseTagList.length !== 0) {
+          differenceIncreaseTagList.forEach((tag) => {
+            const tmpIncreaseTagNum = increaseTagNum(tag);
+          });
+        }
       } else {
         productId = await postProduct(
           title,
@@ -229,6 +242,7 @@ const Post = (): JSX.Element => {
           currentUser.uid
         );
       }
+
       if (productId) {
         history.push("/");
       } else {
