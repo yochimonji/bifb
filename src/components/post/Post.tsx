@@ -13,7 +13,7 @@ import {
   Icon,
 } from "@chakra-ui/react";
 import { BsImage } from "react-icons/bs";
-import { getStorage, ref, getDownloadURL, deleteObject } from "firebase/storage";
+import { getStorage, ref, getDownloadURL, deleteObject, connectStorageEmulator } from "firebase/storage";
 import { useHistory, useLocation } from "react-router-dom";
 
 import app from "../../base";
@@ -39,6 +39,7 @@ const Post = (): JSX.Element => {
   const [validTagList, setValidTagList] = useState(false);
   const [validMainText, setValidMainText] = useState(false);
   const [editProductId, setEditProductId] = useState("");
+  const [pastTagList, setPastTagList] = useState("");
 
   const iconInputRef = useRef<HTMLInputElement>(null);
   const { currentUser } = useContext(AuthContext);
@@ -190,12 +191,21 @@ const Post = (): JSX.Element => {
       .replace(/(^\s+)|(\s+$)/g, "")
       .replace(/(\s{2,})/g, " ")
       .split(" ");
+    const pastTagListToArray = pastTagList
+      .normalize("NFKC")
+      .replace(/(^\s+)|(\s+$)/g, "")
+      .replace(/(\s{2,})/g, " ")
+      .split(" ");
     // 重複要素を削除
     const nonDuplicatedTagList = [...new Set(newTagList)];
     // ログイン済みでバリデーションOKの場合Firestoreに保存
     if (currentUser != null && canPost) {
       let productId = "";
       if (editProductId) {
+        console.log(tagList);
+        console.log(pastTagList);
+        console.log(pastTagListToArray);
+        console.log(nonDuplicatedTagList);
         productId = await editProduct(
           editProductId,
           title,
@@ -241,6 +251,7 @@ const Post = (): JSX.Element => {
           setGithubUrl(productData.githubUrl);
           setProductUrl(productData.productUrl);
           setTagList((productData.tagList as string[]).join(" "));
+          setPastTagList((productData.tagList as string[]).join(" "));
           setMainText(productData.mainText);
         }
       });
