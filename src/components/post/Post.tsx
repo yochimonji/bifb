@@ -191,7 +191,7 @@ const Post = (): JSX.Element => {
       .replace(/(^\s+)|(\s+$)/g, "")
       .replace(/(\s{2,})/g, " ")
       .split(" ");
-    const pastTagListToArray = pastTagList
+    const pastTagListArray = pastTagList
       .normalize("NFKC")
       .replace(/(^\s+)|(\s+$)/g, "")
       .replace(/(\s{2,})/g, " ")
@@ -202,10 +202,10 @@ const Post = (): JSX.Element => {
     if (currentUser != null && canPost) {
       let productId = "";
       if (editProductId) {
-        console.log(tagList);
-        console.log(pastTagList);
-        console.log(pastTagListToArray);
-        console.log(nonDuplicatedTagList);
+        const differenceTagList = pastTagListArray.filter((i) => nonDuplicatedTagList.indexOf(i) === -1);
+        console.log("past", pastTagListArray);
+        console.log("new", nonDuplicatedTagList);
+        console.log("diff", differenceTagList);
         productId = await editProduct(
           editProductId,
           title,
