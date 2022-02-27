@@ -532,3 +532,21 @@ export const IncreaseFeedbackNum = async (productId: string): Promise<unknown> =
   });
   return newFeedbackNumber;
 };
+
+/**
+ * 作品の修正時に削除されたタグの合計値を減らす
+ * @param tag タグの名前
+ * @returns 変更したタグの名前
+ */
+export const reduceTagNum = async (tag: string): Promise<unknown> => {
+  let newTagNum;
+
+  await getDoc(doc(db, "tag", tag)).then((data) => {
+    newTagNum = Number(data.get("num")) - 1;
+  });
+  await updateDoc(doc(db, "tag", tag), {
+    num: newTagNum,
+  });
+
+  return tag;
+};
