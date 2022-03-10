@@ -25,17 +25,25 @@ const db = getFirestore();
  * タグの配列に対して、配列内にあるtag collectionに存在していないタグをtag collectionに追加
  * @param tagList タグの一覧
  */
-export const postTagList = (tagList: string[], conditions: string): void => {
+export const postTagList = (tagList: string[], conditions: string, diff?: string[]): void => {
   async function setData(name: string, num: number) {
     await setDoc(doc(db, "tag", name), { num });
   }
 
-  async function getData(name: string) {
+  async function getData(name: string, _diff?: string[]) {
     const tagData = await getDoc(doc(db, "tag", name));
     const tagname = tagData.id;
     if (tagData.exists()) {
       if (conditions === "EXIST") {
-        const temtemA = setData(tagname, Number(tagData.get("num")));
+        if (_diff) {
+          if (_diff.indexOf(name) !== -1) {
+            const tmpupdateTagNum1 = setData(tagname, Number(tagData.get("num")) + 1);
+          } else {
+            const tmpupdateTagNum2 = setData(tagname, Number(tagData.get("num")));
+          }
+        } else {
+          const temtemA = setData(tagname, Number(tagData.get("num")));
+        }
       } else if (conditions === "NEW") {
         const temtemA = setData(tagname, Number(tagData.get("num")) + 1);
       }
@@ -46,7 +54,7 @@ export const postTagList = (tagList: string[], conditions: string): void => {
 
   if (tagList.length >= 1 && tagList[0] !== "") {
     for (let i = 0; i < tagList.length; i += 1) {
-      const tmp = getData(tagList[i]);
+      const tmp = getData(tagList[i], diff);
     }
   }
 };
@@ -477,6 +485,7 @@ export const deleteProduct = async (productId: string): Promise<void> => {
  * @param tagList タグ一覧
  * @param mainText 本文
  * @param userUid ユーザーID
+ * @param differenceIncreaseTagList 追加されたタグの差分
  * @returns 作品ID
  */
 export const editProduct = async (
@@ -488,10 +497,11 @@ export const editProduct = async (
   productUrl: string,
   tagList: string[],
   mainText: string,
-  userUid: string
+  userUid: string,
+  differenceIncreaseTagList: string[]
 ): Promise<string> => {
   // 現時点で存在しないタグをタグコレクションに追加
-  const tmp = postTagList(tagList, "EXIST");
+  const tmp = postTagList(tagList, "EXIST", differenceIncreaseTagList);
   // 作品のpostDateの取得
   let time: unknown;
   let favoriteNum = 0;
@@ -531,4 +541,23 @@ export const IncreaseFeedbackNum = async (productId: string): Promise<unknown> =
     feedbackNum: newFeedbackNumber,
   });
   return newFeedbackNumber;
+};
+
+/**
+ * 作品の修正時に削除されたタグの合計値を減らす
+ * @param tag タグの名前
+ * @returns 変更したタグの名前
+ */
+export const reduceTagNum = async (tag: string): Promise<unknown> => {
+  let newTagNum;
+
+  await getDoc(doc(db, "tag", tag)).then((data) => {
+    newTagNum = Number(data.get("num")) - 1;
+  });
+
+  await updateDoc(doc(db, "tag", tag), {
+    num: newTagNum,
+  });
+
+  return tag;
 };

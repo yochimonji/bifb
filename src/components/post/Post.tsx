@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useRef, useContext, useEffect } from "react";
 import {
   Input,
@@ -18,7 +19,7 @@ import { useHistory, useLocation } from "react-router-dom";
 
 import app from "../../base";
 import { GithubIcon, ProductIcon, TagIcon, MarkdownForm, postImage } from "..";
-import { editProduct, fetchProduct, postProduct } from "../../firebase/firestore";
+import { editProduct, fetchProduct, postProduct, reduceTagNum } from "../../firebase/firestore";
 import { AuthContext } from "../../auth/AuthProvider";
 
 const storage = getStorage(app);
@@ -39,6 +40,7 @@ const Post = (): JSX.Element => {
   const [validTagList, setValidTagList] = useState(false);
   const [validMainText, setValidMainText] = useState(false);
   const [editProductId, setEditProductId] = useState("");
+  const [pastTagList, setPastTagList] = useState("");
 
   const iconInputRef = useRef<HTMLInputElement>(null);
   const { currentUser } = useContext(AuthContext);
@@ -190,12 +192,26 @@ const Post = (): JSX.Element => {
       .replace(/(^\s+)|(\s+$)/g, "")
       .replace(/(\s{2,})/g, " ")
       .split(" ");
+    const pastTagListArray = pastTagList
+      .normalize("NFKC")
+      .replace(/(^\s+)|(\s+$)/g, "")
+      .replace(/(\s{2,})/g, " ")
+      .split(" ");
     // 重複要素を削除
     const nonDuplicatedTagList = [...new Set(newTagList)];
     // ログイン済みでバリデーションOKの場合Firestoreに保存
     if (currentUser != null && canPost) {
       let productId = "";
       if (editProductId) {
+        const differenceReduceTagList = pastTagListArray.filter((i) => nonDuplicatedTagList.indexOf(i) === -1);
+        const differenceIncreaseTagList = nonDuplicatedTagList.filter((i) => pastTagListArray.indexOf(i) === -1);
+
+        if (differenceReduceTagList.length !== 0) {
+          differenceReduceTagList.forEach((tag) => {
+            const tmpReduceTagNum = reduceTagNum(tag);
+          });
+        }
+
         productId = await editProduct(
           editProductId,
           title,
@@ -205,7 +221,8 @@ const Post = (): JSX.Element => {
           productUrl,
           nonDuplicatedTagList,
           mainText,
-          currentUser.uid
+          currentUser.uid,
+          differenceIncreaseTagList
         );
       } else {
         productId = await postProduct(
@@ -219,6 +236,7 @@ const Post = (): JSX.Element => {
           currentUser.uid
         );
       }
+
       if (productId) {
         history.push("/");
       } else {
@@ -241,6 +259,7 @@ const Post = (): JSX.Element => {
           setGithubUrl(productData.githubUrl);
           setProductUrl(productData.productUrl);
           setTagList((productData.tagList as string[]).join(" "));
+          setPastTagList((productData.tagList as string[]).join(" "));
           setMainText(productData.mainText);
         }
       });
