@@ -61,13 +61,13 @@ const Search = (): JSX.Element => {
 
   // 検索ボタンが押されたときの操作
   const handleSearch = () => {
-    dispatch({ type: "Change_TagList", inputText: newInputText, selectedTagList: "" });
+    dispatch({ type: "Change_Input_Text", inputText: newInputText });
     history.push("/");
   };
 
   // タグボタンが押された時の操作
   const handleClickTagButton = (tag: string) => {
-    dispatch({ type: "Change_TagList", inputText: "", selectedTagList: tag });
+    dispatch({ type: "Change_TagList", selectedTagList: tag });
     history.push("/");
   };
 
