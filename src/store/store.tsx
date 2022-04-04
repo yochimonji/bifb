@@ -23,6 +23,12 @@ const reducer = (
         paramInputText: "",
         paramSearchTag: action.selectedTagList,
       };
+    case "Change_to_Null":
+      return {
+        paramSearchStatus: "",
+        paramInputText: "",
+        paramSearchTag: "",
+      };
     default:
       return state;
   }
