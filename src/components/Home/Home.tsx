@@ -6,7 +6,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable no-restricted-globals */
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
 import { HStack, VStack, Box, Select } from "@chakra-ui/react";
 import { RootStateOrAny, useSelector } from "react-redux";
 import { QuerySnapshot, DocumentData } from "firebase/firestore";
@@ -16,9 +15,6 @@ import { DisplayProducts, SearchCondition, DisplayProductProps } from "../index"
 const Home = (): JSX.Element => {
   const [sortType, setSortType] = useState("NEW");
   const [productData, setProductData] = useState<DisplayProductProps[]>([]);
-  const [searchCondition, setSearchCondition] = useState<string | undefined>();
-  const [searchStatus, setSearchStatus] = useState<string>("");
-  const location = useLocation();
   const searchInputText = useSelector((state: RootStateOrAny) => state.paramInputText);
   const searchTagList = useSelector((state: RootStateOrAny) => state.paramSearchTag);
   const searchStatusFromStore = useSelector((state: RootStateOrAny) => state.paramSearchStatus);
@@ -27,18 +23,6 @@ const Home = (): JSX.Element => {
   const onChangeSortType: React.ChangeEventHandler<HTMLSelectElement> = (event) => {
     setSortType(event.target.value);
   };
-
-  useEffect(() => {
-    if (!location.state) {
-      setSearchStatus("");
-    } else if (location.state.paramSearchTag) {
-      setSearchStatus("paramSearchTag");
-      setSearchCondition(location.state.paramSearchTag);
-    } else if (location.state.paramInputText) {
-      setSearchStatus("paramInputText");
-      setSearchCondition(location.state.paramInputText);
-    }
-  }, [location.state]);
 
   // 作品データの取得
   useEffect(() => {
@@ -113,18 +97,18 @@ const Home = (): JSX.Element => {
     <VStack spacing={10} align="stretch" pt="4" pb="12">
       {/* 上段(検索条件・トレンド等の選択) */}
       <HStack w="100%" spacing="0px" alignItems="center" flexWrap="wrap">
-        {searchStatus === "" ? (
+        {searchStatusFromStore === "" ? (
           <Box w="80%" padding="37px 20px 35px 0px" minW="90px" />
         ) : (
           <>
             <Box w="10%" padding="37px 20px 35px 0px" minW="90px">
               検索条件:
             </Box>
-            <SearchCondition
-              searchCondition={searchCondition}
-              // setSearchCondition={setSearchCondition}
-              // setSearchStatus={setSearchStatus}
-            />
+            {searchStatusFromStore === "inputText" ? (
+              <SearchCondition searchCondition={searchInputText} />
+            ) : (
+              <SearchCondition searchCondition={searchTagList} />
+            )}
           </>
         )}
         <Box w="20%" padding="30px 0px">
