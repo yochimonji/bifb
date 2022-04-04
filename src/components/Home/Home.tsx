@@ -1,9 +1,14 @@
+// TODO: state 周りのために追加 消したい！！
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable no-restricted-globals */
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { HStack, VStack, Box, Select } from "@chakra-ui/react";
+import { RootStateOrAny, useSelector } from "react-redux";
 import { QuerySnapshot, DocumentData } from "firebase/firestore";
 import { fetchProducts, fetchUserInfos } from "../../firebase/firestore";
 import { DisplayProducts, SearchCondition, DisplayProductProps } from "../index";
@@ -14,6 +19,9 @@ const Home = (): JSX.Element => {
   const [searchCondition, setSearchCondition] = useState<string | undefined>();
   const [searchStatus, setSearchStatus] = useState<string>("");
   const location = useLocation();
+  const searchInputText = useSelector((state: RootStateOrAny) => state.paramInputText);
+  const searchTagList = useSelector((state: RootStateOrAny) => state.paramSearchTag);
+  const searchStatusFromStore = useSelector((state: RootStateOrAny) => state.paramSearchStatus);
 
   // sortTypeの選択の変更を認識する関数
   const onChangeSortType: React.ChangeEventHandler<HTMLSelectElement> = (event) => {
@@ -52,7 +60,7 @@ const Home = (): JSX.Element => {
             const p = product.data();
             const u = userInfo.data();
             if (p.userUid === u.userUid) {
-              if (searchStatus === "") {
+              if (searchStatusFromStore === "") {
                 newProductData.push({
                   productId: product.id,
                   productIconUrl: p.productIconUrl as string,
@@ -64,8 +72,8 @@ const Home = (): JSX.Element => {
                   editDate: p.editDate as string,
                   favoriteNum: p.favoriteNum as number,
                 });
-              } else if (searchStatus === "paramSearchTag") {
-                if (product.data().tagList.includes(searchCondition)) {
+              } else if (searchStatusFromStore === "searchTag") {
+                if (product.data().tagList.includes(searchTagList)) {
                   newProductData.push({
                     productId: product.id,
                     productIconUrl: p.productIconUrl as string,
@@ -78,8 +86,8 @@ const Home = (): JSX.Element => {
                     favoriteNum: p.favoriteNum as number,
                   });
                 }
-              } else if (searchStatus === "paramInputText") {
-                if (product.data().productTitle.includes(searchCondition)) {
+              } else if (searchStatusFromStore === "inputText") {
+                if (product.data().productTitle.includes(searchInputText)) {
                   newProductData.push({
                     productId: product.id,
                     productIconUrl: p.productIconUrl as string,
@@ -99,7 +107,7 @@ const Home = (): JSX.Element => {
         setProductData(newProductData);
       }
     })();
-  }, [sortType, searchCondition, searchStatus]);
+  }, [sortType, searchTagList, searchInputText, searchStatusFromStore]);
 
   return (
     <VStack spacing={10} align="stretch" pt="4" pb="12">

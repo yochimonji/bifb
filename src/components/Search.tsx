@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { Input, InputGroup, InputRightElement, VStack, IconButton, SimpleGrid, Button } from "@chakra-ui/react";
 import { BrowserRouter, useHistory } from "react-router-dom";
 import { MdSearch } from "react-icons/md";
@@ -6,6 +7,7 @@ import { QueryDocumentSnapshot, DocumentData } from "firebase/firestore";
 import { fetchAllTagList } from "../firebase/firestore";
 
 const Search = (): JSX.Element => {
+  const dispatch = useDispatch();
   const history = useHistory();
   const [inputTagList, inputSetTagList] = useState<string[]>();
   const [tagList, setTagList] = useState<string[]>();
@@ -59,11 +61,13 @@ const Search = (): JSX.Element => {
 
   // 検索ボタンが押されたときの操作
   const handleSearch = () => {
+    dispatch({ type: "Change_TagList", inputText: newInputText, selectedTagList: "" });
     history.push("/", { paramInputText: newInputText });
   };
 
   // タグボタンが押された時の操作
   const handleClickTagButton = (tag: string) => {
+    dispatch({ type: "Change_TagList", inputText: "", selectedTagList: tag });
     history.push("/", { paramSearchTag: tag });
   };
 
