@@ -17,7 +17,7 @@ const Home = (): JSX.Element => {
   const [productData, setProductData] = useState<DisplayProductProps[]>([]);
   const searchInputText = useSelector((state: RootStateOrAny) => state.paramInputText);
   const searchTagList = useSelector((state: RootStateOrAny) => state.paramSearchTag);
-  const searchStatusFromStore = useSelector((state: RootStateOrAny) => state.paramSearchStatus);
+  const searchStatus = useSelector((state: RootStateOrAny) => state.paramSearchStatus);
 
   // sortTypeの選択の変更を認識する関数
   const onChangeSortType: React.ChangeEventHandler<HTMLSelectElement> = (event) => {
@@ -44,7 +44,7 @@ const Home = (): JSX.Element => {
             const p = product.data();
             const u = userInfo.data();
             if (p.userUid === u.userUid) {
-              if (searchStatusFromStore === "") {
+              if (searchStatus === "") {
                 newProductData.push({
                   productId: product.id,
                   productIconUrl: p.productIconUrl as string,
@@ -56,7 +56,7 @@ const Home = (): JSX.Element => {
                   editDate: p.editDate as string,
                   favoriteNum: p.favoriteNum as number,
                 });
-              } else if (searchStatusFromStore === "searchTag") {
+              } else if (searchStatus === "searchTag") {
                 if (product.data().tagList.includes(searchTagList)) {
                   newProductData.push({
                     productId: product.id,
@@ -70,7 +70,7 @@ const Home = (): JSX.Element => {
                     favoriteNum: p.favoriteNum as number,
                   });
                 }
-              } else if (searchStatusFromStore === "inputText") {
+              } else if (searchStatus === "inputText") {
                 if (product.data().productTitle.includes(searchInputText)) {
                   newProductData.push({
                     productId: product.id,
@@ -91,20 +91,20 @@ const Home = (): JSX.Element => {
         setProductData(newProductData);
       }
     })();
-  }, [sortType, searchTagList, searchInputText, searchStatusFromStore]);
+  }, [sortType, searchTagList, searchInputText, searchStatus]);
 
   return (
     <VStack spacing={10} align="stretch" pt="4" pb="12">
       {/* 上段(検索条件・トレンド等の選択) */}
       <HStack w="100%" spacing="0px" alignItems="center" flexWrap="wrap">
-        {searchStatusFromStore === "" ? (
+        {searchStatus === "" ? (
           <Box w="80%" padding="37px 20px 35px 0px" minW="90px" />
         ) : (
           <>
             <Box w="10%" padding="37px 20px 35px 0px" minW="90px">
               検索条件:
             </Box>
-            {searchStatusFromStore === "inputText" ? (
+            {searchStatus === "inputText" ? (
               <SearchCondition searchCondition={searchInputText} />
             ) : (
               <SearchCondition searchCondition={searchTagList} />
