@@ -1,7 +1,7 @@
 import { createStore } from "redux";
 
 const initialState = {
-  paramSearchStatus: "", // no-string | inputText | searchTag
+  paramSearchStatus: "", // "" | inputText | searchTag
   paramInputText: "inputだよー",
   paramSearchTag: "tagだよー",
 };
