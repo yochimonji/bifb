@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Container, HStack, Link } from "@chakra-ui/react";
 import { Link as ReactLink } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useAppDispatch } from "../../hooks/hooks";
 import { HeaderMenu } from "..";
 
 /**
@@ -10,7 +10,7 @@ import { HeaderMenu } from "..";
  */
 
 const Header = (): JSX.Element => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   return (
     <Box bg="#99CED4" h="16" as="header">
@@ -24,7 +24,7 @@ const Header = (): JSX.Element => {
             color="gray.100"
             _hover={{ textDecoration: "none" }}
             onClick={() => {
-              dispatch({ type: "CHANGE_TO_NULL" });
+              dispatch({ type: "CHANGE_TO_NULL", paramSearchStatus: "", inputText: "", selectedTagList: "" });
             }}
           >
             BiFB

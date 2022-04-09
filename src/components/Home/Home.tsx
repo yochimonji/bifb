@@ -1,23 +1,19 @@
-// XXX: state 周りのために追加 消したい！！
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable no-restricted-globals */
 import React, { useState, useEffect } from "react";
 import { HStack, VStack, Box, Select } from "@chakra-ui/react";
-import { RootStateOrAny, useSelector } from "react-redux";
 import { QuerySnapshot, DocumentData } from "firebase/firestore";
+import { useAppSelector } from "../../hooks/hooks";
 import { fetchProducts, fetchUserInfos } from "../../firebase/firestore";
 import { DisplayProducts, SearchCondition, DisplayProductProps } from "../index";
 
 const Home = (): JSX.Element => {
   const [sortType, setSortType] = useState("NEW");
   const [productData, setProductData] = useState<DisplayProductProps[]>([]);
-  const searchInputText = useSelector((state: RootStateOrAny) => state.paramInputText);
-  const searchTagList = useSelector((state: RootStateOrAny) => state.paramSearchTag);
-  const searchStatus = useSelector((state: RootStateOrAny) => state.paramSearchStatus);
+  const searchInputText = useAppSelector((state) => state.paramInputText);
+  const searchTagList = useAppSelector((state) => state.paramSearchTag);
+  const searchStatus = useAppSelector((state) => state.paramSearchStatus);
 
   // sortTypeの選択の変更を認識する関数
   const onChangeSortType: React.ChangeEventHandler<HTMLSelectElement> = (event) => {
@@ -104,7 +100,7 @@ const Home = (): JSX.Element => {
             <Box w="10%" padding="37px 20px 35px 0px" minW="90px">
               検索条件:
             </Box>
-            {searchStatus === "inputText" ? (
+            {searchStatus === "INPUT_TEXT" ? (
               <SearchCondition searchCondition={searchInputText} />
             ) : (
               <SearchCondition searchCondition={searchTagList} />
