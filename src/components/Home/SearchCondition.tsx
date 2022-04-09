@@ -25,7 +25,7 @@ const SearchCondition = (props: Props): JSX.Element => {
         <TagLabel>{props.searchCondition}</TagLabel>
         <TagCloseButton
           onClick={() => {
-            dispatch({ type: "Change_to_Null" });
+            dispatch({ type: "CHANGE_TO_NULL" });
             history.push("/");
           }}
         />

@@ -11,19 +11,19 @@ const reducer = (
   action: { type: string; paramSearchStatus: string; inputText: string; selectedTagList: string }
 ) => {
   switch (action.type) {
-    case "Change_Input_Text":
+    case "CHANGE_INPUT_TEXT":
       return {
         paramSearchStatus: "inputText",
         paramInputText: action.inputText,
         paramSearchTag: "",
       };
-    case "Change_TagList":
+    case "CHANGE_TAGLIST":
       return {
         paramSearchStatus: "searchTag",
         paramInputText: "",
         paramSearchTag: action.selectedTagList,
       };
-    case "Change_to_Null":
+    case "CHANGE_TO_NULL":
       return {
         paramSearchStatus: "",
         paramInputText: "",

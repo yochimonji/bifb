@@ -24,7 +24,7 @@ const Header = (): JSX.Element => {
             color="gray.100"
             _hover={{ textDecoration: "none" }}
             onClick={() => {
-              dispatch({ type: "Change_to_Null" });
+              dispatch({ type: "CHANGE_TO_NULL" });
             }}
           >
             BiFB
