@@ -13,13 +13,13 @@ const reducer = (
   switch (action.type) {
     case "CHANGE_INPUT_TEXT":
       return {
-        paramSearchStatus: "inputText",
+        paramSearchStatus: "INPUT_TEXT",
         paramInputText: action.inputText,
         paramSearchTag: "",
       };
     case "CHANGE_TAGLIST":
       return {
-        paramSearchStatus: "searchTag",
+        paramSearchStatus: "TAGLIST",
         paramInputText: "",
         paramSearchTag: action.selectedTagList,
       };

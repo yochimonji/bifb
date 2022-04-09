@@ -56,7 +56,7 @@ const Home = (): JSX.Element => {
                   editDate: p.editDate as string,
                   favoriteNum: p.favoriteNum as number,
                 });
-              } else if (searchStatus === "searchTag") {
+              } else if (searchStatus === "TAGLIST") {
                 if (product.data().tagList.includes(searchTagList)) {
                   newProductData.push({
                     productId: product.id,
@@ -70,7 +70,7 @@ const Home = (): JSX.Element => {
                     favoriteNum: p.favoriteNum as number,
                   });
                 }
-              } else if (searchStatus === "inputText") {
+              } else if (searchStatus === "INPUT_TEXT") {
                 if (product.data().productTitle.includes(searchInputText)) {
                   newProductData.push({
                     productId: product.id,
