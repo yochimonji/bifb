@@ -17,9 +17,9 @@ const reducer = (
         paramInputText: action.inputText,
         paramSearchTag: "",
       };
-    case "CHANGE_TAGLIST":
+    case "CHANGE_TAG_LIST":
       return {
-        paramSearchStatus: "TAGLIST",
+        paramSearchStatus: "TAG_LIST",
         paramInputText: "",
         paramSearchTag: action.selectedTagList,
       };

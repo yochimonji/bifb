@@ -67,7 +67,7 @@ const Search = (): JSX.Element => {
 
   // タグボタンが押された時の操作
   const handleClickTagButton = (tag: string) => {
-    dispatch({ type: "CHANGE_TAGLIST", paramSearchStatus: "", inputText: "", selectedTagList: tag });
+    dispatch({ type: "CHANGE_TAG_LIST", paramSearchStatus: "", inputText: "", selectedTagList: tag });
     history.push("/");
   };
 

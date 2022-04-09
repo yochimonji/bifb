@@ -52,7 +52,7 @@ const Home = (): JSX.Element => {
                   editDate: p.editDate as string,
                   favoriteNum: p.favoriteNum as number,
                 });
-              } else if (searchStatus === "TAGLIST") {
+              } else if (searchStatus === "TAG_LIST") {
                 if (product.data().tagList.includes(searchTagList)) {
                   newProductData.push({
                     productId: product.id,
