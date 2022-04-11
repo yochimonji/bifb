@@ -11,6 +11,25 @@ service cloud.firestore {
             return isAuthenticated() && userUid == request.auth.uid;
         }
 
+        function isValidUserInfo(userInfo) {
+            return userInfo.size() == 9
+                && userInfo.keys().hasAll([
+                    "name", "userIcon", "comment", "githubUrl", "twitterUrl", "otherUrl", "favoriteList", "feedbackList", "userUid"
+                ])
+                && userInfo.name is string
+                && userInfo.userIcon is string
+                && userInfo.comment is string
+                && userInfo.githubUrl is string
+                && userInfo.twitterUrl is string
+                && userInfo.otherUrl is string
+                && userInfo.favoriteList is list
+                && userInfo.favoriteList[0] is string
+                && userInfo.feedbackList is list
+                && userInfo.feedbackList[0] is string
+                && userInfo.userUid is string
+        }
+
+        // 非公開にするべき情報はないため読み取りは全て許可
         match /{document=**} {
             allow read: if true;
         }
@@ -27,8 +46,15 @@ service cloud.firestore {
         //     allow read: if true;
         // }
 
-        // match /userInfo/{userUid} {
-        //     allow read: 
-        // }
+        match /userInfo/{userUid} {
+            allow create: if isUserAuthenticated(userUid)
+                && isValidUserInfo(request.resource.data)
+                && request.resource.data.comment == "よろしくお願いします。"
+                && request.resource.data.githubUrl == ""
+                && request.resource.data.twitterUrl == ""
+                && request.resource.data.otherUrl == ""
+                && request.resource.data.favoriteList == [""]
+                && request.resource.data.feedbackList == [""];
+        }
     }
 }
