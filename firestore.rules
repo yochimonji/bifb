@@ -2,8 +2,33 @@ rules_version = '2';
 
 service cloud.firestore {
     match /databases/{database}/documents {
-        match /{document=**} {
-            allow read, write: if false;
+
+        function isAuthenticated() {
+            return request.auth != null;
         }
+
+        function isUserAuthenticated(userUid) {
+            return isAuthenticated() && userUid == request.auth.uid;
+        }
+
+        match /{document=**} {
+            allow read: if true;
+        }
+
+        // match /feedback/{feedbackId} {
+        //     allow read: if true;
+        // }
+
+        // match /product/{productId} {
+        //     allow read: if true;
+        // }
+
+        // match /tag/{tagName} {
+        //     allow read: if true;
+        // }
+
+        // match /userInfo/{userUid} {
+        //     allow read: 
+        // }
     }
 }
