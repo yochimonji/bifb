@@ -1,12 +1,14 @@
 import React from "react";
 import { Tag, TagLabel, TagCloseButton, HStack } from "@chakra-ui/react";
 import { useHistory } from "react-router-dom";
+import { useAppDispatch } from "../../hooks/hooks";
 
 type Props = {
-  searchCondition: string | undefined;
+  searchCondition: string;
 };
 
 const SearchCondition = (props: Props): JSX.Element => {
+  const dispatch = useAppDispatch();
   const history = useHistory();
 
   return (
@@ -23,6 +25,7 @@ const SearchCondition = (props: Props): JSX.Element => {
         <TagLabel>{props.searchCondition}</TagLabel>
         <TagCloseButton
           onClick={() => {
+            dispatch({ type: "CHANGE_TO_NULL", paramSearchStatus: "", inputText: "", selectedTagList: "" });
             history.push("/");
           }}
         />

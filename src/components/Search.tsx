@@ -4,8 +4,10 @@ import { BrowserRouter, useHistory } from "react-router-dom";
 import { MdSearch } from "react-icons/md";
 import { QueryDocumentSnapshot, DocumentData } from "firebase/firestore";
 import { fetchAllTagList } from "../firebase/firestore";
+import { useAppDispatch } from "../hooks/hooks";
 
 const Search = (): JSX.Element => {
+  const dispatch = useAppDispatch();
   const history = useHistory();
   const [inputTagList, inputSetTagList] = useState<string[]>();
   const [tagList, setTagList] = useState<string[]>();
@@ -59,12 +61,14 @@ const Search = (): JSX.Element => {
 
   // 検索ボタンが押されたときの操作
   const handleSearch = () => {
-    history.push("/", { paramInputText: newInputText });
+    dispatch({ type: "CHANGE_INPUT_TEXT", paramSearchStatus: "", inputText: newInputText, selectedTagList: "" });
+    history.push("/");
   };
 
   // タグボタンが押された時の操作
   const handleClickTagButton = (tag: string) => {
-    history.push("/", { paramSearchTag: tag });
+    dispatch({ type: "CHANGE_TAG_LIST", paramSearchStatus: "", inputText: "", selectedTagList: tag });
+    history.push("/");
   };
 
   // 入力画面でEnterが押されたときに検索とみなす
