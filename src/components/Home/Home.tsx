@@ -2,35 +2,23 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable no-restricted-globals */
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
 import { HStack, VStack, Box, Select } from "@chakra-ui/react";
 import { QuerySnapshot, DocumentData } from "firebase/firestore";
+import { useAppSelector } from "../../hooks/hooks";
 import { fetchProducts, fetchUserInfos } from "../../firebase/firestore";
 import { DisplayProducts, SearchCondition, DisplayProductProps } from "../index";
 
 const Home = (): JSX.Element => {
   const [sortType, setSortType] = useState("NEW");
   const [productData, setProductData] = useState<DisplayProductProps[]>([]);
-  const [searchCondition, setSearchCondition] = useState<string | undefined>();
-  const [searchStatus, setSearchStatus] = useState<string>("");
-  const location = useLocation();
+  const searchInputText = useAppSelector((state) => state.paramInputText);
+  const searchTagList = useAppSelector((state) => state.paramSearchTag);
+  const searchStatus = useAppSelector((state) => state.paramSearchStatus);
 
   // sortTypeの選択の変更を認識する関数
   const onChangeSortType: React.ChangeEventHandler<HTMLSelectElement> = (event) => {
     setSortType(event.target.value);
   };
-
-  useEffect(() => {
-    if (!location.state) {
-      setSearchStatus("");
-    } else if (location.state.paramSearchTag) {
-      setSearchStatus("paramSearchTag");
-      setSearchCondition(location.state.paramSearchTag);
-    } else if (location.state.paramInputText) {
-      setSearchStatus("paramInputText");
-      setSearchCondition(location.state.paramInputText);
-    }
-  }, [location.state]);
 
   // 作品データの取得
   useEffect(() => {
@@ -64,8 +52,8 @@ const Home = (): JSX.Element => {
                   editDate: p.editDate as string,
                   favoriteNum: p.favoriteNum as number,
                 });
-              } else if (searchStatus === "paramSearchTag") {
-                if (product.data().tagList.includes(searchCondition)) {
+              } else if (searchStatus === "TAG_LIST") {
+                if (product.data().tagList.includes(searchTagList)) {
                   newProductData.push({
                     productId: product.id,
                     productIconUrl: p.productIconUrl as string,
@@ -78,8 +66,8 @@ const Home = (): JSX.Element => {
                     favoriteNum: p.favoriteNum as number,
                   });
                 }
-              } else if (searchStatus === "paramInputText") {
-                if (product.data().productTitle.includes(searchCondition)) {
+              } else if (searchStatus === "INPUT_TEXT") {
+                if (product.data().productTitle.includes(searchInputText)) {
                   newProductData.push({
                     productId: product.id,
                     productIconUrl: p.productIconUrl as string,
@@ -99,7 +87,7 @@ const Home = (): JSX.Element => {
         setProductData(newProductData);
       }
     })();
-  }, [sortType, searchCondition, searchStatus]);
+  }, [sortType, searchTagList, searchInputText, searchStatus]);
 
   return (
     <VStack spacing={10} align="stretch" pt="4" pb="12">
@@ -112,11 +100,11 @@ const Home = (): JSX.Element => {
             <Box w="10%" padding="37px 20px 35px 0px" minW="90px">
               検索条件:
             </Box>
-            <SearchCondition
-              searchCondition={searchCondition}
-              // setSearchCondition={setSearchCondition}
-              // setSearchStatus={setSearchStatus}
-            />
+            {searchStatus === "INPUT_TEXT" ? (
+              <SearchCondition searchCondition={searchInputText} />
+            ) : (
+              <SearchCondition searchCondition={searchTagList} />
+            )}
           </>
         )}
         <Box w="20%" padding="30px 0px">
