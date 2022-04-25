@@ -17,7 +17,7 @@ import { BsImage } from "react-icons/bs";
 import { getStorage, ref, getDownloadURL, deleteObject } from "firebase/storage";
 import { useHistory, useLocation } from "react-router-dom";
 
-import app from "../../base";
+import app from "../../FirebaseInitialize";
 import GithubIcon from "../common-part/GithubIcon";
 import ProductIcon from "../common-part/ProductIcon";
 import TagIcon from "../common-part/TagIcon";

@@ -7,7 +7,7 @@ import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import MarkdownInput from "./MarkdownInput";
 import MarkdownPreview from "./MarkdownPreview";
 import PostImage from "./PostImage";
-import app from "../../base";
+import app from "../../FirebaseInitialize";
 
 const storage = getStorage(app);
 
