@@ -3,7 +3,7 @@ import { Input, InputGroup, InputRightElement, VStack, IconButton, SimpleGrid, B
 import { BrowserRouter, useHistory } from "react-router-dom";
 import { MdSearch } from "react-icons/md";
 import { QueryDocumentSnapshot, DocumentData } from "firebase/firestore";
-import { fetchAllTagList } from "../../firebase/firestore";
+import { fetchAllTagList } from "../../firebase-com/firestore";
 import { useAppDispatch } from "../../hooks/hooks";
 
 const Search = (): JSX.Element => {

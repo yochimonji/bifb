@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { VStack, HStack, Avatar, Button, Text, IconButton, Wrap, Link } from "@chakra-ui/react";
 import { AiFillGithub, AiOutlineTwitter } from "react-icons/ai";
 
-import { fetchUserInfo } from "../../firebase/firestore";
+import { fetchUserInfo } from "../../firebase-com/firestore";
 import { AuthContext } from "../../auth/AuthProvider";
 
 type DisplayUserProductListProps = {

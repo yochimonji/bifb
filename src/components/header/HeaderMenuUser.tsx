@@ -1,26 +1,17 @@
 import React, { useContext, useEffect, useState } from "react";
-import {
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  MenuDivider,
-  Avatar,
-  Icon,
-} from "@chakra-ui/react";
+import { Menu, MenuButton, MenuList, MenuItem, MenuDivider, Avatar, Icon } from "@chakra-ui/react";
 import { FcGoogle } from "react-icons/fc";
 import { Link } from "react-router-dom";
 
 import { AuthContext } from "../../auth/AuthProvider";
-import { fetchUserInfo } from "../../firebase/firestore";
+import { fetchUserInfo } from "../../firebase-com/firestore";
 
 /**
  * ユーザーアイコンの表示とクリックした際の動作を行う関数
  * @returns ヘッダーのユーザーアイコンのコンポーネント
  */
 const HeaderMenuUser = (): JSX.Element => {
-  const { googleLogin, logout, currentUser, isReload, setIsReload } =
-    useContext(AuthContext);
+  const { googleLogin, logout, currentUser, isReload, setIsReload } = useContext(AuthContext);
   const [userName, setUserName] = useState("");
   const [userIcon, setUserIcon] = useState("");
 
@@ -56,10 +47,7 @@ const HeaderMenuUser = (): JSX.Element => {
             <Avatar w="10" h="10" src={userIcon} name={userName} />
           </MenuButton>
           <MenuList zIndex="2">
-            <MenuItem
-              as={Link}
-              to={{ pathname: "/user", state: { userUid: currentUser.uid } }}
-            >
+            <MenuItem as={Link} to={{ pathname: "/user", state: { userUid: currentUser.uid } }}>
               {userName}
               <span> さん</span>
             </MenuItem>
@@ -79,11 +67,7 @@ const HeaderMenuUser = (): JSX.Element => {
             >
               設定
             </MenuItem>
-            <MenuItem
-              variant="unstyled"
-              fontWeight="medium"
-              onClick={handleLogout}
-            >
+            <MenuItem variant="unstyled" fontWeight="medium" onClick={handleLogout}>
               ログアウト
             </MenuItem>
           </MenuList>

@@ -1,15 +1,8 @@
 import React, { useEffect, useState } from "react";
-import {
-  getAuth,
-  onAuthStateChanged,
-  User,
-  GoogleAuthProvider,
-  signInWithPopup,
-  signOut,
-} from "firebase/auth";
+import { getAuth, onAuthStateChanged, User, GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
 
 import app from "../base";
-import { fetchUserInfo, postUserInfo } from "../firebase/firestore";
+import { fetchUserInfo, postUserInfo } from "../firebase-com/firestore";
 
 // Google Providerの作成
 const provider = new GoogleAuthProvider();

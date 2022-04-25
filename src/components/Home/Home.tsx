@@ -5,7 +5,7 @@ import React, { useState, useEffect } from "react";
 import { HStack, VStack, Box, Select } from "@chakra-ui/react";
 import { QuerySnapshot, DocumentData } from "firebase/firestore";
 import { useAppSelector } from "../../hooks/hooks";
-import { fetchProducts, fetchUserInfos } from "../../firebase/firestore";
+import { fetchProducts, fetchUserInfos } from "../../firebase-com/firestore";
 import DisplayProducts from "../common_part/DisplayProducts";
 import SearchCondition from "./SearchCondition";
 import DisplayProductProps from "../common_part/DisplayProductProps";
@@ -34,6 +34,7 @@ const Home = (): JSX.Element => {
       products.forEach((product) => {
         userUidSet.add(product.data().userUid);
       });
+
       const userInfos = await fetchUserInfos([...userUidSet]);
 
       if (userInfos) {

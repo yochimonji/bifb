@@ -17,7 +17,7 @@ import {
   countFavoriteProduct,
   deleteProduct,
   IncreaseFeedbackNum,
-} from "../../firebase/firestore";
+} from "../../firebase-com/firestore";
 import { AuthContext } from "../../auth/AuthProvider";
 
 type FeedbackDataType = {

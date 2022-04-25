@@ -14,7 +14,7 @@ import {
 import { getStorage, ref, deleteObject, getDownloadURL } from "firebase/storage";
 
 import { useHistory } from "react-router-dom";
-import { fetchUserInfo, postUserInfo } from "../../firebase/firestore";
+import { fetchUserInfo, postUserInfo } from "../../firebase-com/firestore";
 import app from "../../base";
 import { AuthContext } from "../../auth/AuthProvider";
 // import { GithubIcon, TwitterIcon, postImage } from "..";
