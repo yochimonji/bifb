@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { HStack, TabList, Tabs, Tab, TabPanels, TabPanel } from "@chakra-ui/react";
 
-import { fetchProductsUser, fetchUserInfos } from "../../firebase-com/firestore";
-import DisplayProductProps from "../common-part/DisplayProductProps";
-import DisplayProducts from "../common-part/DisplayProducts";
+import { fetchProductsUser, fetchUserInfos } from "firebase-com/firestore";
+import DisplayProductProps from "components/common-part/DisplayProductProps";
+import DisplayProducts from "components/common-part/DisplayProducts";
 
 /**
  * 作品データを取得・フォーマットする関数
@@ -24,6 +24,7 @@ const fetchNewProductData = async (
   products.forEach((product) => {
     userUidSet.add(product.data().userUid);
   });
+  // XXX: 警告が出ている
   const userInfos = await fetchUserInfos([...userUidSet]);
   if (!userInfos) return null;
 

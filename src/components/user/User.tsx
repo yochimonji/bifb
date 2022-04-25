@@ -2,8 +2,8 @@ import React from "react";
 import { VStack } from "@chakra-ui/react";
 import { useLocation } from "react-router-dom";
 
-import DisplayUserInfo from "./DisplayUserInfo";
-import DisplayUserProductList from "./DisplayUserProductList";
+import DisplayUserInfo from "components/user/DisplayUserInfo";
+import DisplayUserProductList from "components/user/DisplayUserProductList";
 
 const User = (): JSX.Element => {
   const location = useLocation();

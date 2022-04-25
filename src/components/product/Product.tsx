@@ -4,11 +4,11 @@ import { Link, useHistory, useLocation } from "react-router-dom";
 import moment from "moment";
 import { QuerySnapshot, QueryDocumentSnapshot, DocumentData } from "firebase/firestore";
 
-import TagIcon from "../common-part/TagIcon";
-import MarkdownForm from "../common-part/MarkdownForm";
-import MarkdownPreview from "../common-part/MarkdownPreview";
-import LinkFavorite from "./LinkFavorite";
-import EditDeleteButton from "./EditDeleteButton";
+import TagIcon from "components/common-part/TagIcon";
+import MarkdownForm from "components/common-part/MarkdownForm";
+import MarkdownPreview from "components/common-part/MarkdownPreview";
+import LinkFavorite from "components/product/LinkFavorite";
+import EditDeleteButton from "components/product/EditDeleteButton";
 import {
   fetchProduct,
   fetchUserInfo,
@@ -17,8 +17,8 @@ import {
   countFavoriteProduct,
   deleteProduct,
   IncreaseFeedbackNum,
-} from "../../firebase-com/firestore";
-import { AuthContext } from "../../auth/AuthProvider";
+} from "firebase-com/firestore";
+import { AuthContext } from "auth/AuthProvider";
 
 type FeedbackDataType = {
   favoriteNum: number;

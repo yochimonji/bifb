@@ -14,13 +14,13 @@ import {
 import { getStorage, ref, deleteObject, getDownloadURL } from "firebase/storage";
 
 import { useHistory } from "react-router-dom";
-import { fetchUserInfo, postUserInfo } from "../../firebase-com/firestore";
-import app from "../../FirebaseInitialize";
-import { AuthContext } from "../../auth/AuthProvider";
-// import { GithubIcon, TwitterIcon, postImage } from "..";
-import GithubIcon from "../common-part/GithubIcon";
-import TwitterIcon from "../common-part/TwitterIcon";
-import PostImage from "../common-part/PostImage";
+
+import { fetchUserInfo, postUserInfo } from "firebase-com/firestore";
+import app from "FirebaseInitialize";
+import { AuthContext } from "auth/AuthProvider";
+import GithubIcon from "components/common-part/GithubIcon";
+import TwitterIcon from "components/common-part/TwitterIcon";
+import PostImage from "components/common-part/PostImage";
 
 const storage = getStorage(app);
 
