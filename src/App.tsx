@@ -6,7 +6,7 @@ import { AuthProvider } from "./auth/AuthProvider";
 import PrivateRoute from "./auth/PrivateRoute";
 import { Product, Search, Post, User, UserEdit, Header } from "./components";
 
-import Home from "./components/Home/Home";
+import Home from "./components/home/Home";
 
 const App = (): JSX.Element => (
   // 認証プロバイダー
