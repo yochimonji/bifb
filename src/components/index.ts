@@ -1,4 +1,3 @@
-export { default as Home } from "./Home/Home";
 export { default as Product } from "./product/Product";
 export { default as LinkFavorite } from "./product/LinkFavorite";
 export { default as EditDeleteButton } from "./product/EditDeleteButton";
