@@ -4,10 +4,10 @@ import { BsImage } from "react-icons/bs";
 import { AiFillGithub } from "react-icons/ai";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 
-import MarkdownInput from "./MarkdownInput";
-import MarkdownPreview from "./MarkdownPreview";
-import PostImage from "./PostImage";
-import app from "../../FirebaseInitialize";
+import app from "FirebaseInitialize";
+import MarkdownInput from "components/common-part/MarkdownInput";
+import MarkdownPreview from "components/common-part/MarkdownPreview";
+import PostImage from "components/common-part/PostImage";
 
 const storage = getStorage(app);
 

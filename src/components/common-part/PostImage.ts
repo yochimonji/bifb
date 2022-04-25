@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from "uuid";
 import loadImage from "blueimp-load-image";
 import { getStorage, ref, uploadBytes } from "firebase/storage";
 
-import app from "../../FirebaseInitialize";
+import app from "FirebaseInitialize";
 
 const storage = getStorage(app);
 

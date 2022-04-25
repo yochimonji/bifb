@@ -3,8 +3,8 @@ import { Menu, MenuButton, MenuList, MenuItem, MenuDivider, Avatar, Icon } from 
 import { FcGoogle } from "react-icons/fc";
 import { Link } from "react-router-dom";
 
-import { AuthContext } from "../../auth/AuthProvider";
-import { fetchUserInfo } from "../../firebase-com/firestore";
+import { AuthContext } from "auth/AuthProvider";
+import { fetchUserInfo } from "firebase-com/firestore";
 
 /**
  * ユーザーアイコンの表示とクリックした際の動作を行う関数

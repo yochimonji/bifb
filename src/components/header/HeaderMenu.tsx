@@ -3,8 +3,8 @@ import { Icon, HStack, Link } from "@chakra-ui/react";
 import { MdSearch, MdNoteAdd } from "react-icons/md";
 import { Link as ReactLink } from "react-router-dom";
 
-import { AuthContext } from "../../auth/AuthProvider";
-import HeaderMenuUser from "./HeaderMenuUser";
+import { AuthContext } from "auth/AuthProvider";
+import HeaderMenuUser from "components/header/HeaderMenuUser";
 
 /**
  * ヘッダーのメニュー部分を作成する関数

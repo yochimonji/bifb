@@ -3,8 +3,8 @@ import { Avatar, Button, HStack, VStack, Box, Image, Text } from "@chakra-ui/rea
 import { BrowserRouter, useHistory } from "react-router-dom";
 import moment from "moment";
 
-import Favorite from "./Favorite";
-import DisplayProductProps from "./DisplayProductProps";
+import Favorite from "components/common-part/Favorite";
+import DisplayProductProps from "components/common-part/DisplayProductProps";
 
 const DisplayProduct = (props: DisplayProductProps): JSX.Element => {
   const formatDate = (date: string) => {

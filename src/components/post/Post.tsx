@@ -17,14 +17,14 @@ import { BsImage } from "react-icons/bs";
 import { getStorage, ref, getDownloadURL, deleteObject } from "firebase/storage";
 import { useHistory, useLocation } from "react-router-dom";
 
-import app from "../../FirebaseInitialize";
-import GithubIcon from "../common-part/GithubIcon";
-import ProductIcon from "../common-part/ProductIcon";
-import TagIcon from "../common-part/TagIcon";
-import MarkdownForm from "../common-part/MarkdownForm";
-import PostImage from "../common-part/PostImage";
-import { editProduct, fetchProduct, postProduct, reduceTagNum } from "../../firebase-com/firestore";
-import { AuthContext } from "../../auth/AuthProvider";
+import app from "FirebaseInitialize";
+import GithubIcon from "components/common-part/GithubIcon";
+import ProductIcon from "components/common-part/ProductIcon";
+import TagIcon from "components/common-part/TagIcon";
+import MarkdownForm from "components/common-part/MarkdownForm";
+import PostImage from "components/common-part/PostImage";
+import { editProduct, fetchProduct, postProduct, reduceTagNum } from "firebase-com/firestore";
+import { AuthContext } from "auth/AuthProvider";
 
 const storage = getStorage(app);
 
@@ -202,6 +202,7 @@ const Post = (): JSX.Element => {
       .replace(/(\s{2,})/g, " ")
       .split(" ");
     // 重複要素を削除
+    // XXX: 警告が出ている
     const nonDuplicatedTagList = [...new Set(newTagList)];
     // ログイン済みでバリデーションOKの場合Firestoreに保存
     if (currentUser != null && canPost) {

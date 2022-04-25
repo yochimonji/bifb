@@ -4,11 +4,12 @@
 import React, { useState, useEffect } from "react";
 import { HStack, VStack, Box, Select } from "@chakra-ui/react";
 import { QuerySnapshot, DocumentData } from "firebase/firestore";
-import { useAppSelector } from "../../hooks/hooks";
-import { fetchProducts, fetchUserInfos } from "../../firebase-com/firestore";
-import DisplayProducts from "../common-part/DisplayProducts";
-import SearchCondition from "./SearchCondition";
-import DisplayProductProps from "../common-part/DisplayProductProps";
+
+import { useAppSelector } from "hooks/hooks";
+import { fetchProducts, fetchUserInfos } from "firebase-com/firestore";
+import DisplayProducts from "components/common-part/DisplayProducts";
+import SearchCondition from "components/home/SearchCondition";
+import DisplayProductProps from "components/common-part/DisplayProductProps";
 
 const Home = (): JSX.Element => {
   const [sortType, setSortType] = useState("NEW");
@@ -35,6 +36,7 @@ const Home = (): JSX.Element => {
         userUidSet.add(product.data().userUid);
       });
 
+      // XXX: 警告が出ている
       const userInfos = await fetchUserInfos([...userUidSet]);
 
       if (userInfos) {

@@ -1,8 +1,8 @@
 import React from "react";
 import { SimpleGrid } from "@chakra-ui/react";
 
-import DisplayProduct from "./DisplayProduct";
-import DisplayProductProps from "./DisplayProductProps";
+import DisplayProduct from "components/common-part/DisplayProduct";
+import DisplayProductProps from "components/common-part/DisplayProductProps";
 
 const DisplayProducts = (props: DisplayProductProps[]): JSX.Element => (
   <SimpleGrid w="100%" columns={[1, null, 2]} spacingX="50px" spacingY="50px" justifyItems="center">
