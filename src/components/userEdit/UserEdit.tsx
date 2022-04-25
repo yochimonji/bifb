@@ -18,9 +18,9 @@ import { fetchUserInfo, postUserInfo } from "../../firebase-com/firestore";
 import app from "../../base";
 import { AuthContext } from "../../auth/AuthProvider";
 // import { GithubIcon, TwitterIcon, postImage } from "..";
-import GithubIcon from "../common_part/GithubIcon";
-import TwitterIcon from "../common_part/TwitterIcon";
-import PostImage from "../common_part/PostImage";
+import GithubIcon from "../common-part/GithubIcon";
+import TwitterIcon from "../common-part/TwitterIcon";
+import PostImage from "../common-part/PostImage";
 
 const storage = getStorage(app);
 

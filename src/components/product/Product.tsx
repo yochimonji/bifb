@@ -4,9 +4,9 @@ import { Link, useHistory, useLocation } from "react-router-dom";
 import moment from "moment";
 import { QuerySnapshot, QueryDocumentSnapshot, DocumentData } from "firebase/firestore";
 
-import TagIcon from "../common_part/TagIcon";
-import MarkdownForm from "../common_part/MarkdownForm";
-import MarkdownPreview from "../common_part/MarkdownPreview";
+import TagIcon from "../common-part/TagIcon";
+import MarkdownForm from "../common-part/MarkdownForm";
+import MarkdownPreview from "../common-part/MarkdownPreview";
 import LinkFavorite from "./LinkFavorite";
 import EditDeleteButton from "./EditDeleteButton";
 import {

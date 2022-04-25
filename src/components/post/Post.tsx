@@ -18,11 +18,11 @@ import { getStorage, ref, getDownloadURL, deleteObject } from "firebase/storage"
 import { useHistory, useLocation } from "react-router-dom";
 
 import app from "../../base";
-import GithubIcon from "../common_part/GithubIcon";
-import ProductIcon from "../common_part/ProductIcon";
-import TagIcon from "../common_part/TagIcon";
-import MarkdownForm from "../common_part/MarkdownForm";
-import PostImage from "../common_part/PostImage";
+import GithubIcon from "../common-part/GithubIcon";
+import ProductIcon from "../common-part/ProductIcon";
+import TagIcon from "../common-part/TagIcon";
+import MarkdownForm from "../common-part/MarkdownForm";
+import PostImage from "../common-part/PostImage";
 import { editProduct, fetchProduct, postProduct, reduceTagNum } from "../../firebase-com/firestore";
 import { AuthContext } from "../../auth/AuthProvider";
 

@@ -11,8 +11,8 @@ import {
   PopoverArrow,
 } from "@chakra-ui/react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
-import GithubIcon from "../common_part/GithubIcon";
-import ProductIcon from "../common_part/ProductIcon";
+import GithubIcon from "../common-part/GithubIcon";
+import ProductIcon from "../common-part/ProductIcon";
 
 type LinkFavoriteProps = {
   githubUrl: string;

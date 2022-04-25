@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { HStack, TabList, Tabs, Tab, TabPanels, TabPanel } from "@chakra-ui/react";
 
 import { fetchProductsUser, fetchUserInfos } from "../../firebase-com/firestore";
-import DisplayProductProps from "../common_part/DisplayProductProps";
-import DisplayProducts from "../common_part/DisplayProducts";
+import DisplayProductProps from "../common-part/DisplayProductProps";
+import DisplayProducts from "../common-part/DisplayProducts";
 
 /**
  * 作品データを取得・フォーマットする関数

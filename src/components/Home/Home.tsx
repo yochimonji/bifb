@@ -6,9 +6,9 @@ import { HStack, VStack, Box, Select } from "@chakra-ui/react";
 import { QuerySnapshot, DocumentData } from "firebase/firestore";
 import { useAppSelector } from "../../hooks/hooks";
 import { fetchProducts, fetchUserInfos } from "../../firebase-com/firestore";
-import DisplayProducts from "../common_part/DisplayProducts";
+import DisplayProducts from "../common-part/DisplayProducts";
 import SearchCondition from "./SearchCondition";
-import DisplayProductProps from "../common_part/DisplayProductProps";
+import DisplayProductProps from "../common-part/DisplayProductProps";
 
 const Home = (): JSX.Element => {
   const [sortType, setSortType] = useState("NEW");
