@@ -1,14 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import {
-  VStack,
-  HStack,
-  Avatar,
-  Button,
-  Text,
-  IconButton,
-  Wrap,
-  Link,
-} from "@chakra-ui/react";
+import { VStack, HStack, Avatar, Button, Text, IconButton, Wrap, Link } from "@chakra-ui/react";
 import { AiFillGithub, AiOutlineTwitter } from "react-icons/ai";
 
 import { fetchUserInfo } from "../../firebase/firestore";
@@ -18,9 +9,7 @@ type DisplayUserProductListProps = {
   displayedUserUid: string;
 };
 
-export const DisplayUserInfo = (
-  props: DisplayUserProductListProps
-): JSX.Element => {
+const DisplayUserInfo = (props: DisplayUserProductListProps): JSX.Element => {
   const [userName, setUserName] = useState("");
   const [userIconUrl, setUserIconUrl] = useState("");
   const [userComment, setUserComment] = useState("");
@@ -45,32 +34,15 @@ export const DisplayUserInfo = (
 
   return (
     <HStack w="100%" spacing="0" mt="8">
-      <VStack
-        w="10%"
-        minW="120px"
-        padding="5px 10px 0px 0px"
-        alignSelf="flex-start"
-      >
+      <VStack w="10%" minW="120px" padding="5px 10px 0px 0px" alignSelf="flex-start">
         <Avatar src={userIconUrl} size="xl" />
         {props.displayedUserUid === currentUser?.uid && (
-          <Button
-            colorScheme="black"
-            variant="outline"
-            size="sm"
-            as={Link}
-            href="/user/edit"
-          >
+          <Button colorScheme="black" variant="outline" size="sm" as={Link} href="/user/edit">
             編集
           </Button>
         )}
       </VStack>
-      <VStack
-        w="35%"
-        spacing="0"
-        minW="200px"
-        minH="150px"
-        alignSelf="flex-start"
-      >
+      <VStack w="35%" spacing="0" minW="200px" minH="150px" alignSelf="flex-start">
         <Text w="100%" minH="50px" fontSize="2xl">
           {userName}
         </Text>

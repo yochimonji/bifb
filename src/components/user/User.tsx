@@ -2,7 +2,8 @@ import React from "react";
 import { VStack } from "@chakra-ui/react";
 import { useLocation } from "react-router-dom";
 
-import { DisplayUserProductList, DisplayUserInfo } from "../index";
+import DisplayUserInfo from "./DisplayUserInfo";
+import DisplayUserProductList from "./DisplayUserProductList";
 
 const User = (): JSX.Element => {
   const location = useLocation();
@@ -10,13 +11,9 @@ const User = (): JSX.Element => {
   return (
     <VStack spacing={10} alignItems="flex-start">
       {/* ユーザー情報の部分 */}
-      <DisplayUserInfo
-        displayedUserUid={(location.state as { userUid: string }).userUid}
-      />
+      <DisplayUserInfo displayedUserUid={(location.state as { userUid: string }).userUid} />
       {/* 作品の表示条件の選択 */}
-      <DisplayUserProductList
-        displayedUserUid={(location.state as { userUid: string }).userUid}
-      />
+      <DisplayUserProductList displayedUserUid={(location.state as { userUid: string }).userUid} />
     </VStack>
   );
 };

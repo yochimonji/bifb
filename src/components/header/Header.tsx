@@ -2,7 +2,7 @@ import React from "react";
 import { Box, Container, HStack, Link } from "@chakra-ui/react";
 import { Link as ReactLink } from "react-router-dom";
 import { useAppDispatch } from "../../hooks/hooks";
-import { HeaderMenu } from "..";
+import HeaderMenu from "./HeaderMenu";
 
 /**
  * ヘッダーを生成する関数

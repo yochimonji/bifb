@@ -18,7 +18,11 @@ import { getStorage, ref, getDownloadURL, deleteObject } from "firebase/storage"
 import { useHistory, useLocation } from "react-router-dom";
 
 import app from "../../base";
-import { GithubIcon, ProductIcon, TagIcon, MarkdownForm, postImage } from "..";
+import GithubIcon from "../common_part/GithubIcon";
+import ProductIcon from "../common_part/ProductIcon";
+import TagIcon from "../common_part/TagIcon";
+import MarkdownForm from "../common_part/MarkdownForm";
+import PostImage from "../common_part/PostImage";
 import { editProduct, fetchProduct, postProduct, reduceTagNum } from "../../firebase/firestore";
 import { AuthContext } from "../../auth/AuthProvider";
 
@@ -82,7 +86,7 @@ const Post = (): JSX.Element => {
 
       // FileをStorageに保存し、アイコン名とURLをstateにセット
       const icon = event.target.files[0];
-      const newIconName = await postImage(icon, "icon", true);
+      const newIconName = await PostImage(icon, "icon", true);
       const newIconRef = ref(storage, newIconName);
       const downloadUrl = await getDownloadURL(newIconRef);
       setIconName(newIconName);

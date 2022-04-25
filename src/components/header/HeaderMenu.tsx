@@ -4,7 +4,7 @@ import { MdSearch, MdNoteAdd } from "react-icons/md";
 import { Link as ReactLink } from "react-router-dom";
 
 import { AuthContext } from "../../auth/AuthProvider";
-import { HeaderMenuUser } from "..";
+import HeaderMenuUser from "./HeaderMenuUser";
 
 /**
  * ヘッダーのメニュー部分を作成する関数
