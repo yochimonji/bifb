@@ -8,7 +8,6 @@ import { HeaderMenu } from "..";
  * ヘッダーを生成する関数
  * @returns Header Component
  */
-
 const Header = (): JSX.Element => {
   const dispatch = useAppDispatch();
 

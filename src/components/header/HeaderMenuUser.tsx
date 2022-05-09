@@ -1,13 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useContext, useEffect, useState } from "react";
-import {
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  MenuDivider,
-  Avatar,
-  Icon,
-} from "@chakra-ui/react";
+import { Menu, MenuButton, MenuList, MenuItem, MenuDivider, Avatar, Icon, Text } from "@chakra-ui/react";
 import { FcGoogle } from "react-icons/fc";
 import { Link } from "react-router-dom";
 
@@ -19,8 +12,7 @@ import { fetchUserInfo } from "../../firebase/firestore";
  * @returns ヘッダーのユーザーアイコンのコンポーネント
  */
 const HeaderMenuUser = (): JSX.Element => {
-  const { googleLogin, logout, currentUser, isReload, setIsReload } =
-    useContext(AuthContext);
+  const { googleLogin, logout, currentUser, isReload, setIsReload } = useContext(AuthContext);
   const [userName, setUserName] = useState("");
   const [userIcon, setUserIcon] = useState("");
 
@@ -36,8 +28,7 @@ const HeaderMenuUser = (): JSX.Element => {
   // Firestoreからユーザー名とユーザーアイコンを取得する
   useEffect(() => {
     if (currentUser !== null) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const tmpUserInfo = fetchUserInfo(currentUser.uid).then((userInfo) => {
+      const temp = fetchUserInfo(currentUser.uid).then((userInfo) => {
         if (userInfo) {
           setUserName(userInfo.name);
           setUserIcon(userInfo.userIcon);
@@ -49,19 +40,17 @@ const HeaderMenuUser = (): JSX.Element => {
 
   return (
     <Menu placement="bottom-start">
-      {/* ログイン時と非ログイン時で表示するメニューを変更する */}
+      {/* ログイン時と非ログイン時で表示するメニューを変更 */}
       {currentUser ? (
+        // ログイン時
         <>
           <MenuButton color="none" p="1">
             <Avatar w="10" h="10" src={userIcon} name={userName} />
           </MenuButton>
           <MenuList zIndex="2">
-            <MenuItem
-              as={Link}
-              to={{ pathname: "/user", state: { userUid: currentUser.uid } }}
-            >
+            <MenuItem as={Link} to={{ pathname: "/user", state: { userUid: currentUser.uid } }}>
               {userName}
-              <span> さん</span>
+              <Text>さん</Text>
             </MenuItem>
             {/* <MenuItem as="a" href="/User">
               フィードバックした投稿
@@ -79,16 +68,13 @@ const HeaderMenuUser = (): JSX.Element => {
             >
               設定
             </MenuItem>
-            <MenuItem
-              variant="unstyled"
-              fontWeight="medium"
-              onClick={handleLogout}
-            >
+            <MenuItem variant="unstyled" fontWeight="medium" onClick={handleLogout}>
               ログアウト
             </MenuItem>
           </MenuList>
         </>
       ) : (
+        // 非ログイン時
         <>
           <MenuButton color="none" p="1">
             <Avatar w="10" h="10" />
