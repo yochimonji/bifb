@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable no-restricted-globals */
 import React, { useState, useEffect } from "react";
 import { HStack, VStack, Box, Select } from "@chakra-ui/react";
 import { QuerySnapshot, DocumentData } from "firebase/firestore";
@@ -91,7 +90,7 @@ const Home = (): JSX.Element => {
 
   return (
     <VStack spacing={10} align="stretch" pt="4" pb="12">
-      {/* 上段(検索条件・トレンド等の選択) */}
+      {/* 検索条件の表示 */}
       <HStack w="100%" spacing="0px" alignItems="center" flexWrap="wrap">
         {searchStatus === "" ? (
           <Box w="80%" padding="37px 20px 35px 0px" minW="90px" />
@@ -107,6 +106,7 @@ const Home = (): JSX.Element => {
             )}
           </>
         )}
+        {/* ソート条件 */}
         <Box w="20%" padding="30px 0px">
           <Select name="sortType" onChange={onChangeSortType}>
             <option value="NEW">新着</option>
