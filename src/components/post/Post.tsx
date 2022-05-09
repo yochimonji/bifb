@@ -25,22 +25,22 @@ import { AuthContext } from "../../auth/AuthProvider";
 const storage = getStorage(app);
 
 const Post = (): JSX.Element => {
-  const [title, setTitle] = useState("");
-  const [abstract, setAbstract] = useState("");
-  const [iconUrl, setIconUrl] = useState("");
-  const [iconName, setIconName] = useState("");
-  const [githubUrl, setGithubUrl] = useState("");
-  const [productUrl, setProductUrl] = useState("");
-  const [tagList, setTagList] = useState("");
-  const [mainText, setMainText] = useState("");
-  const [error, setError] = useState("");
-  const [validTitle, setValidTitle] = useState(false);
-  const [validAbstract, setValidAbstract] = useState(false);
-  const [validIconUrl, setValidIconUrl] = useState(false);
-  const [validTagList, setValidTagList] = useState(false);
-  const [validMainText, setValidMainText] = useState(false);
-  const [editProductId, setEditProductId] = useState("");
-  const [pastTagList, setPastTagList] = useState("");
+  const [title, setTitle] = useState<string>("");
+  const [abstract, setAbstract] = useState<string>("");
+  const [iconUrl, setIconUrl] = useState<string>("");
+  const [iconName, setIconName] = useState<string>("");
+  const [githubUrl, setGithubUrl] = useState<string>("");
+  const [productUrl, setProductUrl] = useState<string>("");
+  const [tagList, setTagList] = useState<string>("");
+  const [mainText, setMainText] = useState<string>("");
+  const [error, setError] = useState<string>("");
+  const [validTitle, setValidTitle] = useState<boolean>(false);
+  const [validAbstract, setValidAbstract] = useState<boolean>(false);
+  const [validIconUrl, setValidIconUrl] = useState<boolean>(false);
+  const [validTagList, setValidTagList] = useState<boolean>(false);
+  const [validMainText, setValidMainText] = useState<boolean>(false);
+  const [editProductId, setEditProductId] = useState<string>("");
+  const [pastTagList, setPastTagList] = useState<string>("");
 
   const iconInputRef = useRef<HTMLInputElement>(null);
   const { currentUser } = useContext(AuthContext);
