@@ -5,6 +5,7 @@ import { Link as ReactLink } from "react-router-dom";
 import { useAppDispatch } from "hooks/hooks";
 import HeaderMenu from "components/header/HeaderMenu";
 
+// TODO: 後で消す
 /**
  * ヘッダーを生成する関数
  * @returns Header Component
