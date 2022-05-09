@@ -1,4 +1,4 @@
-import React from "react";
+import React, { MouseEventHandler } from "react";
 import {
   HStack,
   Link,
@@ -18,7 +18,7 @@ type LinkFavoriteProps = {
   productUrl: string;
   favoriteNum: number;
   isFavorite: boolean;
-  handleClickFavoriteButton: React.MouseEventHandler<HTMLButtonElement>;
+  handleClickFavoriteButton: MouseEventHandler<HTMLButtonElement>;
 };
 
 const LinkFavorite = (props: LinkFavoriteProps): JSX.Element => (
