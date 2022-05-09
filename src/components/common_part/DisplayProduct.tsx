@@ -31,7 +31,9 @@ const DisplayProduct = (props: DisplayProductProps): JSX.Element => {
       >
         <HStack w="100%" spacing={0} alignItems="flex-start">
           <VStack w="36%" h="230px" spacing={0} pt="3" justify="center">
+            {/* 作品アイコンの表示 */}
             <Image w="100%" h="161px" src={props.productIconUrl} boxsize="100px" padding="20px 10px" />
+            {/* ユーザー情報の表示 */}
             <HStack h="69px" spacing={0}>
               <Avatar w="8" h="8" src={props.userIconUrl} />
               <Text
@@ -45,8 +47,8 @@ const DisplayProduct = (props: DisplayProductProps): JSX.Element => {
               </Text>
             </HStack>
           </VStack>
-
           <VStack w="64%" h="230px" spacing="0px" pt="5" pl="2">
+            {/* 作品タイトルの表示 */}
             <Text
               w="100%"
               h="69px"
@@ -59,6 +61,7 @@ const DisplayProduct = (props: DisplayProductProps): JSX.Element => {
             >
               {props.productTitle}
             </Text>
+            {/* 作品概要の表示 */}
             <Text
               w="100%"
               h="115px"
@@ -72,6 +75,7 @@ const DisplayProduct = (props: DisplayProductProps): JSX.Element => {
               {props.productAbstract}
             </Text>
             <HStack w="100%" h="46px" spacing="0px">
+              {/* 投稿日の表示 */}
               <VStack w="80%" h="46px" spacing="0px">
                 <Text w="100%" h="23px" fontSize="xs" textAlign="left" padding="7px 5px 5px 0px" whiteSpace="pre-wrap">
                   {props.postDate === props.editDate
@@ -79,6 +83,7 @@ const DisplayProduct = (props: DisplayProductProps): JSX.Element => {
                     : `更新日：${formatDate(props.editDate)}`}
                 </Text>
               </VStack>
+              {/* いいね数の表示 */}
               <Box w="20%" h="46px" pt="2px" pr="4px">
                 <Favorite favoriteNum={props.favoriteNum} />
               </Box>

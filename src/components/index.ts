@@ -17,7 +17,7 @@ export { default as MarkdownForm } from "./common_part/MarkdownForm";
 export { default as MarkdownInput } from "./common_part/MarkdownInput";
 export { default as MarkdownPreview } from "./common_part/MarkdownPreview";
 export { default as DisplayProduct } from "./common_part/DisplayProduct";
-export { default as DisplayProducts } from "./common_part/DisplayProducts";
+export { default as DisplayProducts } from "./common_part/DisplayProductList";
 export { default as Favorite } from "./common_part/Favorite";
 export { default as SearchCondition } from "./home/SearchCondition";
 export { default as postImage } from "./common_part/postImage";
