@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { MouseEventHandler, useRef } from "react";
 import {
   IconButton,
   HStack,
@@ -15,8 +15,8 @@ import {
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 
 type EditDeleteButtonType = {
-  handleClickEdit: React.MouseEventHandler<HTMLButtonElement>;
-  handleClickDelete: React.MouseEventHandler<HTMLButtonElement>;
+  handleClickEdit: MouseEventHandler<HTMLButtonElement>;
+  handleClickDelete: MouseEventHandler<HTMLButtonElement>;
 };
 
 const EditDeleteButton = (props: EditDeleteButtonType): JSX.Element => {
@@ -63,9 +63,7 @@ const EditDeleteButton = (props: EditDeleteButtonType): JSX.Element => {
         <AlertDialogContent>
           <AlertDialogHeader>作品を削除しますか？</AlertDialogHeader>
           <AlertDialogCloseButton />
-          <AlertDialogBody>
-            作品を削除すると元に戻すことはできません。それでも削除しますか？
-          </AlertDialogBody>
+          <AlertDialogBody>作品を削除すると元に戻すことはできません。それでも削除しますか？</AlertDialogBody>
           <AlertDialogFooter>
             <Button ref={cancelRef} onClick={onClose}>
               閉じる
