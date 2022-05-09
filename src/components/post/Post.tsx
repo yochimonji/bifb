@@ -208,7 +208,7 @@ const Post = (): JSX.Element => {
 
         if (differenceReduceTagList.length !== 0) {
           differenceReduceTagList.forEach((tag) => {
-            const tmpReduceTagNum = reduceTagNum(tag);
+            const temp = reduceTagNum(tag);
           });
         }
 
@@ -250,8 +250,7 @@ const Post = (): JSX.Element => {
     if (location.state && (location.state as { productId?: string }).productId) {
       const currentProductId = (location.state as { productId: string }).productId;
       setEditProductId(currentProductId);
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const tmpProductData = fetchProduct(currentProductId).then((productData) => {
+      const temp = fetchProduct(currentProductId).then((productData) => {
         if (productData) {
           setTitle(productData.productTitle);
           setAbstract(productData.productAbstract);
