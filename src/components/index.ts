@@ -21,6 +21,6 @@ export { default as DisplayProducts } from "./common_part/DisplayProducts";
 export { default as Favorite } from "./common_part/Favorite";
 export { default as SearchCondition } from "./home/SearchCondition";
 export { default as postImage } from "./common_part/postImage";
-export type { default as DisplayProductProps } from "./common_part/DisplayProductProps";
+export type { default as DisplayProductProps } from "../type/DisplayProductProps";
 export { default as DisplayUserInfo } from "./user/DisplayUserInfo";
 export { default as DisplayUserProductList } from "./user/DisplayUserProductList";

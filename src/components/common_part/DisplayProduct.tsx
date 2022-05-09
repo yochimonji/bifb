@@ -14,19 +14,6 @@ const DisplayProduct = (props: DisplayProductProps): JSX.Element => {
 
   const history = useHistory();
 
-  /**
-   *ボタンが押された時に、その作品の作品IDを引数として送る
-   *
-   * --値の受け取り方--
-   * import { useLocation } from "react-router-dom";
-   * const APP = () => {
-   *  const location = useLocation();
-   *
-   *  return (
-   *     {(location.state as { productId: string }).productId}
-   *  )
-   * }
-   */
   const handleClick = () => {
     history.push("/product", { productId: props.productId });
   };
