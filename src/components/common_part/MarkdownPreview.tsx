@@ -4,12 +4,12 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import ChackUIRenderer from "chakra-ui-markdown-renderer";
 
-type MarkdonwPreviewProps = {
+type MarkdownPreviewProps = {
   text: string;
   isFeedback: boolean;
 };
 
-const MarkdownPreview = (props: MarkdonwPreviewProps): JSX.Element => (
+const MarkdownPreview = (props: MarkdownPreviewProps): JSX.Element => (
   <>
     {props.isFeedback ? (
       <Text
