@@ -20,7 +20,7 @@ export { default as DisplayProduct } from "./common_part/DisplayProduct";
 export { default as DisplayProducts } from "./common_part/DisplayProductList";
 export { default as Favorite } from "./common_part/Favorite";
 export { default as SearchCondition } from "./home/SearchCondition";
-export { default as postImage } from "./common_part/postImage";
+export { default as postImage } from "./common_part/PostImage";
 export type { default as DisplayProductProps } from "../type/DisplayProductProps";
 export { default as DisplayUserInfo } from "./user/DisplayUserInfo";
 export { default as DisplayUserProductList } from "./user/DisplayUserProductList";
