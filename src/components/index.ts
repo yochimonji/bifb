@@ -1,4 +1,4 @@
-export { default as Home } from "./Home";
+export { default as Home } from "./home/Home";
 export { default as Product } from "./product/Product";
 export { default as LinkFavorite } from "./product/LinkFavorite";
 export { default as EditDeleteButton } from "./product/EditDeleteButton";
@@ -19,7 +19,7 @@ export { default as MarkdownPreview } from "./common_part/MarkdownPreview";
 export { default as DisplayProduct } from "./common_part/DisplayProduct";
 export { default as DisplayProducts } from "./common_part/DisplayProducts";
 export { default as Favorite } from "./common_part/Favorite";
-export { default as SearchCondition } from "./SearchCondition";
+export { default as SearchCondition } from "./home/SearchCondition";
 export { default as postImage } from "./common_part/postImage";
 export type { default as DisplayProductProps } from "./common_part/DisplayProductProps";
 export { default as DisplayUserInfo } from "./user/DisplayUserInfo";
