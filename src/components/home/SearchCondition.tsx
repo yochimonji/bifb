@@ -1,6 +1,7 @@
 import React from "react";
 import { Tag, TagLabel, TagCloseButton, HStack } from "@chakra-ui/react";
 import { useHistory } from "react-router-dom";
+// XXX: 絶対パスで指定できていない
 import { useAppDispatch } from "../../hooks/hooks";
 
 type Props = {
