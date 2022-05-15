@@ -11,6 +11,24 @@ service cloud.firestore {
             return isAuthenticated() && userUid == request.auth.uid;
         }
 
+        function isValidProduct(product) {
+            return product.size() == 8
+                && product.keys().hasAll([
+                    "productTitle", "productAbstract", "productIconUrl", "githubUrl", "productUrl", "tagList", "mainText", "userUid"
+                ])
+                && product.productTitle is string
+                && product.productAbstract is string
+                && product.productIconUrl is string
+                && product.githubUrl is string
+                && product.productUrl is string
+                && product.tagList is list
+                && product.tagList[0] is string
+                && product.tagList.size() >= 0
+                && product.tagList.size() <= 5
+                && product.mainText is list
+                && product.userUid is string;
+        }
+
         function isValidTag(tag) {
             return tag.size() == 1
                 && "num" in tag
@@ -44,16 +62,28 @@ service cloud.firestore {
         //     allow read: if true;
         // }
 
-        // match /product/{productId} {
-        //     allow read: if true;
-        // }
+        match /product/{productId} {
+            allow write: if isValidProduct(request.resource.data)
+                // バリデーション
+                && isUserAuthenticated(request.resource.data.userUid)
+                && request.resource.data.productTitle != ""
+                && request.resource.data.productAbstract != ""
+                && request.resource.data.productIconUrl.matches("https?://[\w!?/+\-_~=;.,*&@#$%()[\]]+")
+                && (request.resource.data.githubUrl == ""
+                    || request.resource.data.githubUrl.matches("https?://github.com/[\w!?/+\-_~=;.,*&@#$%()[\]]+"))
+                && (request.resource.data.productUrl == ""
+                    || request.resource.data.productUrl.matches("https?://[\w!?/+\-_~=;.,*&@#$%()[\]]+"));
+            // FIXME: 本人以外の登録済みユーザーも削除可能のためisUserAuthenticatedを使いたい
+            // 現在のFirestoreの構成ではuserUidの取得ができないため根本の構成から変更する必要あり
+            allow delete: if isAuthenticated();
+        }
 
         match /tag/{tagName} {
-            allow create: if isAuthenticated()
+            allow write: if isAuthenticated()
                 && isValidTag(request.resource.data)
                 && request.resource.data.num > -1;
         }
-
+        // TODO: validを先にする、urlをチェックする、コメント追加
         match /userInfo/{userUid} {
             allow create: if isUserAuthenticated(userUid)
                 && isValidUserInfo(request.resource.data)
