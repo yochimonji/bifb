@@ -11,6 +11,12 @@ service cloud.firestore {
             return isAuthenticated() && userUid == request.auth.uid;
         }
 
+        function isValidTag(tag) {
+            return tag.size() == 1
+                && "num" in tag
+                && tag.num is int
+        }
+
         function isValidUserInfo(userInfo) {
             return userInfo.size() == 9
                 && userInfo.keys().hasAll([
@@ -42,9 +48,11 @@ service cloud.firestore {
         //     allow read: if true;
         // }
 
-        // match /tag/{tagName} {
-        //     allow read: if true;
-        // }
+        match /tag/{tagName} {
+            allow create: if isAuthenticated()
+                && isValidTag(request.resource.data)
+                && request.resource.data.num > -1;
+        }
 
         match /userInfo/{userUid} {
             allow create: if isUserAuthenticated(userUid)
@@ -55,6 +63,8 @@ service cloud.firestore {
                 && request.resource.data.otherUrl == ""
                 && request.resource.data.favoriteList == [""]
                 && request.resource.data.feedbackList == [""];
+            allow update: if isUserAuthenticated(userUid)
+                && isValidUserInfo(request.resource.data);
         }
     }
 }
