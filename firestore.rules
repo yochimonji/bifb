@@ -11,6 +11,20 @@ service cloud.firestore {
             return isAuthenticated() && userUid == request.auth.uid;
         }
 
+        // feedbackのスキーマ検証
+        function isValidFeedback(feedback) {
+            return feedback.size() == 5
+                && feedback.keys().hasAll([
+                    "userUid", "feedbackText", "productId", "postDate", "favoriteNum"
+                ])
+                && feedback.userUid is string
+                && feedback.feedbackText is string
+                && feedback.productId is string
+                && feedback.postDate is string
+                && feedback.favoriteNum is int;
+        }
+
+        // TODO: フィールドが足りてない
         // productのスキーマ検証
         function isValidProduct(product) {
             return product.size() == 8
@@ -34,7 +48,7 @@ service cloud.firestore {
         function isValidTag(tag) {
             return tag.size() == 1
                 && "num" in tag
-                && tag.num is int
+                && tag.num is int;
         }
 
         // ユーザー情報のスキーマ検証
@@ -53,7 +67,7 @@ service cloud.firestore {
                 && userInfo.favoriteList[0] is string
                 && userInfo.feedbackList is list
                 && userInfo.feedbackList[0] is string
-                && userInfo.userUid is string
+                && userInfo.userUid is string;
         }
 
         // 非公開にするべき情報はないため読み取りは全て許可
@@ -61,9 +75,15 @@ service cloud.firestore {
             allow read: if true;
         }
 
-        // match /feedback/{feedbackId} {
-        //     allow read: if true;
-        // }
+        match /feedback/{feedbackId} {
+            allow write: if isValidFeedback(request.resource.data)
+                // バリデーション
+                && isUserAuthenticated(request.resource.data.userUid)
+                && request.resource.data.userUid != ""
+                && request.resource.data.feedbackText != ""
+                && request.resource.data.productId != ""
+                && request.resource.data.favoriteNum > -1;
+        }
 
         match /product/{productId} {
             allow write: if isValidProduct(request.resource.data)
