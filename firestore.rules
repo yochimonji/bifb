@@ -11,6 +11,7 @@ service cloud.firestore {
             return isAuthenticated() && userUid == request.auth.uid;
         }
 
+        // productのスキーマ検証
         function isValidProduct(product) {
             return product.size() == 8
                 && product.keys().hasAll([
@@ -29,12 +30,14 @@ service cloud.firestore {
                 && product.userUid is string;
         }
 
+        // タグのスキーマ検証
         function isValidTag(tag) {
             return tag.size() == 1
                 && "num" in tag
                 && tag.num is int
         }
 
+        // ユーザー情報のスキーマ検証
         function isValidUserInfo(userInfo) {
             return userInfo.size() == 9
                 && userInfo.keys().hasAll([
@@ -79,22 +82,33 @@ service cloud.firestore {
         }
 
         match /tag/{tagName} {
-            allow write: if isAuthenticated()
-                && isValidTag(request.resource.data)
+            allow write: if isValidTag(request.resource.data)
+                // バリデーション
+                && isAuthenticated()
                 && request.resource.data.num > -1;
         }
-        // TODO: validを先にする、urlをチェックする、コメント追加
+
+        // TODO: urlをチェックする
         match /userInfo/{userUid} {
-            allow create: if isUserAuthenticated(userUid)
-                && isValidUserInfo(request.resource.data)
+            allow create: if isValidUserInfo(request.resource.data)
+                // バリデーション
+                && isUserAuthenticated(userUid)
                 && request.resource.data.comment == "よろしくお願いします。"
                 && request.resource.data.githubUrl == ""
                 && request.resource.data.twitterUrl == ""
                 && request.resource.data.otherUrl == ""
                 && request.resource.data.favoriteList == [""]
                 && request.resource.data.feedbackList == [""];
-            allow update: if isUserAuthenticated(userUid)
-                && isValidUserInfo(request.resource.data);
+
+            allow update: if isValidUserInfo(request.resource.data)
+                // バリデーション
+                && isUserAuthenticated(userUid)
+                && (request.resource.data.githubUrl == ""
+                    || request.resource.data.githubUrl.matches("https?://github.com/[\w!?/+\-_~=;.,*&@#$%()[\]]+"))
+                && (request.resource.data.twitterUrl == ""
+                    || request.resource.data.twitterUrl.matches("https?://twitter.com/[\w!?/+\-_~=;.,*&@#$%()[\]]+"))
+                && (request.resource.data.otherUrl == ""
+                    || request.resource.data.otherUrl.matches("https?://[\w!?/+\-_~=;.,*&@#$%()[\]]+"));
         }
     }
 }
