@@ -27,9 +27,9 @@ service cloud.firestore {
         // TODO: フィールドが足りてない
         // productのスキーマ検証
         function isValidProduct(product) {
-            return product.size() == 8
+            return product.size() == 13
                 && product.keys().hasAll([
-                    "productTitle", "productAbstract", "productIconUrl", "githubUrl", "productUrl", "tagList", "mainText", "userUid"
+                    "productTitle", "productAbstract", "productIconUrl", "githubUrl", "productUrl", "tagList", "mainText", "postDate", "editDate", "favoriteNum", "feedbackNum", "userUid", "productId"
                 ])
                 && product.productTitle is string
                 && product.productAbstract is string
@@ -41,7 +41,12 @@ service cloud.firestore {
                 && product.tagList.size() >= 0
                 && product.tagList.size() <= 5
                 && product.mainText is list
-                && product.userUid is string;
+                && product.postDate is string
+                && product.editDate is string
+                && product.favoriteNum is int
+                && product.feedbackNum is int
+                && product.userUid is string
+                && product.productId is string;
         }
 
         // タグのスキーマ検証
@@ -86,7 +91,7 @@ service cloud.firestore {
         }
 
         match /product/{productId} {
-            allow write: if isValidProduct(request.resource.data)
+            allow create: if isValidProduct(request.resource.data)
                 // バリデーション
                 && isUserAuthenticated(request.resource.data.userUid)
                 && request.resource.data.productTitle != ""
@@ -95,10 +100,29 @@ service cloud.firestore {
                 && (request.resource.data.githubUrl == ""
                     || request.resource.data.githubUrl.matches("https?://github.com/[\w!?/+\-_~=;.,*&@#$%()[\]]+"))
                 && (request.resource.data.productUrl == ""
-                    || request.resource.data.productUrl.matches("https?://[\w!?/+\-_~=;.,*&@#$%()[\]]+"));
-            // FIXME: 本人以外の登録済みユーザーも削除可能のためisUserAuthenticatedを使いたい
-            // 現在のFirestoreの構成ではuserUidの取得ができないため根本の構成から変更する必要あり
-            allow delete: if isAuthenticated();
+                    || request.resource.data.productUrl.matches("https?://[\w!?/+\-_~=;.,*&@#$%()[\]]+"))
+                && request.resource.data.favoriteNum > -1
+                && request.resource.data.feedbackNum > -1
+                && request.resource.data.userUid != ""
+                && request.resource.data.productId != ""
+
+            allow update: if isValidProduct(request.resource.data)
+                // バリデーション
+                && isUserAuthenticated(request.resource.data.userUid)
+                && request.resource.data.productTitle != ""
+                && request.resource.data.productAbstract != ""
+                && request.resource.data.productIconUrl.matches("https?://[\w!?/+\-_~=;.,*&@#$%()[\]]+")
+                && (request.resource.data.githubUrl == ""
+                    || request.resource.data.githubUrl.matches("https?://github.com/[\w!?/+\-_~=;.,*&@#$%()[\]]+"))
+                && (request.resource.data.productUrl == ""
+                    || request.resource.data.productUrl.matches("https?://[\w!?/+\-_~=;.,*&@#$%()[\]]+"))
+                && request.resource.data.favoriteNum > -1
+                && request.resource.data.feedbackNum > -1
+                && request.resource.data.userUid != ""
+                && request.resource.data.productId != ""
+                && request.resource.data.postDate == resource.data.postDate
+
+            allow delete: if isUserAuthenticated(resource.data.userUid);
         }
 
         match /tag/{tagName} {
