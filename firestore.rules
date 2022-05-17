@@ -24,7 +24,6 @@ service cloud.firestore {
                 && feedback.favoriteNum is int;
         }
 
-        // TODO: フィールドが足りてない
         // productのスキーマ検証
         function isValidProduct(product) {
             return product.size() == 13
@@ -96,11 +95,11 @@ service cloud.firestore {
                 && isUserAuthenticated(request.resource.data.userUid)
                 && request.resource.data.productTitle != ""
                 && request.resource.data.productAbstract != ""
-                && request.resource.data.productIconUrl.matches("https?://[\w!?/+\-_~=;.,*&@#$%()[\]]+")
+                && request.resource.data.productIconUrl.matches("https?://[\\w!?/+-_~=;.,*&@#$%()[\\]]+")
                 && (request.resource.data.githubUrl == ""
-                    || request.resource.data.githubUrl.matches("https?://github.com/[\w!?/+\-_~=;.,*&@#$%()[\]]+"))
+                    || request.resource.data.githubUrl.matches("https?://github.com/[\\w!?/+-_~=;.,*&@#$%()[\\]]+"))
                 && (request.resource.data.productUrl == ""
-                    || request.resource.data.productUrl.matches("https?://[\w!?/+\-_~=;.,*&@#$%()[\]]+"))
+                    || request.resource.data.productUrl.matches("https?://[\\w!?/+-_~=;.,*&@#$%()[\\]]+"))
                 && request.resource.data.favoriteNum > -1
                 && request.resource.data.feedbackNum > -1
                 && request.resource.data.userUid != ""
@@ -111,11 +110,11 @@ service cloud.firestore {
                 && isUserAuthenticated(request.resource.data.userUid)
                 && request.resource.data.productTitle != ""
                 && request.resource.data.productAbstract != ""
-                && request.resource.data.productIconUrl.matches("https?://[\w!?/+\-_~=;.,*&@#$%()[\]]+")
+                && request.resource.data.productIconUrl.matches("https?://[\\w!?/+-_~=;.,*&@#$%()[\\]]+")
                 && (request.resource.data.githubUrl == ""
-                    || request.resource.data.githubUrl.matches("https?://github.com/[\w!?/+\-_~=;.,*&@#$%()[\]]+"))
+                    || request.resource.data.githubUrl.matches("https?://github.com/[\\w!?/+-_~=;.,*&@#$%()[\\]]+"))
                 && (request.resource.data.productUrl == ""
-                    || request.resource.data.productUrl.matches("https?://[\w!?/+\-_~=;.,*&@#$%()[\]]+"))
+                    || request.resource.data.productUrl.matches("https?://[\\w!?/+-_~=;.,*&@#$%()[\\]]+"))
                 && request.resource.data.favoriteNum > -1
                 && request.resource.data.feedbackNum > -1
                 && request.resource.data.userUid != ""
@@ -148,11 +147,11 @@ service cloud.firestore {
                 // バリデーション
                 && isUserAuthenticated(userUid)
                 && (request.resource.data.githubUrl == ""
-                    || request.resource.data.githubUrl.matches("https?://github.com/[\w!?/+\-_~=;.,*&@#$%()[\]]+"))
+                    || request.resource.data.githubUrl.matches("https?://github.com/[\\w!?/+-_~=;.,*&@#$%()[\\]]+"))
                 && (request.resource.data.twitterUrl == ""
-                    || request.resource.data.twitterUrl.matches("https?://twitter.com/[\w!?/+\-_~=;.,*&@#$%()[\]]+"))
+                    || request.resource.data.twitterUrl.matches("https?://twitter.com/[\\w!?/+-_~=;.,*&@#$%()[\\]]+"))
                 && (request.resource.data.otherUrl == ""
-                    || request.resource.data.otherUrl.matches("https?://[\w!?/+\-_~=;.,*&@#$%()[\]]+"));
+                    || request.resource.data.otherUrl.matches("https?://[\\w!?/+-_~=;.,*&@#$%()[\\]]+"));
         }
     }
 }
