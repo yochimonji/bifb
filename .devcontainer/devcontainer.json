@@ -36,6 +36,7 @@
         "mosapride.zenkaku",                // 全角スペース
         "oderwat.indent-rainbow",           // インデントをカラフルにする
         "xabikos.javascriptsnippets",       // JS用Snippets
-        "yzhang.markdown-all-in-one"        // Markdownツール
+        "yzhang.markdown-all-in-one",       // Markdownツール
+        "toba.vsfire",                      // firebase
     ]
 }

@@ -1,0 +1,157 @@
+rules_version = '2';
+
+service cloud.firestore {
+    match /databases/{database}/documents {
+
+        function isAuthenticated() {
+            return request.auth != null;
+        }
+
+        function isUserAuthenticated(userUid) {
+            return isAuthenticated() && userUid == request.auth.uid;
+        }
+
+        // feedbackのスキーマ検証
+        function isValidFeedback(feedback) {
+            return feedback.size() == 5
+                && feedback.keys().hasAll([
+                    "userUid", "feedbackText", "productId", "postDate", "favoriteNum"
+                ])
+                && feedback.userUid is string
+                && feedback.feedbackText is string
+                && feedback.productId is string
+                && feedback.postDate is string
+                && feedback.favoriteNum is int;
+        }
+
+        // productのスキーマ検証
+        function isValidProduct(product) {
+            return product.size() == 13
+                && product.keys().hasAll([
+                    "productTitle", "productAbstract", "productIconUrl", "githubUrl", "productUrl", "tagList", "mainText", "postDate", "editDate", "favoriteNum", "feedbackNum", "userUid", "productId"
+                ])
+                && product.productTitle is string
+                && product.productAbstract is string
+                && product.productIconUrl is string
+                && product.githubUrl is string
+                && product.productUrl is string
+                && product.tagList is list
+                && product.tagList[0] is string
+                && product.tagList.size() >= 0
+                && product.tagList.size() <= 5
+                && product.mainText is string
+                && product.postDate is string
+                && product.editDate is string
+                && product.favoriteNum is int
+                && product.feedbackNum is int
+                && product.userUid is string
+                && product.productId is string;
+        }
+
+        // タグのスキーマ検証
+        function isValidTag(tag) {
+            return tag.size() == 1
+                && "num" in tag
+                && tag.num is int;
+        }
+
+        // ユーザー情報のスキーマ検証
+        function isValidUserInfo(userInfo) {
+            return userInfo.size() == 9
+                && userInfo.keys().hasAll([
+                    "name", "userIcon", "comment", "githubUrl", "twitterUrl", "otherUrl", "favoriteList", "feedbackList", "userUid"
+                ])
+                && userInfo.name is string
+                && userInfo.userIcon is string
+                && userInfo.comment is string
+                && userInfo.githubUrl is string
+                && userInfo.twitterUrl is string
+                && userInfo.otherUrl is string
+                && userInfo.favoriteList is list
+                && userInfo.favoriteList[0] is string
+                && userInfo.feedbackList is list
+                && userInfo.feedbackList[0] is string
+                && userInfo.userUid is string;
+        }
+
+        // 非公開にするべき情報はないため読み取りは全て許可
+        match /{document=**} {
+            allow read: if true;
+        }
+
+        match /feedback/{feedbackId} {
+            allow write: if isValidFeedback(request.resource.data)
+                // バリデーション
+                && isUserAuthenticated(request.resource.data.userUid)
+                && request.resource.data.userUid != ""
+                && request.resource.data.feedbackText != ""
+                && request.resource.data.productId != ""
+                && request.resource.data.favoriteNum > -1;
+        }
+
+        match /product/{productId} {
+            allow create: if isValidProduct(request.resource.data)
+                // バリデーション
+                && isUserAuthenticated(request.resource.data.userUid)
+                && request.resource.data.productTitle != ""
+                && request.resource.data.productAbstract != ""
+                && request.resource.data.productIconUrl.matches("https?://[\\w!?/+-_~=;.,*&@#$%()[\\]]+")
+                && (request.resource.data.githubUrl == ""
+                    || request.resource.data.githubUrl.matches("https?://github.com/[\\w!?/+-_~=;.,*&@#$%()[\\]]+"))
+                && (request.resource.data.productUrl == ""
+                    || request.resource.data.productUrl.matches("https?://[\\w!?/+-_~=;.,*&@#$%()[\\]]+"))
+                && request.resource.data.favoriteNum > -1
+                && request.resource.data.feedbackNum > -1
+                && request.resource.data.userUid != ""
+                && request.resource.data.productId != "";
+
+            allow update: if isValidProduct(request.resource.data)
+                // バリデーション
+                && isUserAuthenticated(request.resource.data.userUid)
+                && request.resource.data.productTitle != ""
+                && request.resource.data.productAbstract != ""
+                && request.resource.data.productIconUrl.matches("https?://[\\w!?/+-_~=;.,*&@#$%()[\\]]+")
+                && (request.resource.data.githubUrl == ""
+                    || request.resource.data.githubUrl.matches("https?://github.com/[\\w!?/+-_~=;.,*&@#$%()[\\]]+"))
+                && (request.resource.data.productUrl == ""
+                    || request.resource.data.productUrl.matches("https?://[\\w!?/+-_~=;.,*&@#$%()[\\]]+"))
+                && request.resource.data.favoriteNum > -1
+                && request.resource.data.feedbackNum > -1
+                && request.resource.data.userUid != ""
+                && request.resource.data.productId != ""
+                && request.resource.data.postDate == resource.data.postDate;
+
+            allow delete: if isUserAuthenticated(resource.data.userUid);
+        }
+
+        match /tag/{tagName} {
+            allow write: if isValidTag(request.resource.data)
+                // バリデーション
+                && isAuthenticated()
+                && request.resource.data.num > -1;
+        }
+
+        // TODO: urlをチェックする
+        match /userInfo/{userUid} {
+            allow create: if isValidUserInfo(request.resource.data)
+                // バリデーション
+                && isUserAuthenticated(userUid)
+                && request.resource.data.comment == "よろしくお願いします。"
+                && request.resource.data.githubUrl == ""
+                && request.resource.data.twitterUrl == ""
+                && request.resource.data.otherUrl == ""
+                && request.resource.data.favoriteList == [""]
+                && request.resource.data.feedbackList == [""];
+
+            allow update: if isValidUserInfo(request.resource.data)
+                // バリデーション
+                && isUserAuthenticated(userUid)
+                && (request.resource.data.githubUrl == ""
+                    || request.resource.data.githubUrl.matches("https?://github.com/[\\w!?/+-_~=;.,*&@#$%()[\\]]+"))
+                && (request.resource.data.twitterUrl == ""
+                    || request.resource.data.twitterUrl.matches("https?://twitter.com/[\\w!?/+-_~=;.,*&@#$%()[\\]]+"))
+                && (request.resource.data.otherUrl == ""
+                    || request.resource.data.otherUrl.matches("https?://[\\w!?/+-_~=;.,*&@#$%()[\\]]+"));
+        }
+    }
+}
