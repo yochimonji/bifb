@@ -39,7 +39,7 @@ service cloud.firestore {
                 && product.tagList[0] is string
                 && product.tagList.size() >= 0
                 && product.tagList.size() <= 5
-                && product.mainText is list
+                && product.mainText is string
                 && product.postDate is string
                 && product.editDate is string
                 && product.favoriteNum is int
@@ -103,7 +103,7 @@ service cloud.firestore {
                 && request.resource.data.favoriteNum > -1
                 && request.resource.data.feedbackNum > -1
                 && request.resource.data.userUid != ""
-                && request.resource.data.productId != ""
+                && request.resource.data.productId != "";
 
             allow update: if isValidProduct(request.resource.data)
                 // バリデーション
@@ -119,7 +119,7 @@ service cloud.firestore {
                 && request.resource.data.feedbackNum > -1
                 && request.resource.data.userUid != ""
                 && request.resource.data.productId != ""
-                && request.resource.data.postDate == resource.data.postDate
+                && request.resource.data.postDate == resource.data.postDate;
 
             allow delete: if isUserAuthenticated(resource.data.userUid);
         }
