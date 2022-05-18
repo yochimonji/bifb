@@ -505,9 +505,11 @@ export const editProduct = async (
   // 作品のpostDateの取得
   let time: unknown;
   let favoriteNum = 0;
+  let feedbackNum = 0;
   const tmp2 = await getDoc(doc(db, "product", productId)).then((data) => {
     time = data.get("postDate");
     favoriteNum = data.get("favoriteNum") as number;
+    feedbackNum = data.get("feedbackNum") as number;
   });
   // 作品情報の取得
   const tmp3 = await setDoc(doc(db, "product", productId), {
@@ -521,7 +523,9 @@ export const editProduct = async (
     postDate: time,
     editDate: new Date().toLocaleString(),
     favoriteNum,
+    feedbackNum,
     userUid,
+    productId,
   });
   return productId;
 };
