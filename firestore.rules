@@ -105,7 +105,7 @@ service cloud.firestore {
                 && request.resource.data.userUid != ""
                 && request.resource.data.productId != "";
 
-            allow update: if isValidProduct(request.resource.data);
+            allow update: if isValidProduct(request.resource.data)
                 // バリデーション
                 && isUserAuthenticated(request.resource.data.userUid)
                 && request.resource.data.productTitle != ""
