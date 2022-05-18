@@ -4,4 +4,5 @@ RUN apt update && \
     apt install -y git
 COPY package*.json ./
 RUN npm install --no-audit
+RUN npm install -g firebase-tools
 RUN chmod 777 -R node_modules/
