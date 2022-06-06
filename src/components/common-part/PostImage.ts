@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from "uuid";
 import loadImage from "blueimp-load-image";
 import { getStorage, ref, uploadBytes } from "firebase/storage";
 
-import app from "../../base";
+import app from "FirebaseInitialize";
 
 const storage = getStorage(app);
 
@@ -13,11 +13,7 @@ const storage = getStorage(app);
  * @param isCrop 画像のクロップの有無
  * @returns 保存した画像のファイル名（ダウンロードURLではない）
  */
-const postImage = async (
-  file: File,
-  dir: string,
-  isCrop: boolean
-): Promise<string> => {
+const PostImage = async (file: File, dir: string, isCrop: boolean): Promise<string> => {
   // 新しいファイル名を生成
   const fileName = `${dir}/${uuidv4()}.jpeg`;
 
@@ -57,4 +53,4 @@ const postImage = async (
   return fileName;
 };
 
-export default postImage;
+export default PostImage;

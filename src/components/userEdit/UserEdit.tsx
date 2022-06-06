@@ -14,10 +14,13 @@ import {
 import { getStorage, ref, deleteObject, getDownloadURL } from "firebase/storage";
 
 import { useHistory } from "react-router-dom";
-import { fetchUserInfo, postUserInfo } from "../../firebase/firestore";
-import app from "../../base";
-import { AuthContext } from "../../auth/AuthProvider";
-import { GithubIcon, TwitterIcon, postImage } from "..";
+
+import { fetchUserInfo, postUserInfo } from "firebase-com/firestore";
+import app from "FirebaseInitialize";
+import { AuthContext } from "auth/AuthProvider";
+import GithubIcon from "components/common-part/GithubIcon";
+import TwitterIcon from "components/common-part/TwitterIcon";
+import PostImage from "components/common-part/PostImage";
 
 const storage = getStorage(app);
 
@@ -127,7 +130,7 @@ const UserEdit = (): JSX.Element => {
 
     // FileをStorageに保存し、アイコン名とURLをstateにセット
     const icon = event.target.files[0];
-    const newIconName = await postImage(icon, "user_icon", true);
+    const newIconName = await PostImage(icon, "user_icon", true);
     const newIconRef = ref(storage, newIconName);
     const downloadUrl = await getDownloadURL(newIconRef);
     setUserIconUrl(downloadUrl);

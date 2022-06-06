@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
 import { Route, RouteProps } from "react-router-dom";
-import { AuthContext } from "./AuthProvider";
 
-import { Home } from "../components";
+import { AuthContext } from "auth/AuthProvider";
+import Home from "components/home/Home";
 
 /**
  * 認証済みを判断し、認証状態の場合そのまま、非認証状態の場合ホームに移動

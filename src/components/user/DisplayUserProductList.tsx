@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { HStack, TabList, Tabs, Tab, TabPanels, TabPanel } from "@chakra-ui/react";
 
-import { fetchProductsUser, fetchUserInfos } from "../../firebase/firestore";
-import { DisplayProductProps, DisplayProducts } from "../index";
+import { fetchProductsUser, fetchUserInfos } from "firebase-com/firestore";
+import DisplayProductProps from "components/common-part/DisplayProductProps";
+import DisplayProducts from "components/common-part/DisplayProducts";
 
 /**
  * 作品データを取得・フォーマットする関数
@@ -23,6 +24,7 @@ const fetchNewProductData = async (
   products.forEach((product) => {
     userUidSet.add(product.data().userUid);
   });
+  // XXX: 警告が出ている
   const userInfos = await fetchUserInfos([...userUidSet]);
   if (!userInfos) return null;
 
@@ -52,7 +54,7 @@ type DisplayUserProductListProps = {
   displayedUserUid: string;
 };
 
-export const DisplayUserProductList = (props: DisplayUserProductListProps): JSX.Element => {
+const DisplayUserProductList = (props: DisplayUserProductListProps): JSX.Element => {
   const [productsPosted, setProductsPosted] = useState<DisplayProductProps[]>([]);
   const [productsFavorite, setProductsFavorite] = useState<DisplayProductProps[]>([]);
   const [productsFeedback, setProductsFeedback] = useState<DisplayProductProps[]>([]);

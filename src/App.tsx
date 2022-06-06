@@ -4,15 +4,14 @@ import { BrowserRouter, Switch, Route } from "react-router-dom";
 
 import { AuthProvider } from "./auth/AuthProvider";
 import PrivateRoute from "./auth/PrivateRoute";
-import {
-  Home,
-  Product,
-  Search,
-  Post,
-  User,
-  UserEdit,
-  Header,
-} from "./components";
+
+import Home from "./components/home/Home";
+import Product from "./components/product/Product";
+import Search from "./components/search/Search";
+import Post from "./components/post/Post";
+import User from "./components/user/User";
+import UserEdit from "./components/userEdit/UserEdit";
+import Header from "./components/header/Header";
 
 const App = (): JSX.Element => (
   // 認証プロバイダー
